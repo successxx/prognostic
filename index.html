@@ -81,7 +81,7 @@
             transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Shorter duration */
         }
 
-        /* Add fade-out effect to all elements */
+        /* Add fade-out effect */
         .fade-out {
             animation: fadeOut 1s forwards; /* Shorter fade-out */
         }
@@ -98,16 +98,6 @@
             margin-top: 20px;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
-        }
-
-        /* Apply fading to particle elements */
-        .particles-fade {
-            animation: fadeOutParticles 1s forwards;
-        }
-
-        @keyframes fadeOutParticles {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
         }
     </style>
 </head>
@@ -194,7 +184,6 @@
             levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
             setTimeout(() => {
                 levelUp.classList.add('fade-out'); // Add fade-out class for smooth exit
-                document.getElementById("tsparticles").classList.add("particles-fade"); // Fade-out particles
             }, 1500); // Shortened delay
         }
 
