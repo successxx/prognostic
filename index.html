@@ -78,12 +78,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Shorter duration */
         }
 
         /* Add fade-out effect */
         .fade-out {
-            animation: fadeOut 1.5s forwards;
+            animation: fadeOut 1s forwards; /* Shorter fade-out */
         }
 
         @keyframes fadeOut {
@@ -184,7 +184,7 @@
             levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
             setTimeout(() => {
                 levelUp.classList.add('fade-out'); // Add fade-out class for smooth exit
-            }, 2000);
+            }, 1500); // Shortened delay
         }
 
         fetchAndDisplayText();
@@ -193,7 +193,7 @@
         const startParticlesConfig = {
             particles: {
                 number: { value: 100 },
-                color: { value: ["#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A"] },
+                color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] }, /* Added purples */
                 shape: { type: ["circle", "star"] },
                 opacity: { value: 1, anim: { enable: true, speed: 3, opacity_min: 0, sync: false } },
                 size: { value: 5, random: true, anim: { enable: true, speed: 6, size_min: 0.1, sync: false } },
@@ -222,7 +222,7 @@
         const completionParticlesConfig = {
             particles: {
                 number: { value: 200 },
-                color: { value: ["#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] },
+                color: { value: ["#9370DB", "#6A5ACD", "#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] }, /* More purple variety */
                 shape: { type: "star" },
                 opacity: { value: 0.8, random: true, anim: { enable: true, speed: 2 } },
                 size: { value: 6, random: true },
