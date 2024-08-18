@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Text Display</title>
+    <title>PrognosticAI Results</title>
 
-    <!-- Add Montserrat from Google Fonts -->
+    <!-- Load Montserrat font -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <!-- Load marked.js library to parse markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
         body {
@@ -31,15 +32,16 @@
     <div id="typed-output"></div>
 
     <script>
+        // Fetch the AI-generated text (using GET request with query string in this example)
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        const text = urlParams.get('text') || 'No text provided';
+        const rawText = urlParams.get('text') || '**No text provided**';
 
-        new Typed('#typed-output', {
-            strings: [text],
-            typeSpeed: 30,
-            showCursor: false
-        });
+        // Convert markdown to HTML using marked.js
+        const convertedHTML = marked.parse(rawText);
+
+        // Display the converted HTML in the div
+        document.getElementById('typed-output').innerHTML = convertedHTML;
     </script>
 </body>
 </html>
