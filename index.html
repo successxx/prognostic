@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Text Display</title>
+
+    <!-- Add Montserrat from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+
     <style>
         body {
-            font-family: Montserrat, fine;
+            font-family: 'Montserrat', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,12 +29,12 @@
 </head>
 <body>
     <div id="typed-output"></div>
-    
+
     <script>
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const text = urlParams.get('text') || 'No text provided';
-        
+
         new Typed('#typed-output', {
             strings: [text],
             typeSpeed: 30,
