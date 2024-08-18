@@ -22,12 +22,19 @@
             overflow: hidden;
         }
 
-        /* Center content and ensure text is left-aligned */
+        /* Center the entire page's content */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Text box left-aligned but centered on page */
         #typed-output {
             font-size: 24px;
             max-width: 500px;
             width: 100%;
-            text-align: left; /* Keep text left-aligned */
+            text-align: left;
             font-weight: 300;
             min-height: 100px;
             display: flex;
@@ -37,7 +44,7 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            margin: 20px 0; /* Add spacing between elements */
+            margin-bottom: 20px; /* Adds space between elements */
         }
 
         #tsparticles {
@@ -49,7 +56,6 @@
             pointer-events: none;
         }
 
-        /* Style the progress bar */
         .progress-bar {
             width: 0%;
             height: 10px;
@@ -59,6 +65,19 @@
             left: 0;
             transition: width 0.5s ease-in-out;
             box-shadow: 0 2px 10px rgba(255, 154, 158, 0.5);
+        }
+
+        /* Style for the centered button */
+        .button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
         }
 
         /* Style for the level-up element */
@@ -75,15 +94,6 @@
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
-        /* Style for the streak counter */
-        .streak-counter {
-            font-size: 18px;
-            color: #4CAF50;
-            margin-top: 20px;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-
         /* Add fade-out effect */
         .fade-out {
             animation: fadeOut 1.5s forwards;
@@ -93,12 +103,24 @@
             0% { opacity: 1; }
             100% { opacity: 0; }
         }
+
+        /* Streak counter styling */
+        .streak-counter {
+            font-size: 18px;
+            color: #4CAF50;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body>
     <div class="progress-bar"></div>
     <div id="tsparticles"></div>
-    <div id="typed-output"></div>
+    <div class="container">
+        <div id="typed-output"></div>
+        <button class="button">Book Your Free Demo Now</button> <!-- Centered button -->
+    </div>
     <div class="level-up" id="level-up">LEVEL UP!</div>
     <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
 
