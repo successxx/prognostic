@@ -13,72 +13,51 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
         #typed-output {
-            font-size: 24px;
+            font-size: 18px;
             max-width: 800px;
-            text-align: center;
-        }
-        #debug-info {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            font-size: 12px;
-            background-color: rgba(255,255,255,0.8);
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
+            text-align: left;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
-    <div id="debug-info"></div>
     <div id="typed-output"></div>
 
     <script>
-        function addDebugInfo(message) {
-            const debugEl = document.getElementById('debug-info');
-            debugEl.style.display = 'block';
-            debugEl.innerHTML += message + '<br>';
+        function fetchAndDisplayText() {
+            fetch('https://prognostic-backend.herokuapp.com/getText')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.text) {
+                        new Typed('#typed-output', {
+                            strings: [data.text],
+                            typeSpeed: 20,
+                            showCursor: false,
+                            preStringTyped: function(arrayPos, self) {
+                                document.getElementById('typed-output').innerHTML = '';
+                            }
+                        });
+                    } else {
+                        document.getElementById('typed-output').innerHTML = 'Waiting for AI response...';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+                });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            addDebugInfo('Page loaded');
+        // Fetch immediately on page load
+        fetchAndDisplayText();
 
-            function getQueryParam(param) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(param);
-            }
-
-            let text = getQueryParam('text');
-            if (text) {
-                addDebugInfo('GET parameter found: ' + text);
-                text = decodeURIComponent(text);
-                initTyped(text);
-            } else {
-                addDebugInfo('No GET parameter, waiting for POST');
-                window.addEventListener('message', function(event) {
-                    addDebugInfo('Message received: ' + JSON.stringify(event.data));
-                    if (event.data && event.data.text) {
-                        text = event.data.text;
-                        initTyped(text);
-                    }
-                }, false);
-            }
-
-            function initTyped(content) {
-                addDebugInfo('Initializing Typed with content: ' + content.substring(0, 50) + '...');
-                new Typed('#typed-output', {
-                    strings: [content],
-                    typeSpeed: 30,
-                    showCursor: false
-                });
-            }
-        });
+        // Then fetch every 5 seconds
+        setInterval(fetchAndDisplayText, 5000);
     </script>
 </body>
 </html>
