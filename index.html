@@ -13,16 +13,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
         #typed-output {
-            font-size: 18px;
+            font-size: 24px;
             max-width: 800px;
-            text-align: left;
-            line-height: 1.6;
+            text-align: center;
         }
     </style>
 </head>
@@ -31,17 +30,14 @@
 
     <script>
         function fetchAndDisplayText() {
-            fetch('https://prognostic-backend-2f61e14d9607.herokuapp.com')
+            fetch('https://prognostic-backend-44804a264069.herokuapp.com/setText')
                 .then(response => response.json())
                 .then(data => {
                     if (data.text) {
                         new Typed('#typed-output', {
                             strings: [data.text],
-                            typeSpeed: 20,
-                            showCursor: false,
-                            preStringTyped: function(arrayPos, self) {
-                                document.getElementById('typed-output').innerHTML = '';
-                            }
+                            typeSpeed: 30,
+                            showCursor: false
                         });
                     } else {
                         document.getElementById('typed-output').innerHTML = 'Waiting for AI response...';
