@@ -29,25 +29,25 @@
     <div id="typed-output"></div>
 
     <script>
-        function fetchAndDisplayText() {
-            fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.text) {
-                        new Typed('#typed-output', {
-                            strings: [data.text],
-                            typeSpeed: 30,
-                            showCursor: false
-                        });
-                    } else {
-                        document.getElementById('typed-output').innerHTML = 'Waiting for AI response...';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                });
-        }
+     function fetchAndDisplayText() {
+  fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
+    .then(response => response.json())
+    .then(data => {
+      if (data.text) {
+        new Typed('#typed-output', {
+          strings: [data.text],
+          typeSpeed: 30,
+          showCursor: false
+        });
+      } else {
+        document.getElementById('typed-output').innerHTML = 'Waiting for AI response...';
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('typed-output').innerHTML = 'Our bad. We glitched out. Please try again.';
+    });
+}
 
         // Fetch immediately on page load
         fetchAndDisplayText();
