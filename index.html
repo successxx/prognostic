@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrognosticAI Enabled</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.9.3/tsparticles.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -21,39 +22,125 @@
         #typed-output {
             font-size: 24px;
             max-width: 800px;
-            text-align: center;
+            text-align: left;
+            font-weight: 300;
+        }
+        #tsparticles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
+    <div id="tsparticles"></div>
     <div id="typed-output"></div>
-
     <script>
-     function fetchAndDisplayText() {
-  fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
-    .then(response => response.json())
-    .then(data => {
-      if (data.text) {
-        new Typed('#typed-output', {
-          strings: [data.text],
-          typeSpeed: 30,
-          showCursor: false
-        });
-      } else {
-        document.getElementById('typed-output').innerHTML = 'Waiting for AI response...';
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      document.getElementById('typed-output').innerHTML = 'Our bad. We glitched out. Please try again.';
-    });
-}
+        let typedInstance = null;
+        let fetchInProgress = false;
+
+        function fetchAndDisplayText() {
+            if (fetchInProgress) return;
+            fetchInProgress = true;
+
+            fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+                        if (typedInstance) {
+                            typedInstance.destroy();
+                        }
+                        // Trigger start animation
+                        tsParticles.load("tsparticles", startParticlesConfig);
+                        
+                        typedInstance = new Typed('#typed-output', {
+                            strings: [data.text],
+                            typeSpeed: 30,
+                            showCursor: false,
+                            onComplete: () => {
+                                // Trigger completion animation
+                                tsParticles.load("tsparticles", completionParticlesConfig);
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+                })
+                .finally(() => {
+                    fetchInProgress = false;
+                });
+        }
 
         // Fetch immediately on page load
         fetchAndDisplayText();
 
         // Then fetch every 5 seconds
         setInterval(fetchAndDisplayText, 5000);
+
+        // Start animation configuration
+        const startParticlesConfig = {
+            particles: {
+                number: { value: 100 },
+                color: { value: ["#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8"] },
+                shape: { type: "circle" },
+                opacity: { value: 1, anim: { enable: true, speed: 2, opacity_min: 0, sync: false } },
+                size: { value: 3, random: true, anim: { enable: true, speed: 5, size_min: 0.1, sync: false } },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: "outside",
+                    random: false,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                },
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: false },
+                    onclick: { enable: false },
+                    resize: true
+                },
+            },
+            retina_detect: true,
+            duration: 0.3,
+        };
+
+        // Completion animation configuration
+        const completionParticlesConfig = {
+            particles: {
+                number: { value: 80 },
+                color: { value: "#ffd700" },
+                shape: { type: "star" },
+                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 1 } },
+                size: { value: 3, random: true },
+                move: {
+                    enable: true,
+                    speed: 3,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                },
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: false },
+                    onclick: { enable: false },
+                    resize: true
+                },
+            },
+            retina_detect: true,
+            duration: 2,
+        };
     </script>
 </body>
 </html>
