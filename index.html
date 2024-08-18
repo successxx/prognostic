@@ -12,19 +12,25 @@
             font-family: 'Montserrat', sans-serif;
             background-color: #F7F7F7;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
+            overflow: hidden;
         }
         #typed-output {
             font-size: 24px;
-            max-width: 600px; /* Reduced width */
+            max-width: 600px;
             width: 100%;
-            text-align: center; /* Centered text */
+            text-align: center;
             font-weight: 300;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         #tsparticles {
             position: fixed;
@@ -34,72 +40,112 @@
             left: 0;
             pointer-events: none;
         }
+        .archetype-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 4px;
+            background-color: #4CAF50;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: width 0.5s ease-in-out;
+        }
+        .insight-counter {
+            font-size: 18px;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body>
+    <div class="progress-bar"></div>
+    <div class="archetype-icon" id="archetype-icon">🧙‍♂️</div>
     <div id="tsparticles"></div>
     <div id="typed-output"></div>
+    <div class="insight-counter" id="insight-counter">Insights generated: 0</div>
     <script>
-        // ... (keep the existing fetchAndDisplayText function and setInterval)
+        let typedInstance = null;
+        let fetchInProgress = false;
+        let insightCount = 0;
+
+        function fetchAndDisplayText() {
+            if (fetchInProgress) return;
+            fetchInProgress = true;
+
+            fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+                        if (typedInstance) {
+                            typedInstance.destroy();
+                        }
+                        // Trigger start animation
+                        tsParticles.load("tsparticles", startParticlesConfig);
+                        
+                        // Show archetype icon
+                        document.getElementById('archetype-icon').style.opacity = '1';
+                        
+                        // Start progress bar
+                        startProgressBar();
+                        
+                        typedInstance = new Typed('#typed-output', {
+                            strings: [data.text],
+                            typeSpeed: 30,
+                            showCursor: false,
+                            onComplete: () => {
+                                // Trigger completion animation
+                                tsParticles.load("tsparticles", completionParticlesConfig);
+                                // Update insight counter
+                                insightCount++;
+                                document.getElementById('insight-counter').textContent = `Insights generated: ${insightCount}`;
+                                document.getElementById('insight-counter').style.opacity = '1';
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+                })
+                .finally(() => {
+                    fetchInProgress = false;
+                });
+        }
+
+        function startProgressBar() {
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = '0%';
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                }
+            }, 20);
+        }
+
+        // Fetch immediately on page load
+        fetchAndDisplayText();
+
+        // Then fetch every 10 seconds
+        setInterval(fetchAndDisplayText, 10000);
 
         // Enhanced start animation configuration
         const startParticlesConfig = {
-            particles: {
-                number: { value: 200 },
-                color: { value: ["#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A"] },
-                shape: { type: ["circle", "star"] },
-                opacity: { value: 1, anim: { enable: true, speed: 3, opacity_min: 0, sync: false } },
-                size: { value: 5, random: true, anim: { enable: true, speed: 6, size_min: 0.1, sync: false } },
-                move: {
-                    enable: true,
-                    speed: 10,
-                    direction: "outside",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false,
-                },
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: false },
-                    onclick: { enable: false },
-                    resize: true
-                },
-            },
-            retina_detect: true,
-            duration: 0.5,
+            /* ... (keep the existing configuration) ... */
         };
 
         // Enhanced completion animation configuration
         const completionParticlesConfig = {
-            particles: {
-                number: { value: 150 },
-                color: { value: ["#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] },
-                shape: { type: "star" },
-                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 2 } },
-                size: { value: 6, random: true },
-                move: {
-                    enable: true,
-                    speed: 5,
-                    direction: "none",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false,
-                },
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: false },
-                    onclick: { enable: false },
-                    resize: true
-                },
-            },
-            retina_detect: true,
-            duration: 3,
+            /* ... (keep the existing configuration) ... */
         };
     </script>
 </body>
