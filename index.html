@@ -3,14 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrognosticAI Results</title>
-
-    <!-- Load Montserrat font -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- Load marked.js library to parse markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+    <title>Your PrognosticAI Results Are Ready!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -23,8 +17,9 @@
         }
         #typed-output {
             font-size: 24px;
-            max-width: 600px;
+            max-width: 800px;
             text-align: center;
+            padding: 20px;
         }
     </style>
 </head>
@@ -32,16 +27,38 @@
     <div id="typed-output"></div>
 
     <script>
-        // Fetch the AI-generated text (using GET request with query string in this example)
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const rawText = urlParams.get('text') || '**No text provided**';
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to get URL parameters
+            function getQueryParam(param) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
 
-        // Convert markdown to HTML using marked.js
-        const convertedHTML = marked.parse(rawText);
+            // Check if there's a 'text' parameter in the URL (for GET requests)
+            let text = getQueryParam('text');
 
-        // Display the converted HTML in the div
-        document.getElementById('typed-output').innerHTML = convertedHTML;
+            if (!text) {
+                // If no 'text' parameter, set up to receive POST data
+                window.addEventListener('message', function(event) {
+                    if (event.data && event.data.text) {
+                        text = event.data.text;
+                        initTyped(text);
+                    }
+                }, false);
+            } else {
+                // If 'text' parameter exists, use it directly
+                text = decodeURIComponent(text);
+                initTyped(text);
+            }
+
+            function initTyped(content) {
+                new Typed('#typed-output', {
+                    strings: [content],
+                    typeSpeed: 30,
+                    showCursor: false
+                });
+            }
+        });
     </script>
 </body>
 </html>
