@@ -21,8 +21,9 @@
         }
         #typed-output {
             font-size: 24px;
-            max-width: 800px;
-            text-align: left;
+            max-width: 600px; /* Reduced width */
+            width: 100%;
+            text-align: center; /* Centered text */
             font-weight: 300;
         }
         #tsparticles {
@@ -39,62 +40,21 @@
     <div id="tsparticles"></div>
     <div id="typed-output"></div>
     <script>
-        let typedInstance = null;
-        let fetchInProgress = false;
+        // ... (keep the existing fetchAndDisplayText function and setInterval)
 
-        function fetchAndDisplayText() {
-            if (fetchInProgress) return;
-            fetchInProgress = true;
-
-            fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
-                        if (typedInstance) {
-                            typedInstance.destroy();
-                        }
-                        // Trigger start animation
-                        tsParticles.load("tsparticles", startParticlesConfig);
-                        
-                        typedInstance = new Typed('#typed-output', {
-                            strings: [data.text],
-                            typeSpeed: 30,
-                            showCursor: false,
-                            onComplete: () => {
-                                // Trigger completion animation
-                                tsParticles.load("tsparticles", completionParticlesConfig);
-                            }
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                })
-                .finally(() => {
-                    fetchInProgress = false;
-                });
-        }
-
-        // Fetch immediately on page load
-        fetchAndDisplayText();
-
-        // Then fetch every 5 seconds
-        setInterval(fetchAndDisplayText, 5000);
-
-        // Start animation configuration
+        // Enhanced start animation configuration
         const startParticlesConfig = {
             particles: {
-                number: { value: 100 },
-                color: { value: ["#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8"] },
-                shape: { type: "circle" },
-                opacity: { value: 1, anim: { enable: true, speed: 2, opacity_min: 0, sync: false } },
-                size: { value: 3, random: true, anim: { enable: true, speed: 5, size_min: 0.1, sync: false } },
+                number: { value: 200 },
+                color: { value: ["#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A"] },
+                shape: { type: ["circle", "star"] },
+                opacity: { value: 1, anim: { enable: true, speed: 3, opacity_min: 0, sync: false } },
+                size: { value: 5, random: true, anim: { enable: true, speed: 6, size_min: 0.1, sync: false } },
                 move: {
                     enable: true,
-                    speed: 6,
+                    speed: 10,
                     direction: "outside",
-                    random: false,
+                    random: true,
                     straight: false,
                     out_mode: "out",
                     bounce: false,
@@ -109,20 +69,20 @@
                 },
             },
             retina_detect: true,
-            duration: 0.3,
+            duration: 0.5,
         };
 
-        // Completion animation configuration
+        // Enhanced completion animation configuration
         const completionParticlesConfig = {
             particles: {
-                number: { value: 80 },
-                color: { value: "#ffd700" },
+                number: { value: 150 },
+                color: { value: ["#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] },
                 shape: { type: "star" },
-                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 1 } },
-                size: { value: 3, random: true },
+                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 2 } },
+                size: { value: 6, random: true },
                 move: {
                     enable: true,
-                    speed: 3,
+                    speed: 5,
                     direction: "none",
                     random: true,
                     straight: false,
@@ -139,7 +99,7 @@
                 },
             },
             retina_detect: true,
-            duration: 2,
+            duration: 3,
         };
     </script>
 </body>
