@@ -98,11 +98,11 @@
         .streak-counter {
             font-size: 20px;
             font-weight: 600;
-            color: #4CAF50;
+            color: #0000FF; /* Changed to blue */
             background-color: rgba(255, 255, 255, 0.95);
             padding: 12px 20px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 255, 0.2);
             opacity: 0;
             transition: all 0.5s ease-in-out;
             z-index: 2;
@@ -158,16 +158,21 @@
                             showLevelUp();
                         }
 
-                        setTimeout(() => {
-                            typedInstance = new Typed('#typed-output', {
-                                strings: [data.text],
-                                typeSpeed: 30,
-                                showCursor: false,
-                                onComplete: () => {
-                                    tsParticles.dom()[0].classList.add('fade-out');
-                                }
-                            });
-                        }, 1500);
+                        // Start typing immediately
+                        typedInstance = new Typed('#typed-output', {
+                            strings: [data.text],
+                            typeSpeed: 30,
+                            showCursor: false,
+                            onComplete: () => {
+                                // Fade out particles gracefully
+                                const particlesContainer = tsParticles.dom()[0];
+                                particlesContainer.style.transition = 'opacity 1.5s ease-out';
+                                particlesContainer.style.opacity = '0';
+                                setTimeout(() => {
+                                    tsParticles.destroy();
+                                }, 1500);
+                            }
+                        });
                     }
                 })
                 .catch(error => {
@@ -188,6 +193,8 @@
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
+                    progressBar.style.transition = 'opacity 1s ease-out';
+                    progressBar.style.opacity = '0';
                 } else {
                     width++;
                     progressBar.style.width = width + '%';
@@ -209,7 +216,9 @@
             levelUp.style.opacity = '1';
             levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
             setTimeout(() => {
-                levelUp.classList.add('fade-out');
+                levelUp.style.transition = 'opacity 1s ease-out, transform 1s ease-out';
+                levelUp.style.opacity = '0';
+                levelUp.style.transform = 'translate(-50%, -50%) scale(1)';
             }, 1500);
         }
 
@@ -219,7 +228,7 @@
         const particlesConfig = {
             particles: {
                 number: { value: 100 },
-                color: { value: ["#6a11cb", "#2575fc", "#4CAF50", "#FFA500"] },
+                color: { value: ["#6a11cb", "#2575fc", "#0000FF", "#FFA500"] },
                 shape: { type: "circle" },
                 opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1 } },
                 size: { value: 5, random: true },
@@ -242,7 +251,6 @@
                 },
             },
             retina_detect: true,
-            duration: 1.5,
         };
     </script>
 </body>
