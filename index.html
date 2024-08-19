@@ -54,17 +54,16 @@
             pointer-events: none;
         }
 
-        .level-up {
-            font-size: 48px;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        .level-counter {
+            font-size: 18px;
+            color: #4CAF50;
+            margin-top: 20px;
             opacity: 0;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            padding: 10px 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         @keyframes sparkle {
@@ -87,7 +86,7 @@
     <div class="container">
         <div id="typed-output"></div>
     </div>
-    <div class="level-up" id="level-up">LEVEL 99!</div>
+    <div class="level-counter" id="level-counter">Level 99! 🎉</div>
 
     <script>
         let typedInstance = null;
@@ -110,13 +109,11 @@
         }
 
         function showLevelUp() {
-            const levelUp = document.getElementById('level-up');
-            levelUp.style.opacity = '1';
-            levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            const levelCounter = document.getElementById('level-counter');
+            levelCounter.style.opacity = '1';
             setTimeout(() => {
-                levelUp.style.opacity = '0';
-                levelUp.style.transform = 'translate(-50%, -50%) scale(1)';
-            }, 2000);
+                levelCounter.style.opacity = '0';
+            }, 3000);
         }
 
         function fetchAndDisplayText() {
@@ -135,7 +132,7 @@
 
                         // Remove particles and sparkles after 3 seconds
                         setTimeout(() => {
-                            tsParticles.destroy();
+                            tsParticles.clear();
                             removeSparkles();
                         }, 3000);
 
@@ -178,7 +175,6 @@
                 },
             },
             retina_detect: true,
-            duration: 3,
         };
 
         fetchAndDisplayText();
