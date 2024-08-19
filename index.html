@@ -22,14 +22,12 @@
             overflow: hidden;
         }
 
-        /* Center the entire page's content */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Text box left-aligned but centered on page */
         #typed-output {
             font-size: 24px;
             max-width: 500px;
@@ -44,7 +42,9 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px; /* Adds space between elements */
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
         }
 
         #tsparticles {
@@ -59,31 +59,29 @@
         .progress-bar {
             width: 0%;
             height: 10px;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4, #ffecd2);
+            background: linear-gradient(to right, #9370DB, #6A5ACD, #FFD700);
             position: fixed;
             top: 0;
             left: 0;
             transition: width 0.5s ease-in-out;
-            box-shadow: 0 2px 10px rgba(255, 154, 158, 0.5);
+            box-shadow: 0 2px 10px rgba(147, 112, 219, 0.5);
         }
 
-        /* Style for the level-up element */
         .level-up {
             font-size: 48px;
             font-weight: bold;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            color: #9370DB;
+            text-shadow: 0 0 10px rgba(147, 112, 219, 0.7);
             opacity: 0;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Shorter duration */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
 
-        /* Add fade-out effect */
         .fade-out {
-            animation: fadeOut 1s forwards; /* Shorter fade-out */
+            animation: fadeOut 2s forwards;
         }
 
         @keyframes fadeOut {
@@ -91,10 +89,9 @@
             100% { opacity: 0; }
         }
 
-        /* Streak counter styling */
         .streak-counter {
             font-size: 18px;
-            color: #4CAF50;
+            color: #9370DB;
             margin-top: 20px;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
@@ -126,22 +123,23 @@
                         if (typedInstance) {
                             typedInstance.destroy();
                         }
-                        tsParticles.load("tsparticles", startParticlesConfig);
-                        startProgressBar();
+                        
+                        // Start animations before text display
+                        startAnimations();
 
-                        typedInstance = new Typed('#typed-output', {
-                            strings: [data.text],
-                            typeSpeed: 30,
-                            showCursor: false,
-                            onComplete: () => {
-                                tsParticles.load("tsparticles", completionParticlesConfig);
-                                streak++;
-                                updateStreak();
-                                if (streak % 3 === 0) {
-                                    showLevelUp();
+                        // Delay text display
+                        setTimeout(() => {
+                            document.getElementById('typed-output').style.opacity = '1';
+                            typedInstance = new Typed('#typed-output', {
+                                strings: [data.text],
+                                typeSpeed: 30,
+                                showCursor: false,
+                                onComplete: () => {
+                                    // Fade out animations
+                                    fadeOutAnimations();
                                 }
-                            }
-                        });
+                            });
+                        }, 3000); // Delay text display by 3 seconds
                     }
                 })
                 .catch(error => {
@@ -153,6 +151,32 @@
                 .finally(() => {
                     fetchInProgress = false;
                 });
+        }
+
+        function startAnimations() {
+            streak++;
+            updateStreak();
+            if (streak % 3 === 0) {
+                showLevelUp();
+            }
+            tsParticles.load("tsparticles", particlesConfig);
+            startProgressBar();
+        }
+
+        function fadeOutAnimations() {
+            const streakCounter = document.getElementById('streak-counter');
+            const levelUp = document.getElementById('level-up');
+            
+            streakCounter.classList.add('fade-out');
+            levelUp.classList.add('fade-out');
+            
+            setTimeout(() => {
+                tsParticles.destroy();
+                streakCounter.style.opacity = '0';
+                levelUp.style.opacity = '0';
+                streakCounter.classList.remove('fade-out');
+                levelUp.classList.remove('fade-out');
+            }, 2000);
         }
 
         function startProgressBar() {
@@ -173,62 +197,27 @@
             const streakCounter = document.getElementById('streak-counter');
             streakCounter.textContent = `Streak: ${streak} 🔥`;
             streakCounter.style.opacity = '1';
-            setTimeout(() => {
-                streakCounter.style.opacity = '0';
-            }, 3000);
         }
 
         function showLevelUp() {
             const levelUp = document.getElementById('level-up');
             levelUp.style.opacity = '1';
             levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            setTimeout(() => {
-                levelUp.classList.add('fade-out'); // Add fade-out class for smooth exit
-            }, 1500); // Shortened delay
         }
 
         fetchAndDisplayText();
         setInterval(fetchAndDisplayText, 10000);
 
-        const startParticlesConfig = {
+        const particlesConfig = {
             particles: {
-                number: { value: 100 },
-                color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] }, /* Added purples */
+                number: { value: 150 },
+                color: { value: ["#9370DB", "#6A5ACD", "#483D8B", "#7B68EE", "#FFD700", "#FFA500", "#FF4500"] },
                 shape: { type: ["circle", "star"] },
-                opacity: { value: 1, anim: { enable: true, speed: 3, opacity_min: 0, sync: false } },
-                size: { value: 5, random: true, anim: { enable: true, speed: 6, size_min: 0.1, sync: false } },
+                opacity: { value: 0.8, anim: { enable: true, speed: 2, opacity_min: 0.1, sync: false } },
+                size: { value: 5, random: true, anim: { enable: true, speed: 4, size_min: 0.1, sync: false } },
                 move: {
                     enable: true,
-                    speed: 8,
-                    direction: "outside",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false,
-                },
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: false },
-                    onclick: { enable: false },
-                    resize: true
-                },
-            },
-            retina_detect: true,
-            duration: 0.5,
-        };
-
-        const completionParticlesConfig = {
-            particles: {
-                number: { value: 200 },
-                color: { value: ["#9370DB", "#6A5ACD", "#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] }, /* More purple variety */
-                shape: { type: "star" },
-                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 2 } },
-                size: { value: 6, random: true },
-                move: {
-                    enable: true,
-                    speed: 7,
+                    speed: 6,
                     direction: "none",
                     random: true,
                     straight: false,
