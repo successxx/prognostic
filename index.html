@@ -29,12 +29,7 @@ body {
     z-index: 10;
     width: 100%;
     max-width: 600px;
-}
-
-.title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
+    padding: 20px;
 }
 
 #typed-output {
@@ -45,7 +40,7 @@ body {
     min-height: 60px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: #FFFFFF;
     border-radius: 10px;
     padding: 15px;
@@ -65,79 +60,39 @@ body {
 }
 
 .level-up {
-    font-size: 36px;
+    font-size: 24px;
     font-weight: bold;
     color: #A335EE;
-    text-shadow: 0 0 10px rgba(163, 53, 238, 0.7);
-    opacity: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.5);
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    z-index: 100;
-}
-
-@keyframes fadeOutSlowly {
-    0% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
-}
-
-.fade-out {
-    animation: fadeOutSlowly 2s forwards;
-}
-
-.level-counter {
-    font-size: 18px;
-    color: #A335EE;
-    margin-bottom: 20px;
+    background-color: rgba(163, 53, 238, 0.1);
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-top: 10px;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
-    text-shadow: 0 0 5px rgba(163, 53, 238, 0.5);
 }
 
-.cta-button {
-    background-color: #1a56db;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(1); }
 }
 
-.cta-button:hover {
-    background-color: #1e40af;
+.fade-in-out {
+    animation: fadeInOut 2s forwards;
 }
 
-.footer {
-    margin-top: 40px;
-    text-align: center;
-    font-size: 14px;
-    color: #666;
-}
 </style>
 </head>
 <body>
 <div id="tsparticles"></div>
 <div class="container">
-    <h1 class="title">Your Prediction Is In!</h1>
     <div id="typed-output"></div>
-    <div class="level-counter" id="level-counter"></div>
-    <button class="cta-button">Book Your Free Demo Now!</button>
-</div>
-<div class="level-up" id="level-up">LEVEL UP! 🔥</div>
-<div class="footer">
-    <p>The World's First Dynamic Opt-In Page.</p>
-    <p>Because Marketing Is Personal.</p>
+    <div class="level-up" id="level-up">LEVEL UP! 🔥</div>
 </div>
 
 <script>
 let typedInstance = null;
 let fetchInProgress = false;
-let level = 1;
 
 function fetchAndDisplayText() {
     if (fetchInProgress) return;
@@ -159,10 +114,7 @@ function fetchAndDisplayText() {
                 typedInstance = new Typed('#typed-output', {
                     strings: [data.text],
                     typeSpeed: 30,
-                    showCursor: false,
-                    onBegin: () => {
-                        updateLevel();
-                    }
+                    showCursor: false
                 });
             }, 1000);
         }
@@ -170,31 +122,17 @@ function fetchAndDisplayText() {
     .catch(error => {
         console.error('Error:', error);
         document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-        level = 1;
-        updateLevel();
     })
     .finally(() => {
         fetchInProgress = false;
     });
 }
 
-function updateLevel() {
-    const levelCounter = document.getElementById('level-counter');
-    levelCounter.textContent = `Level ${level} 🔥`;
-    levelCounter.style.opacity = '1';
-    setTimeout(() => {
-        levelCounter.style.opacity = '0';
-    }, 3000);
-}
-
 function showLevelUp() {
-    level++;
     const levelUp = document.getElementById('level-up');
-    levelUp.style.opacity = '1';
-    levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
-    setTimeout(() => {
-        levelUp.classList.add('fade-out');
-    }, 1000);
+    levelUp.classList.remove('fade-in-out');
+    void levelUp.offsetWidth; // Trigger reflow
+    levelUp.classList.add('fade-in-out');
 }
 
 fetchAndDisplayText();
