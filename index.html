@@ -6,6 +6,7 @@
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.9.3/tsparticles.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -22,17 +23,15 @@
         }
 
         .container {
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             z-index: 1;
-            width: 100%;
-            max-width: 800px;
         }
 
         #typed-output {
             font-size: 24px;
+            max-width: 600px;
             width: 100%;
             text-align: left;
             font-weight: 300;
@@ -48,10 +47,58 @@
             transition: all 0.3s ease;
         }
 
+        #typed-output:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        #tsparticles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 6px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: width 0.5s ease-in-out;
+            box-shadow: 0 2px 10px rgba(106, 17, 203, 0.3);
+        }
+
+        .level-up {
+            font-size: 54px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            opacity: 0;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 10;
+        }
+
+        .fade-out {
+            animation: fadeOut 1.5s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
         .streak-counter {
             font-size: 20px;
             font-weight: 600;
-            color: #0142AC;
+            color: #0142AC; /* Updated to the correct blue */
             background-color: rgba(255, 255, 255, 0.95);
             padding: 12px 20px;
             border-radius: 12px;
@@ -66,38 +113,26 @@
             transform: translateY(-10px);
         }
 
-        #fireworks-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
+        .streak-counter .fire-icon {
+            display: inline-block;
+            animation: pulse 1.5s infinite;
         }
 
-        .firework {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-        }
-
-        .spark {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
+    <div class="progress-bar"></div>
+    <div id="tsparticles"></div>
     <div class="container">
         <div id="typed-output"></div>
-        <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
+        <div class="streak-counter" id="streak-counter">Streak: 1 <span class="fire-icon">🔥</span></div>
     </div>
-    <div id="fireworks-container"></div>
+    <div class="level-up" id="level-up">LEVEL UP!</div>
 
     <script>
         let typedInstance = null;
@@ -115,15 +150,35 @@
                         if (typedInstance) {
                             typedInstance.destroy();
                         }
-                        createFireworks();
+                        tsParticles.load("tsparticles", particlesConfig);
+                        startProgressBar();
                         streak++;
                         updateStreak();
+                        if (streak % 3 === 0) {
+                            showLevelUp();
+                        }
 
                         typedInstance = new Typed('#typed-output', {
                             strings: [data.text],
                             typeSpeed: 30,
-                            showCursor: false
+                            showCursor: false,
+                            onComplete: () => {
+                                // Fade out particles after 1.5 seconds
+                                setTimeout(() => {
+                                    const particlesContainer = tsParticles.dom()[0];
+                                    particlesContainer.style.transition = 'opacity 0.5s ease-out';
+                                    particlesContainer.style.opacity = '0';
+                                    setTimeout(() => {
+                                        tsParticles.destroy();
+                                    }, 500);
+                                }, 1500);
+                            }
                         });
+
+                        // Stop animation after 1.5 seconds
+                        setTimeout(() => {
+                            tsParticles.pauseAnimation();
+                        }, 1500);
                     }
                 })
                 .catch(error => {
@@ -137,83 +192,73 @@
                 });
         }
 
+        function startProgressBar() {
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = '0%';
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    progressBar.style.transition = 'opacity 1s ease-out';
+                    progressBar.style.opacity = '0';
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                }
+            }, 15);
+        }
+
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
-            streakCounter.innerHTML = `Streak: ${streak} 🔥`;
+            streakCounter.innerHTML = `Streak: ${streak} <span class="fire-icon">🔥</span>`;
             streakCounter.classList.add('visible');
             setTimeout(() => {
                 streakCounter.classList.remove('visible');
             }, 1500);
         }
 
-        function createFireworks() {
-            const container = document.getElementById('fireworks-container');
-            const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
-            const fireworkCount = 15;  // Increased number of fireworks
-
-            for (let i = 0; i < fireworkCount; i++) {
-                setTimeout(() => {
-                    launchFirework(container, colors[Math.floor(Math.random() * colors.length)]);
-                }, i * 100);  // Reduced delay between fireworks
-            }
-
-            // Clear fireworks after animation
+        function showLevelUp() {
+            const levelUp = document.getElementById('level-up');
+            levelUp.style.opacity = '1';
+            levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
             setTimeout(() => {
-                container.innerHTML = '';
+                levelUp.style.transition = 'opacity 1s ease-out, transform 1s ease-out';
+                levelUp.style.opacity = '0';
+                levelUp.style.transform = 'translate(-50%, -50%) scale(1)';
             }, 1500);
-        }
-
-        function launchFirework(container, color) {
-            const firework = document.createElement('div');
-            firework.className = 'firework';
-            firework.style.left = Math.random() * 100 + '%';
-            firework.style.bottom = '0';
-            firework.style.backgroundColor = color;
-            container.appendChild(firework);
-
-            const animationDuration = 1000 + Math.random() * 500;
-            const maxHeight = 50 + Math.random() * 40; // Variable height
-
-            firework.animate([
-                { transform: 'translateY(0) scale(1)' },
-                { transform: `translateY(-${maxHeight}vh) scale(1)`, offset: 0.6 },
-                { transform: `translateY(-${maxHeight}vh) scale(3)`, opacity: 1, offset: 0.8 },
-                { transform: `translateY(-${maxHeight}vh) scale(0)`, opacity: 0 }
-            ], {
-                duration: animationDuration,
-                easing: 'ease-out'
-            }).onfinish = () => {
-                createSparks(container, color, firework.offsetLeft, firework.offsetTop);
-                firework.remove();
-            };
-        }
-
-        function createSparks(container, color, x, y) {
-            const sparkCount = 50;  // Increased number of sparks
-            for (let i = 0; i < sparkCount; i++) {
-                const spark = document.createElement('div');
-                spark.className = 'spark';
-                spark.style.backgroundColor = color;
-                spark.style.left = x + 'px';
-                spark.style.top = y + 'px';
-                container.appendChild(spark);
-
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 50 + Math.random() * 50;
-                const duration = 500 + Math.random() * 500;
-
-                spark.animate([
-                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                    { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`, opacity: 0 }
-                ], {
-                    duration: duration,
-                    easing: 'ease-out'
-                }).onfinish = () => spark.remove();
-            }
         }
 
         fetchAndDisplayText();
         setInterval(fetchAndDisplayText, 10000);
+
+        const particlesConfig = {
+            particles: {
+                number: { value: 100 },
+                color: { value: ["#6a11cb", "#2575fc", "#0142AC", "#FFA500"] },
+                shape: { type: "circle" },
+                opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1 } },
+                size: { value: 5, random: true },
+                move: {
+                    enable: true,
+                    speed: 3,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                },
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: false },
+                    resize: true
+                },
+            },
+            retina_detect: true,
+        };
     </script>
 </body>
 </html>
+
