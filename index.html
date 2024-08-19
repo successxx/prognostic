@@ -111,7 +111,7 @@ Current dopamine animation front end code
         <div id="typed-output"></div>
     </div>
     <div class="level-up" id="level-up">LEVEL UP!</div>
-    <div class="streak-counter" id="streak-counter">Achievement unlocked: NEW RECORD🔥</div>
+    <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
 
     <script>
         let typedInstance = null;
@@ -174,7 +174,7 @@ Current dopamine animation front end code
 
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
-            streakCounter.textContent = `Streak: ${streak} 🔥`;
+            streakCounter.textContent = `Achievement unlocked: NEW RECORD🔥`;
             streakCounter.style.opacity = '1';
             setTimeout(() => {
                 streakCounter.style.opacity = '0';
