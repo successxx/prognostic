@@ -91,7 +91,7 @@
             font-size: 18px;
             color: #4CAF50;
             margin-top: 20px;
-            opacity: 1;
+            opacity: 0;
             transition: opacity 0.5s ease-in-out;
         }
     </style>
@@ -108,7 +108,7 @@
     <script>
         let typedInstance = null;
         let fetchInProgress = false;
-        let streak = 1;
+        let streak = 0;
 
         function fetchAndDisplayText() {
             if (fetchInProgress) return;
@@ -123,14 +123,14 @@
                         }
                         startAnimations();
                         startProgressBar();
+                        streak++;
+                        updateStreak();
 
                         typedInstance = new Typed('#typed-output', {
                             strings: [data.text],
                             typeSpeed: 30,
                             showCursor: false,
                             onComplete: () => {
-                                streak++;
-                                updateStreak();
                                 if (streak % 3 === 0) {
                                     showLevelUp();
                                 }
@@ -141,7 +141,7 @@
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    streak = 1;
+                    streak = 0;
                     updateStreak();
                 })
                 .finally(() => {
@@ -152,9 +152,7 @@
         function startAnimations() {
             tsParticles.load("tsparticles", runescapeFireworksConfig);
             setTimeout(() => {
-                tsParticles.load("tsparticles", {
-                    particles: { number: { value: 0 } }
-                });
+                tsParticles.load("tsparticles", fadeOutConfig);
             }, 1500);
         }
 
@@ -176,6 +174,9 @@
             const streakCounter = document.getElementById('streak-counter');
             streakCounter.textContent = `Streak: ${streak} 🔥`;
             streakCounter.style.opacity = '1';
+            setTimeout(() => {
+                streakCounter.style.opacity = '0';
+            }, 3000);
         }
 
         function showLevelUp() {
@@ -189,14 +190,14 @@
 
         const runescapeFireworksConfig = {
             particles: {
-                number: { value: 100 },
+                number: { value: 150 },
                 color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] },
                 shape: { type: ["star", "circle"] },
                 opacity: { value: 1, anim: { enable: true, speed: 2, opacity_min: 0, sync: false } },
-                size: { value: 5, random: true, anim: { enable: true, speed: 4, size_min: 0.1, sync: false } },
+                size: { value: { min: 2, max: 7 }, random: true, anim: { enable: true, speed: 4, size_min: 0.1, sync: false } },
                 move: {
                     enable: true,
-                    speed: 10,
+                    speed: { min: 8, max: 15 },
                     direction: "top",
                     random: true,
                     straight: false,
@@ -204,6 +205,22 @@
                     bounce: false,
                     gravity: { enable: true, acceleration: 9.8 },
                 },
+                life: {
+                    duration: { value: 1.5, sync: false },
+                    count: 1,
+                },
+                twinkle: {
+                    lines: {
+                        enable: true,
+                        frequency: 0.05,
+                        opacity: 1
+                    },
+                    particles: {
+                        enable: true,
+                        frequency: 0.05,
+                        opacity: 1
+                    }
+                }
             },
             interactivity: {
                 detect_on: "canvas",
@@ -214,7 +231,20 @@
                 },
             },
             retina_detect: true,
-            duration: 1.5,
+        };
+
+        const fadeOutConfig = {
+            particles: {
+                ...runescapeFireworksConfig.particles,
+                opacity: { value: 1, anim: { enable: true, speed: 1, opacity_min: 0, sync: false } },
+                size: { ...runescapeFireworksConfig.particles.size, anim: { enable: true, speed: 2, size_min: 0.1, sync: false } },
+                move: {
+                    ...runescapeFireworksConfig.particles.move,
+                    speed: { min: 2, max: 5 },
+                    gravity: { enable: true, acceleration: 2 },
+                },
+            },
+            duration: 0.5,
         };
 
         fetchAndDisplayText();
