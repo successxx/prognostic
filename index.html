@@ -79,7 +79,7 @@
         }
 
         .fade-out {
-            animation: fadeOut 0.5s forwards;
+            animation: fadeOut 1.5s forwards;
         }
 
         @keyframes fadeOut {
@@ -100,10 +100,10 @@
     <div class="progress-bar"></div>
     <div id="tsparticles"></div>
     <div class="container">
-        <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
         <div id="typed-output"></div>
     </div>
     <div class="level-up" id="level-up">LEVEL UP!</div>
+    <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
 
     <script>
         let typedInstance = null;
@@ -121,21 +121,25 @@
                         if (typedInstance) {
                             typedInstance.destroy();
                         }
-                        startAnimations();
+                        tsParticles.load("tsparticles", particlesConfig);
                         startProgressBar();
                         streak++;
                         updateStreak();
+                        if (streak % 3 === 0) {
+                            showLevelUp();
+                        }
 
-                        typedInstance = new Typed('#typed-output', {
-                            strings: [data.text],
-                            typeSpeed: 30,
-                            showCursor: false,
-                            onComplete: () => {
-                                if (streak % 3 === 0) {
-                                    showLevelUp();
+                        setTimeout(() => {
+                            typedInstance = new Typed('#typed-output', {
+                                strings: [data.text],
+                                typeSpeed: 30,
+                                showCursor: false,
+                                onComplete: () => {
+                                    // Animation fades out at the end
+                                    tsParticles.dom()[0].classList.add('fade-out');
                                 }
-                            }
-                        });
+                            });
+                        }, 1500); // Wait for the animation to complete before starting typing
                     }
                 })
                 .catch(error => {
@@ -149,13 +153,6 @@
                 });
         }
 
-        function startAnimations() {
-            tsParticles.load("tsparticles", runescapeFireworksConfig);
-            setTimeout(() => {
-                tsParticles.load("tsparticles", fadeOutConfig);
-            }, 1500);
-        }
-
         function startProgressBar() {
             const progressBar = document.querySelector('.progress-bar');
             progressBar.style.width = '0%';
@@ -167,7 +164,7 @@
                     width++;
                     progressBar.style.width = width + '%';
                 }
-            }, 20);
+            }, 15); // Adjusted to complete in 1.5 seconds
         }
 
         function updateStreak() {
@@ -176,7 +173,7 @@
             streakCounter.style.opacity = '1';
             setTimeout(() => {
                 streakCounter.style.opacity = '0';
-            }, 3000);
+            }, 1500);
         }
 
         function showLevelUp() {
@@ -185,42 +182,28 @@
             levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
             setTimeout(() => {
                 levelUp.classList.add('fade-out');
-            }, 1000);
+            }, 1500);
         }
 
-        const runescapeFireworksConfig = {
+        fetchAndDisplayText();
+        setInterval(fetchAndDisplayText, 10000);
+
+        const particlesConfig = {
             particles: {
-                number: { value: 150 },
-                color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] },
-                shape: { type: ["star", "circle"] },
-                opacity: { value: 1, anim: { enable: true, speed: 2, opacity_min: 0, sync: false } },
-                size: { value: { min: 2, max: 7 }, random: true, anim: { enable: true, speed: 4, size_min: 0.1, sync: false } },
+                number: { value: 200 },
+                color: { value: ["#9370DB", "#6A5ACD", "#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] },
+                shape: { type: "star" },
+                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 2 } },
+                size: { value: 6, random: true },
                 move: {
                     enable: true,
-                    speed: { min: 8, max: 15 },
-                    direction: "top",
+                    speed: 7,
+                    direction: "none",
                     random: true,
                     straight: false,
                     out_mode: "out",
                     bounce: false,
-                    gravity: { enable: true, acceleration: 9.8 },
                 },
-                life: {
-                    duration: { value: 1.5, sync: false },
-                    count: 1,
-                },
-                twinkle: {
-                    lines: {
-                        enable: true,
-                        frequency: 0.05,
-                        opacity: 1
-                    },
-                    particles: {
-                        enable: true,
-                        frequency: 0.05,
-                        opacity: 1
-                    }
-                }
             },
             interactivity: {
                 detect_on: "canvas",
@@ -231,24 +214,8 @@
                 },
             },
             retina_detect: true,
+            duration: 1.5,
         };
-
-        const fadeOutConfig = {
-            particles: {
-                ...runescapeFireworksConfig.particles,
-                opacity: { value: 1, anim: { enable: true, speed: 1, opacity_min: 0, sync: false } },
-                size: { ...runescapeFireworksConfig.particles.size, anim: { enable: true, speed: 2, size_min: 0.1, sync: false } },
-                move: {
-                    ...runescapeFireworksConfig.particles.move,
-                    speed: { min: 2, max: 5 },
-                    gravity: { enable: true, acceleration: 2 },
-                },
-            },
-            duration: 0.5,
-        };
-
-        fetchAndDisplayText();
-        setInterval(fetchAndDisplayText, 10000);
     </script>
 </body>
 </html>
