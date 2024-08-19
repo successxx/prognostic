@@ -98,11 +98,11 @@
         .streak-counter {
             font-size: 20px;
             font-weight: 600;
-            color: #0000FF; /* Changed to blue */
+            color: #0142AC; /* Updated to the correct blue */
             background-color: rgba(255, 255, 255, 0.95);
             padding: 12px 20px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(1, 66, 172, 0.2);
             opacity: 0;
             transition: all 0.5s ease-in-out;
             z-index: 2;
@@ -158,21 +158,27 @@
                             showLevelUp();
                         }
 
-                        // Start typing immediately
                         typedInstance = new Typed('#typed-output', {
                             strings: [data.text],
                             typeSpeed: 30,
                             showCursor: false,
                             onComplete: () => {
-                                // Fade out particles gracefully
-                                const particlesContainer = tsParticles.dom()[0];
-                                particlesContainer.style.transition = 'opacity 1.5s ease-out';
-                                particlesContainer.style.opacity = '0';
+                                // Fade out particles after 1.5 seconds
                                 setTimeout(() => {
-                                    tsParticles.destroy();
+                                    const particlesContainer = tsParticles.dom()[0];
+                                    particlesContainer.style.transition = 'opacity 0.5s ease-out';
+                                    particlesContainer.style.opacity = '0';
+                                    setTimeout(() => {
+                                        tsParticles.destroy();
+                                    }, 500);
                                 }, 1500);
                             }
                         });
+
+                        // Stop animation after 1.5 seconds
+                        setTimeout(() => {
+                            tsParticles.pauseAnimation();
+                        }, 1500);
                     }
                 })
                 .catch(error => {
@@ -228,7 +234,7 @@
         const particlesConfig = {
             particles: {
                 number: { value: 100 },
-                color: { value: ["#6a11cb", "#2575fc", "#0000FF", "#FFA500"] },
+                color: { value: ["#6a11cb", "#2575fc", "#0142AC", "#FFA500"] },
                 shape: { type: "circle" },
                 opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1 } },
                 size: { value: 5, random: true },
