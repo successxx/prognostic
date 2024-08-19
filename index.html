@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #0C0C0C;
+            background-color: #F7F7F7;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -22,13 +22,14 @@
             overflow: hidden;
         }
 
+        /* Center the entire page's content */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 10;
         }
 
+        /* Text box left-aligned but centered on page */
         #typed-output {
             font-size: 24px;
             max-width: 500px;
@@ -39,12 +40,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgba(30, 30, 30, 0.8);
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(163, 53, 238, 0.5);
-            margin-bottom: 20px;
-            color: #FFFFFF;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; /* Adds space between elements */
         }
 
         #tsparticles {
@@ -59,48 +59,45 @@
         .progress-bar {
             width: 0%;
             height: 10px;
-            background: linear-gradient(to right, #A335EE, #B969FF, #FFD700);
+            background: linear-gradient(to right, #ff9a9e, #fad0c4, #ffecd2);
             position: fixed;
             top: 0;
             left: 0;
             transition: width 0.5s ease-in-out;
-            box-shadow: 0 2px 10px rgba(163, 53, 238, 0.7);
+            box-shadow: 0 2px 10px rgba(255, 154, 158, 0.5);
         }
 
+        /* Style for the level-up element */
         .level-up {
             font-size: 48px;
             font-weight: bold;
-            color: #A335EE;
-            text-shadow: 0 0 20px rgba(163, 53, 238, 1);
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
             opacity: 0;
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
-            transition: all 0.3s ease-in-out;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Shorter duration */
         }
 
-        .level-up.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1.2);
-        }
-
+        /* Add fade-out effect */
         .fade-out {
-            animation: fadeOut 1s forwards;
+            animation: fadeOut 1s forwards; /* Shorter fade-out */
         }
 
         @keyframes fadeOut {
-            0% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            0% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
-        .epic-glow {
-            animation: epicGlow 2s infinite alternate;
-        }
-
-        @keyframes epicGlow {
-            0% { text-shadow: 0 0 20px rgba(163, 53, 238, 1); }
-            100% { text-shadow: 0 0 40px rgba(163, 53, 238, 1), 0 0 80px rgba(163, 53, 238, 0.8); }
+        /* Streak counter styling */
+        .streak-counter {
+            font-size: 18px;
+            color: #4CAF50;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
     </style>
 </head>
@@ -110,12 +107,13 @@
     <div class="container">
         <div id="typed-output"></div>
     </div>
-    <div class="level-up" id="level-up">LEVEL UP! 🔥</div>
+    <div class="level-up" id="level-up">LEVEL UP!</div>
+    <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
 
     <script>
         let typedInstance = null;
         let fetchInProgress = false;
-        let level = 0;
+        let streak = 0;
 
         function fetchAndDisplayText() {
             if (fetchInProgress) return;
@@ -128,50 +126,33 @@
                         if (typedInstance) {
                             typedInstance.destroy();
                         }
-                        
-                        // Start animations and text display simultaneously
-                        startAnimations();
-                        displayText(data.text);
+                        tsParticles.load("tsparticles", startParticlesConfig);
+                        startProgressBar();
+
+                        typedInstance = new Typed('#typed-output', {
+                            strings: [data.text],
+                            typeSpeed: 30,
+                            showCursor: false,
+                            onComplete: () => {
+                                tsParticles.load("tsparticles", completionParticlesConfig);
+                                streak++;
+                                updateStreak();
+                                if (streak % 3 === 0) {
+                                    showLevelUp();
+                                }
+                            }
+                        });
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    level = 0;
+                    streak = 0;
+                    updateStreak();
                 })
                 .finally(() => {
                     fetchInProgress = false;
                 });
-        }
-
-        function startAnimations() {
-            level++;
-            showLevelUp();
-            tsParticles.load("tsparticles", particlesConfig);
-            startProgressBar();
-        }
-
-        function displayText(text) {
-            typedInstance = new Typed('#typed-output', {
-                strings: [text],
-                typeSpeed: 30,
-                showCursor: false,
-                onComplete: () => {
-                    // Fade out animations
-                    fadeOutAnimations();
-                }
-            });
-        }
-
-        function fadeOutAnimations() {
-            const levelUp = document.getElementById('level-up');
-            levelUp.classList.add('fade-out');
-            
-            setTimeout(() => {
-                tsParticles.destroy();
-                levelUp.classList.remove('show', 'fade-out', 'epic-glow');
-                levelUp.style.opacity = '0';
-            }, 1000);
         }
 
         function startProgressBar() {
@@ -182,41 +163,49 @@
                 if (width >= 100) {
                     clearInterval(interval);
                 } else {
-                    width += 2;
+                    width++;
                     progressBar.style.width = width + '%';
                 }
             }, 20);
         }
 
+        function updateStreak() {
+            const streakCounter = document.getElementById('streak-counter');
+            streakCounter.textContent = `Streak: ${streak} 🔥`;
+            streakCounter.style.opacity = '1';
+            setTimeout(() => {
+                streakCounter.style.opacity = '0';
+            }, 3000);
+        }
+
         function showLevelUp() {
             const levelUp = document.getElementById('level-up');
-            levelUp.textContent = `LEVEL ${level}! 🔥`;
-            levelUp.classList.add('show', 'epic-glow');
+            levelUp.style.opacity = '1';
+            levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            setTimeout(() => {
+                levelUp.classList.add('fade-out'); // Add fade-out class for smooth exit
+            }, 1500); // Shortened delay
         }
 
         fetchAndDisplayText();
         setInterval(fetchAndDisplayText, 10000);
 
-        const particlesConfig = {
+        const startParticlesConfig = {
             particles: {
-                number: { value: 150 },
-                color: { value: ["#A335EE", "#B969FF", "#FFD700", "#FFA500"] },
-                shape: { type: "star" },
+                number: { value: 100 },
+                color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] }, /* Added purples */
+                shape: { type: ["circle", "star"] },
                 opacity: { value: 1, anim: { enable: true, speed: 3, opacity_min: 0, sync: false } },
-                size: { value: 6, random: true, anim: { enable: true, speed: 4, size_min: 0.1, sync: false } },
+                size: { value: 5, random: true, anim: { enable: true, speed: 6, size_min: 0.1, sync: false } },
                 move: {
                     enable: true,
-                    speed: 10,
+                    speed: 8,
                     direction: "outside",
                     random: true,
                     straight: false,
                     out_mode: "out",
                     bounce: false,
                 },
-                life: {
-                    duration: { value: 1 },
-                    count: 1
-                }
             },
             interactivity: {
                 detect_on: "canvas",
@@ -227,4 +216,34 @@
                 },
             },
             retina_detect: true,
+            duration: 0.5,
+        };
+
+        const completionParticlesConfig = {
+            particles: {
+                number: { value: 200 },
+                color: { value: ["#9370DB", "#6A5ACD", "#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] }, /* More purple variety */
+                shape: { type: "star" },
+                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 2 } },
+                size: { value: 6, random: true },
+                move: {
+                    enable: true,
+                    speed: 7,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                },
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: false },
+                    onclick: { enable: false },
+                    resize: true
+                },
+            },
+            retina_detect: true,
+            duration: 3,
         };
