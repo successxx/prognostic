@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #F7F7F7;
+            background-color: #F0F4F8;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -22,29 +22,34 @@
             overflow: hidden;
         }
 
-        /* Center the entire page's content */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 1;
         }
 
-        /* Text box left-aligned but centered on page */
         #typed-output {
             font-size: 24px;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
             text-align: left;
             font-weight: 300;
-            min-height: 100px;
+            min-height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px; /* Adds space between elements */
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        #typed-output:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
 
         #tsparticles {
@@ -58,32 +63,31 @@
 
         .progress-bar {
             width: 0%;
-            height: 10px;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4, #ffecd2);
+            height: 6px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
             position: fixed;
             top: 0;
             left: 0;
             transition: width 0.5s ease-in-out;
-            box-shadow: 0 2px 10px rgba(255, 154, 158, 0.5);
+            box-shadow: 0 2px 10px rgba(106, 17, 203, 0.3);
         }
 
-        /* Style for the level-up element */
         .level-up {
-            font-size: 48px;
+            font-size: 54px;
             font-weight: bold;
             color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
             opacity: 0;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Shorter duration */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 10;
         }
 
-        /* Add fade-out effect */
         .fade-out {
-            animation: fadeOut 1s forwards; /* Shorter fade-out */
+            animation: fadeOut 1.5s forwards;
         }
 
         @keyframes fadeOut {
@@ -91,13 +95,33 @@
             100% { opacity: 0; }
         }
 
-        /* Streak counter styling */
         .streak-counter {
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: 600;
             color: #4CAF50;
-            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            transition: all 0.5s ease-in-out;
+            z-index: 2;
+        }
+
+        .streak-counter.visible {
+            opacity: 1;
+            transform: translateY(-10px);
+        }
+
+        .streak-counter .fire-icon {
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -106,9 +130,9 @@
     <div id="tsparticles"></div>
     <div class="container">
         <div id="typed-output"></div>
+        <div class="streak-counter" id="streak-counter">Streak: 1 <span class="fire-icon">🔥</span></div>
     </div>
     <div class="level-up" id="level-up">LEVEL UP!</div>
-    <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
 
     <script>
         let typedInstance = null;
@@ -126,22 +150,24 @@
                         if (typedInstance) {
                             typedInstance.destroy();
                         }
-                        tsParticles.load("tsparticles", startParticlesConfig);
+                        tsParticles.load("tsparticles", particlesConfig);
                         startProgressBar();
+                        streak++;
+                        updateStreak();
+                        if (streak % 3 === 0) {
+                            showLevelUp();
+                        }
 
-                        typedInstance = new Typed('#typed-output', {
-                            strings: [data.text],
-                            typeSpeed: 30,
-                            showCursor: false,
-                            onComplete: () => {
-                                tsParticles.load("tsparticles", completionParticlesConfig);
-                                streak++;
-                                updateStreak();
-                                if (streak % 3 === 0) {
-                                    showLevelUp();
+                        setTimeout(() => {
+                            typedInstance = new Typed('#typed-output', {
+                                strings: [data.text],
+                                typeSpeed: 30,
+                                showCursor: false,
+                                onComplete: () => {
+                                    tsParticles.dom()[0].classList.add('fade-out');
                                 }
-                            }
-                        });
+                            });
+                        }, 1500);
                     }
                 })
                 .catch(error => {
@@ -166,16 +192,16 @@
                     width++;
                     progressBar.style.width = width + '%';
                 }
-            }, 20);
+            }, 15);
         }
 
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
-            streakCounter.textContent = `Streak: ${streak} 🔥`;
-            streakCounter.style.opacity = '1';
+            streakCounter.innerHTML = `Streak: ${streak} <span class="fire-icon">🔥</span>`;
+            streakCounter.classList.add('visible');
             setTimeout(() => {
-                streakCounter.style.opacity = '0';
-            }, 3000);
+                streakCounter.classList.remove('visible');
+            }, 1500);
         }
 
         function showLevelUp() {
@@ -183,52 +209,23 @@
             levelUp.style.opacity = '1';
             levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
             setTimeout(() => {
-                levelUp.classList.add('fade-out'); // Add fade-out class for smooth exit
-            }, 1500); // Shortened delay
+                levelUp.classList.add('fade-out');
+            }, 1500);
         }
 
         fetchAndDisplayText();
         setInterval(fetchAndDisplayText, 10000);
 
-        const startParticlesConfig = {
+        const particlesConfig = {
             particles: {
                 number: { value: 100 },
-                color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] }, /* Added purples */
-                shape: { type: ["circle", "star"] },
-                opacity: { value: 1, anim: { enable: true, speed: 3, opacity_min: 0, sync: false } },
-                size: { value: 5, random: true, anim: { enable: true, speed: 6, size_min: 0.1, sync: false } },
+                color: { value: ["#6a11cb", "#2575fc", "#4CAF50", "#FFA500"] },
+                shape: { type: "circle" },
+                opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1 } },
+                size: { value: 5, random: true },
                 move: {
                     enable: true,
-                    speed: 8,
-                    direction: "outside",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false,
-                },
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: false },
-                    onclick: { enable: false },
-                    resize: true
-                },
-            },
-            retina_detect: true,
-            duration: 0.5,
-        };
-
-        const completionParticlesConfig = {
-            particles: {
-                number: { value: 200 },
-                color: { value: ["#9370DB", "#6A5ACD", "#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] }, /* More purple variety */
-                shape: { type: "star" },
-                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 2 } },
-                size: { value: 6, random: true },
-                move: {
-                    enable: true,
-                    speed: 7,
+                    speed: 3,
                     direction: "none",
                     random: true,
                     straight: false,
@@ -239,13 +236,13 @@
             interactivity: {
                 detect_on: "canvas",
                 events: {
-                    onhover: { enable: false },
+                    onhover: { enable: true, mode: "repulse" },
                     onclick: { enable: false },
                     resize: true
                 },
             },
             retina_detect: true,
-            duration: 3,
+            duration: 1.5,
         };
     </script>
 </body>
