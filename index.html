@@ -75,24 +75,30 @@
 
         .firework {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
-            animation: explode 1.5s ease-out forwards;
+            animation: shoot 2s ease-out forwards;
         }
 
-        @keyframes explode {
-            0% {
-                transform: translateY(100vh) scale(0);
-                opacity: 1;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(0) scale(1);
-                opacity: 0;
-            }
+        .spark {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            animation: spark 1s ease-out forwards;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            50% { transform: translateY(30vh) scale(1); opacity: 1; }
+            75% { opacity: 1; }
+            100% { transform: translateY(0) scale(0.5); opacity: 0; }
+        }
+
+        @keyframes spark {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
         }
     </style>
 </head>
@@ -129,10 +135,10 @@
                             showCursor: false
                         });
 
-                        // Clear fireworks after 1.5 seconds
+                        // Clear fireworks after 2 seconds
                         setTimeout(() => {
                             document.getElementById('fireworks-container').innerHTML = '';
-                        }, 1500);
+                        }, 2000);
                     }
                 })
                 .catch(error => {
@@ -158,15 +164,31 @@
         function createFireworks() {
             const container = document.getElementById('fireworks-container');
             container.innerHTML = '';
-            const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
+            const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFD700', '#FFA500'];
             
-            for (let i = 0; i < 50; i++) {
-                const firework = document.createElement('div');
-                firework.className = 'firework';
-                firework.style.left = Math.random() * 100 + '%';
-                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                firework.style.animationDelay = Math.random() * 0.5 + 's';
-                container.appendChild(firework);
+            for (let i = 0; i < 20; i++) {
+                createFirework(container, colors, Math.random() * 100, 100);
+            }
+        }
+
+        function createFirework(container, colors, x, y) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = `${x}%`;
+            firework.style.bottom = `${y}%`;
+            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            container.appendChild(firework);
+
+            // Create sparks
+            for (let j = 0; j < 20; j++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.left = `${x}%`;
+                spark.style.bottom = `${y}%`;
+                spark.style.setProperty('--tx', `${(Math.random() - 0.5) * 100}px`);
+                spark.style.setProperty('--ty', `${(Math.random() - 0.5) * 100}px`);
+                container.appendChild(spark);
             }
         }
 
