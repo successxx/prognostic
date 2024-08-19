@@ -65,11 +65,11 @@
             box-shadow: 0 2px 10px rgba(255, 154, 158, 0.5);
         }
 
-        .level-up {
-            font-size: 48px;
+        .achievement {
+            font-size: 24px;
             font-weight: bold;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            color: #4CAF50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
             opacity: 0;
             position: fixed;
             top: 50%;
@@ -86,14 +86,6 @@
             0% { opacity: 1; }
             100% { opacity: 0; }
         }
-
-        .streak-counter {
-            font-size: 18px;
-            color: #4CAF50;
-            margin-top: 20px;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
     </style>
 </head>
 <body>
@@ -102,13 +94,11 @@
     <div class="container">
         <div id="typed-output"></div>
     </div>
-    <div class="level-up" id="level-up">LEVEL UP!</div>
-    <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
+    <div class="achievement" id="achievement">Achievement Unlocked!</div>
 
     <script>
         let typedInstance = null;
         let fetchInProgress = false;
-        let streak = 0;
 
         function fetchAndDisplayText() {
             if (fetchInProgress) return;
@@ -122,32 +112,21 @@
                             typedInstance.destroy();
                         }
                         
-                        // Start animations before text generation
-                        tsParticles.load("tsparticles", startParticlesConfig);
+                        // Start animations and text generation simultaneously
+                        tsParticles.load("tsparticles", fireworksConfig);
                         startProgressBar();
+                        showAchievement();
 
-                        // Short delay before starting text generation
-                        setTimeout(() => {
-                            typedInstance = new Typed('#typed-output', {
-                                strings: [data.text],
-                                typeSpeed: 30,
-                                showCursor: false,
-                                onComplete: () => {
-                                    streak++;
-                                    updateStreak();
-                                    if (streak % 3 === 0) {
-                                        showLevelUp();
-                                    }
-                                }
-                            });
-                        }, 1000); // 1 second delay
+                        typedInstance = new Typed('#typed-output', {
+                            strings: [data.text],
+                            typeSpeed: 30,
+                            showCursor: false
+                        });
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    streak = 0;
-                    updateStreak();
                 })
                 .finally(() => {
                     fetchInProgress = false;
@@ -162,60 +141,137 @@
                 if (width >= 100) {
                     clearInterval(interval);
                 } else {
-                    width += 2; // Faster progress
+                    width += 2;
                     progressBar.style.width = width + '%';
                 }
             }, 20);
         }
 
-        function updateStreak() {
-            const streakCounter = document.getElementById('streak-counter');
-            streakCounter.textContent = `Streak: ${streak} 🔥`;
-            streakCounter.style.opacity = '1';
+        function showAchievement() {
+            const achievement = document.getElementById('achievement');
+            achievement.style.opacity = '1';
+            achievement.style.transform = 'translate(-50%, -50%) scale(1.2)';
             setTimeout(() => {
-                streakCounter.style.opacity = '0';
-            }, 1500); // Shorter display time
-        }
-
-        function showLevelUp() {
-            const levelUp = document.getElementById('level-up');
-            levelUp.style.opacity = '1';
-            levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            setTimeout(() => {
-                levelUp.classList.add('fade-out');
-            }, 750); // Shorter delay
+                achievement.classList.add('fade-out');
+            }, 1500);
         }
 
         fetchAndDisplayText();
         setInterval(fetchAndDisplayText, 10000);
 
-        const startParticlesConfig = {
+        const fireworksConfig = {
             particles: {
-                number: { value: 150 }, // Increased number of particles
-                color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] },
-                shape: { type: ["circle", "star"] },
-                opacity: { value: 1, anim: { enable: true, speed: 6, opacity_min: 0, sync: false } }, // Faster opacity animation
-                size: { value: 5, random: true, anim: { enable: true, speed: 12, size_min: 0.1, sync: false } }, // Faster size animation
+                number: {
+                    value: 0
+                },
+                color: {
+                    value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"]
+                },
+                shape: {
+                    type: "circle"
+                },
+                opacity: {
+                    value: 1,
+                    animation: {
+                        enable: true,
+                        speed: 0.5,
+                        minimumValue: 0,
+                        sync: false
+                    }
+                },
+                size: {
+                    value: 4,
+                    random: {
+                        enable: true,
+                        minimumValue: 2
+                    }
+                },
+                life: {
+                    duration: {
+                        sync: false,
+                        value: 5
+                    },
+                    count: 1
+                },
                 move: {
                     enable: true,
-                    speed: 16, // Increased speed
-                    direction: "outside",
-                    random: true,
+                    gravity: {
+                        enable: true,
+                        acceleration: 10
+                    },
+                    speed: {
+                        min: 10,
+                        max: 20
+                    },
+                    decay: 0.1,
+                    direction: "none",
                     straight: false,
-                    out_mode: "out",
-                    bounce: false,
+                    outModes: {
+                        default: "destroy",
+                        top: "none"
+                    }
                 },
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: false },
-                    onclick: { enable: false },
-                    resize: true
+                rotate: {
+                    value: {
+                        min: 0,
+                        max: 360
+                    },
+                    direction: "random",
+                    move: true,
+                    animation: {
+                        enable: true,
+                        speed: 60
+                    }
                 },
+                tilt: {
+                    direction: "random",
+                    enable: true,
+                    move: true,
+                    value: {
+                        min: 0,
+                        max: 360
+                    },
+                    animation: {
+                        enable: true,
+                        speed: 60
+                    }
+                },
+                roll: {
+                    darken: {
+                        enable: true,
+                        value: 25
+                    },
+                    enable: true,
+                    speed: {
+                        min: 15,
+                        max: 25
+                    }
+                },
+                wobble: {
+                    distance: 30,
+                    enable: true,
+                    move: true,
+                    speed: {
+                        min: -15,
+                        max: 15
+                    }
+                }
             },
-            retina_detect: true,
-            duration: 1, // Shorter duration
+            emitters: {
+                life: {
+                    count: 0,
+                    duration: 0.1,
+                    delay: 0.4
+                },
+                rate: {
+                    delay: 0.1,
+                    quantity: 150
+                },
+                size: {
+                    width: 0,
+                    height: 0
+                }
+            }
         };
     </script>
 </body>
