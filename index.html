@@ -75,25 +75,24 @@
 
         .firework {
             position: absolute;
-            width: 5px;
-            height: 5px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            animation: shoot 2s ease-out forwards;
+            animation: shoot 1.5s ease-out forwards;
         }
 
         .spark {
             position: absolute;
-            width: 3px;
-            height: 3px;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             animation: spark 1s ease-out forwards;
         }
 
         @keyframes shoot {
-            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
             50% { transform: translateY(30vh) scale(1); opacity: 1; }
-            75% { opacity: 1; }
-            100% { transform: translateY(0) scale(0.5); opacity: 0; }
+            100% { transform: translateY(0) scale(0.8); opacity: 0; }
         }
 
         @keyframes spark {
@@ -135,10 +134,10 @@
                             showCursor: false
                         });
 
-                        // Clear fireworks after 2 seconds
+                        // Clear fireworks after 3 seconds
                         setTimeout(() => {
                             document.getElementById('fireworks-container').innerHTML = '';
-                        }, 2000);
+                        }, 3000);
                     }
                 })
                 .catch(error => {
@@ -166,8 +165,10 @@
             container.innerHTML = '';
             const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFD700', '#FFA500'];
             
-            for (let i = 0; i < 20; i++) {
-                createFirework(container, colors, Math.random() * 100, 100);
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    createFirework(container, colors, 20 + i * 15, 100);
+                }, i * 300);
             }
         }
 
@@ -180,14 +181,16 @@
             container.appendChild(firework);
 
             // Create sparks
-            for (let j = 0; j < 20; j++) {
+            for (let j = 0; j < 30; j++) {
                 const spark = document.createElement('div');
                 spark.className = 'spark';
                 spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 spark.style.left = `${x}%`;
                 spark.style.bottom = `${y}%`;
-                spark.style.setProperty('--tx', `${(Math.random() - 0.5) * 100}px`);
-                spark.style.setProperty('--ty', `${(Math.random() - 0.5) * 100}px`);
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 50;
+                spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
                 container.appendChild(spark);
             }
         }
