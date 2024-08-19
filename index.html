@@ -45,8 +45,6 @@
             box-shadow: 0 0 20px rgba(163, 53, 238, 0.5);
             margin-bottom: 20px;
             color: #FFFFFF;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
         }
 
         #tsparticles {
@@ -58,11 +56,22 @@
             pointer-events: none;
         }
 
+        .progress-bar {
+            width: 0%;
+            height: 10px;
+            background: linear-gradient(to right, #A335EE, #B969FF, #FFD700);
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: width 0.5s ease-in-out;
+            box-shadow: 0 2px 10px rgba(163, 53, 238, 0.7);
+        }
+
         .level-up {
-            font-size: 64px;
+            font-size: 48px;
             font-weight: bold;
             color: #A335EE;
-            text-shadow: 0 0 20px rgba(163, 53, 238, 1), 0 0 40px rgba(163, 53, 238, 0.8);
+            text-shadow: 0 0 20px rgba(163, 53, 238, 1);
             opacity: 0;
             position: fixed;
             top: 50%;
@@ -86,16 +95,17 @@
         }
 
         .epic-glow {
-            animation: epicGlow 0.5s infinite alternate;
+            animation: epicGlow 2s infinite alternate;
         }
 
         @keyframes epicGlow {
-            0% { text-shadow: 0 0 20px rgba(163, 53, 238, 1), 0 0 40px rgba(163, 53, 238, 0.8); }
-            100% { text-shadow: 0 0 40px rgba(163, 53, 238, 1), 0 0 80px rgba(163, 53, 238, 0.8), 0 0 120px rgba(163, 53, 238, 0.6); }
+            0% { text-shadow: 0 0 20px rgba(163, 53, 238, 1); }
+            100% { text-shadow: 0 0 40px rgba(163, 53, 238, 1), 0 0 80px rgba(163, 53, 238, 0.8); }
         }
     </style>
 </head>
 <body>
+    <div class="progress-bar"></div>
     <div id="tsparticles"></div>
     <div class="container">
         <div id="typed-output"></div>
@@ -121,7 +131,7 @@
                         
                         // Start animations and text display simultaneously
                         startAnimations();
-                        setTimeout(() => displayText(data.text), 1000); // Delay text display slightly
+                        displayText(data.text);
                     }
                 })
                 .catch(error => {
@@ -138,11 +148,10 @@
             level++;
             showLevelUp();
             tsParticles.load("tsparticles", particlesConfig);
+            startProgressBar();
         }
 
         function displayText(text) {
-            const outputElement = document.getElementById('typed-output');
-            outputElement.style.opacity = '1';
             typedInstance = new Typed('#typed-output', {
                 strings: [text],
                 typeSpeed: 30,
@@ -165,13 +174,24 @@
             }, 1000);
         }
 
+        function startProgressBar() {
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = '0%';
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                } else {
+                    width += 2;
+                    progressBar.style.width = width + '%';
+                }
+            }, 20);
+        }
+
         function showLevelUp() {
             const levelUp = document.getElementById('level-up');
-            levelUp.textContent = `LEVEL UP! 🔥`;
+            levelUp.textContent = `LEVEL ${level}! 🔥`;
             levelUp.classList.add('show', 'epic-glow');
-            setTimeout(() => {
-                levelUp.classList.add('fade-out');
-            }, 2000);
         }
 
         fetchAndDisplayText();
@@ -179,14 +199,14 @@
 
         const particlesConfig = {
             particles: {
-                number: { value: 100 },
+                number: { value: 150 },
                 color: { value: ["#A335EE", "#B969FF", "#FFD700", "#FFA500"] },
                 shape: { type: "star" },
                 opacity: { value: 1, anim: { enable: true, speed: 3, opacity_min: 0, sync: false } },
                 size: { value: 6, random: true, anim: { enable: true, speed: 4, size_min: 0.1, sync: false } },
                 move: {
                     enable: true,
-                    speed: 15,
+                    speed: 10,
                     direction: "outside",
                     random: true,
                     straight: false,
@@ -194,7 +214,7 @@
                     bounce: false,
                 },
                 life: {
-                    duration: { value: 1.5 },
+                    duration: { value: 1 },
                     count: 1
                 }
             },
@@ -208,6 +228,3 @@
             },
             retina_detect: true,
         };
-    </script>
-</body>
-</html>
