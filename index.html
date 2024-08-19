@@ -1,6 +1,3 @@
-Current dopamine animation front end code
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,14 +22,12 @@ Current dopamine animation front end code
             overflow: hidden;
         }
 
-        /* Center the entire page's content */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Text box left-aligned but centered on page */
         #typed-output {
             font-size: 24px;
             max-width: 500px;
@@ -47,7 +42,7 @@ Current dopamine animation front end code
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px; /* Adds space between elements */
+            margin-bottom: 20px;
         }
 
         #tsparticles {
@@ -70,9 +65,8 @@ Current dopamine animation front end code
             box-shadow: 0 2px 10px rgba(255, 154, 158, 0.5);
         }
 
-        /* Style for the level-up element */
-        .level-up {
-            font-size: 48px;
+        .achievement {
+            font-size: 24px;
             font-weight: bold;
             color: #FFD700;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
@@ -81,26 +75,19 @@ Current dopamine animation front end code
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Shorter duration */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
         }
 
-        /* Add fade-out effect */
         .fade-out {
-            animation: fadeOut 1s forwards; /* Shorter fade-out */
+            animation: fadeOut 1s forwards;
         }
 
         @keyframes fadeOut {
             0% { opacity: 1; }
             100% { opacity: 0; }
-        }
-
-        /* Streak counter styling */
-        .streak-counter {
-            font-size: 18px;
-            color: #4CAF50;
-            margin-top: 20px;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
         }
     </style>
 </head>
@@ -110,13 +97,12 @@ Current dopamine animation front end code
     <div class="container">
         <div id="typed-output"></div>
     </div>
-    <div class="level-up" id="level-up">LEVEL UP!</div>
-    <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
+    <div class="achievement" id="achievement">ACHIEVEMENT UNLOCKED! 🔥</div>
 
     <script>
         let typedInstance = null;
         let fetchInProgress = false;
-        let streak = 0;
+        let achievementCount = 0;
 
         function fetchAndDisplayText() {
             if (fetchInProgress) return;
@@ -129,7 +115,7 @@ Current dopamine animation front end code
                         if (typedInstance) {
                             typedInstance.destroy();
                         }
-                        tsParticles.load("tsparticles", startParticlesConfig);
+                        tsParticles.load("tsparticles", particlesConfig);
                         startProgressBar();
 
                         typedInstance = new Typed('#typed-output', {
@@ -137,11 +123,9 @@ Current dopamine animation front end code
                             typeSpeed: 30,
                             showCursor: false,
                             onComplete: () => {
-                                tsParticles.load("tsparticles", completionParticlesConfig);
-                                streak++;
-                                updateStreak();
-                                if (streak % 3 === 0) {
-                                    showLevelUp();
+                                achievementCount++;
+                                if (achievementCount % 3 === 0) {
+                                    showAchievement();
                                 }
                             }
                         });
@@ -150,8 +134,7 @@ Current dopamine animation front end code
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    streak = 0;
-                    updateStreak();
+                    achievementCount = 0;
                 })
                 .finally(() => {
                     fetchInProgress = false;
@@ -172,37 +155,28 @@ Current dopamine animation front end code
             }, 20);
         }
 
-        function updateStreak() {
-            const streakCounter = document.getElementById('streak-counter');
-            streakCounter.textContent = `Achievement unlocked: NEW RECORD🔥`;
-            streakCounter.style.opacity = '1';
+        function showAchievement() {
+            const achievement = document.getElementById('achievement');
+            achievement.style.opacity = '1';
+            achievement.style.transform = 'translate(-50%, -50%) scale(1.2)';
             setTimeout(() => {
-                streakCounter.style.opacity = '0';
-            }, 3000);
-        }
-
-        function showLevelUp() {
-            const levelUp = document.getElementById('level-up');
-            levelUp.style.opacity = '1';
-            levelUp.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            setTimeout(() => {
-                levelUp.classList.add('fade-out'); // Add fade-out class for smooth exit
-            }, 1500); // Shortened delay
+                achievement.classList.add('fade-out');
+            }, 1500);
         }
 
         fetchAndDisplayText();
         setInterval(fetchAndDisplayText, 10000);
 
-        const startParticlesConfig = {
+        const particlesConfig = {
             particles: {
-                number: { value: 100 },
-                color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] }, /* Added purples */
+                number: { value: 150 },
+                color: { value: ["#FFD700", "#FF6B6B", "#9370DB", "#6A5ACD", "#4ECDC4", "#45B7D1", "#FFA07A"] },
                 shape: { type: ["circle", "star"] },
                 opacity: { value: 1, anim: { enable: true, speed: 3, opacity_min: 0, sync: false } },
                 size: { value: 5, random: true, anim: { enable: true, speed: 6, size_min: 0.1, sync: false } },
                 move: {
                     enable: true,
-                    speed: 8,
+                    speed: 10,
                     direction: "outside",
                     random: true,
                     straight: false,
@@ -219,36 +193,7 @@ Current dopamine animation front end code
                 },
             },
             retina_detect: true,
-            duration: 0.5,
-        };
-
-        const completionParticlesConfig = {
-            particles: {
-                number: { value: 200 },
-                color: { value: ["#9370DB", "#6A5ACD", "#FFD700", "#FFA500", "#FF4500", "#9370DB", "#00CED1"] }, /* More purple variety */
-                shape: { type: "star" },
-                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 2 } },
-                size: { value: 6, random: true },
-                move: {
-                    enable: true,
-                    speed: 7,
-                    direction: "none",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false,
-                },
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: false },
-                    onclick: { enable: false },
-                    resize: true
-                },
-            },
-            retina_detect: true,
-            duration: 3,
+            duration: 2,
         };
     </script>
 </body>
