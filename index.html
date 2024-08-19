@@ -91,9 +91,9 @@
         }
 
         @keyframes shoot {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            50% { transform: translateY(30vh) scale(1); opacity: 1; }
-            100% { transform: translateY(0) scale(0.8); opacity: 0; }
+            0% { transform: translateY(50vh) scale(0); opacity: 0; }
+            50% { transform: translateY(-25vh) scale(1); opacity: 1; }
+            100% { transform: translateY(-50vh) scale(0.8); opacity: 0; }
         }
 
         @keyframes spark {
@@ -118,8 +118,9 @@
 </head>
 <body>
     <div class="container">
-        <div id="typed-output"></div>
-        <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
+        <div id="typed-output">
+            <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
+        </div>
         <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
     </div>
     <div id="fireworks-container"></div>
@@ -150,7 +151,6 @@
                             showCursor: false
                         });
 
-                        // Clear fireworks after 4 seconds
                         setTimeout(() => {
                             document.getElementById('fireworks-container').innerHTML = '';
                         }, 4000);
@@ -181,9 +181,14 @@
             container.innerHTML = '';
             const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFD700', '#FFA500'];
             
+            const textBox = document.getElementById('typed-output');
+            const rect = textBox.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
             for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
-                    createFirework(container, colors, 10 + i * 8, 100);
+                    createFirework(container, colors, centerX, centerY);
                 }, i * 200);
             }
         }
@@ -191,20 +196,19 @@
         function createFirework(container, colors, x, y) {
             const firework = document.createElement('div');
             firework.className = 'firework';
-            firework.style.left = `${x}%`;
-            firework.style.bottom = `${y}%`;
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
             firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             container.appendChild(firework);
 
-            // Create more intense sparks
             for (let j = 0; j < 50; j++) {
                 const spark = document.createElement('div');
                 spark.className = 'spark';
                 spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                spark.style.left = `${x}%`;
-                spark.style.bottom = `${y}%`;
+                spark.style.left = `${x}px`;
+                spark.style.top = `${y}px`;
                 const angle = Math.random() * Math.PI * 2;
-                const distance = 50 + Math.random() * 100;
+                const distance = 30 + Math.random() * 50;
                 spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
                 spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
                 container.appendChild(spark);
