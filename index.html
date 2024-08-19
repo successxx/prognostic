@@ -49,32 +49,8 @@
             box-sizing: border-box;
         }
 
-        .streak-counter {
-            font-size: 20px;
-            font-weight: 600;
-            color: #0142AC;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 12px 20px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(1, 66, 172, 0.2);
-            opacity: 0;
-            transition: all 0.5s ease-in-out;
-            z-index: 2;
-            position: absolute;
-            bottom: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .streak-counter.visible {
-            opacity: 1;
-            bottom: -50px;
-        }
-
         .prognostic-button {
-            position: absolute;
-            bottom: -30px;
-            right: 0;
+            align-self: flex-end;
             background-color: #0142AC;
             color: white;
             font-size: 12px;
@@ -83,6 +59,7 @@
             text-decoration: none;
             font-weight: 400;
             z-index: 10;
+            margin-top: -5px;
         }
 
         #fireworks-container {
@@ -133,15 +110,7 @@
             }
             .prognostic-button {
                 font-size: 10px;
-                bottom: -25px;
-            }
-            .streak-counter {
-                font-size: 16px;
-                padding: 10px 15px;
-                bottom: -50px;
-            }
-            .streak-counter.visible {
-                bottom: -40px;
+                margin-top: 5px;
             }
         }
     </style>
@@ -149,7 +118,6 @@
 <body>
     <div class="container">
         <div id="typed-output"></div>
-        <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
         <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
     </div>
     <div id="fireworks-container"></div>
@@ -157,7 +125,6 @@
     <script>
         let typedInstance = null;
         let fetchInProgress = false;
-        let streak = 0;
 
         function fetchAndDisplayText() {
             if (fetchInProgress) return;
@@ -171,8 +138,6 @@
                             typedInstance.destroy();
                         }
                         createFireworks();
-                        streak++;
-                        updateStreak();
 
                         typedInstance = new Typed('#typed-output', {
                             strings: [data.text],
@@ -188,21 +153,10 @@
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    streak = 0;
-                    updateStreak();
                 })
                 .finally(() => {
                     fetchInProgress = false;
                 });
-        }
-
-        function updateStreak() {
-            const streakCounter = document.getElementById('streak-counter');
-            streakCounter.innerHTML = Streak: ${streak} 🔥;
-            streakCounter.classList.add('visible');
-            setTimeout(() => {
-                streakCounter.classList.remove('visible');
-            }, 1500);
         }
 
         function createFireworks() {
@@ -225,8 +179,8 @@
         function createFirework(container, colors, x, y) {
             const firework = document.createElement('div');
             firework.className = 'firework';
-            firework.style.left = ${x + (Math.random() - 0.5) * 300}px;
-            firework.style.top = ${y + (Math.random() - 0.5) * 200}px;
+            firework.style.left = `${x + (Math.random() - 0.5) * 300}px`;
+            firework.style.top = `${y + (Math.random() - 0.5) * 200}px`;
             firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             container.appendChild(firework);
 
@@ -238,8 +192,8 @@
                 spark.style.top = firework.style.top;
                 const angle = Math.random() * Math.PI * 2;
                 const distance = 50 + Math.random() * 100;
-                spark.style.setProperty('--tx', ${Math.cos(angle) * distance}px);
-                spark.style.setProperty('--ty', ${Math.sin(angle) * distance}px);
+                spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
                 container.appendChild(spark);
             }
         }
