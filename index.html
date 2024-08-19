@@ -27,7 +27,7 @@
             z-index: 1;
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
         }
 
         #typed-output {
@@ -43,7 +43,7 @@
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
@@ -59,7 +59,7 @@
             opacity: 0;
             transition: all 0.5s ease-in-out;
             z-index: 2;
-            margin-top: 10px;
+            margin-bottom: 15px;
         }
 
         .streak-counter.visible {
@@ -68,9 +68,7 @@
         }
 
         .prognostic-button {
-            position: absolute;
-            bottom: -50px;
-            right: 0;
+            align-self: flex-end;
             background-color: #0142AC;
             color: white;
             font-size: 12px;
@@ -123,7 +121,6 @@
                 padding: 15px;
             }
             .prognostic-button {
-                bottom: -40px;
                 font-size: 10px;
             }
         }
@@ -132,7 +129,7 @@
 <body>
     <div class="container">
         <div id="typed-output"></div>
-        <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
+        <div class="streak-counter" id="streak-counter">Streak: 0 🔥</div>
         <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
     </div>
     <div id="fireworks-container"></div>
@@ -188,7 +185,44 @@
             }, 1500);
         }
 
-        // ... (createFireworks and createFirework functions remain unchanged)
+        function createFireworks() {
+            const container = document.getElementById('fireworks-container');
+            container.innerHTML = '';
+            const colors = ['#FF00FF', '#A020F0', '#8A2BE2', '#9400D3', '#9370DB', '#7B68EE', '#6A5ACD', '#FFD700', '#FFA500', '#FF4500'];
+            
+            const textBox = document.getElementById('typed-output');
+            const rect = textBox.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createFirework(container, colors, centerX, centerY);
+                }, i * 100);
+            }
+        }
+
+        function createFirework(container, colors, x, y) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = `${x + (Math.random() - 0.5) * 300}px`;
+            firework.style.top = `${y + (Math.random() - 0.5) * 200}px`;
+            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            container.appendChild(firework);
+
+            for (let j = 0; j < 60; j++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.left = firework.style.left;
+                spark.style.top = firework.style.top;
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 100;
+                spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+                container.appendChild(spark);
+            }
+        }
 
         fetchAndDisplayText();
         setInterval(fetchAndDisplayText, 10000);
