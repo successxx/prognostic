@@ -156,12 +156,23 @@
 
     <script>
         let typedInstance = null;
-        let fetchInProgress = false;
-        let streak = 0;
+let fetchInProgress = false;
+let streak = 0;
+let streakShown = false; // Add this variable to track if the streak has been shown
 
-        function fetchAndDisplayText() {
-            if (fetchInProgress) return;
-            fetchInProgress = true;
+function updateStreak() {
+    const streakCounter = document.getElementById('streak-counter');
+
+    if (!streakShown) { // Check if streak counter has already been shown
+        streakCounter.innerHTML = `Streak: ${streak} 🔥`;
+        streakCounter.classList.add('visible');
+        streakShown = true; // Set it to true after the first show
+
+        setTimeout(() => {
+            streakCounter.classList.remove('visible');
+        }, 1500);
+    }
+}
 
             fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
                 .then(response => response.json())
