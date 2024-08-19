@@ -67,29 +67,17 @@
 
         .firework {
             position: absolute;
-            width: 5px;
-            height: 5px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-        }
-
-        @keyframes explode {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(30);
-                opacity: 0;
-            }
+            transform-origin: center bottom;
         }
 
         @keyframes shoot {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(-100px);
-            }
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-80vh) scale(1); }
+            55% { transform: translateY(-80vh) scale(1.2); opacity: 1; }
+            100% { transform: translateY(-80vh) scale(0); opacity: 0; }
         }
 
         .spark {
@@ -97,18 +85,12 @@
             width: 3px;
             height: 3px;
             border-radius: 50%;
-            animation: spark 0.5s linear forwards;
+            opacity: 0;
         }
 
-        @keyframes spark {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--tx), var(--ty)) scale(0);
-                opacity: 0;
-            }
+        @keyframes explode {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
         }
     </style>
 </head>
@@ -175,37 +157,48 @@
                 setTimeout(() => {
                     const firework = document.createElement('div');
                     firework.className = 'firework';
-                    firework.style.left = Math.random() * 100 + '%';
-                    firework.style.top = Math.random() * 100 + '%';
-                    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.left = Math.random() * 80 + 10 + '%';
+                    firework.style.bottom = '0';
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.backgroundColor = color;
                     container.appendChild(firework);
 
                     firework.animate([
-                        { transform: 'scale(0)', opacity: 1 },
-                        { transform: 'scale(30)', opacity: 0 }
+                        { transform: 'translateY(0) scale(1)' },
+                        { transform: 'translateY(-80vh) scale(1)', offset: 0.5 },
+                        { transform: 'translateY(-80vh) scale(1.2)', opacity: 1, offset: 0.55 },
+                        { transform: 'translateY(-80vh) scale(0)', opacity: 0 }
                     ], {
-                        duration: 1000,
+                        duration: 1500,
                         easing: 'ease-out'
                     });
 
-                    for (let j = 0; j < sparkCount; j++) {
-                        const spark = document.createElement('div');
-                        spark.className = 'spark';
-                        spark.style.backgroundColor = firework.style.backgroundColor;
-                        spark.style.left = firework.style.left;
-                        spark.style.top = firework.style.top;
-                        container.appendChild(spark);
-
-                        const angle = Math.random() * Math.PI * 2;
-                        const distance = Math.random() * 100 + 50;
-                        spark.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
-                        spark.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
-                    }
-
                     setTimeout(() => {
-                        firework.remove();
-                        container.querySelectorAll('.spark').forEach(spark => spark.remove());
-                    }, 1000);
+                        for (let j = 0; j < sparkCount; j++) {
+                            const spark = document.createElement('div');
+                            spark.className = 'spark';
+                            spark.style.backgroundColor = color;
+                            spark.style.left = firework.style.left;
+                            spark.style.top = '20%';
+                            container.appendChild(spark);
+
+                            const angle = Math.random() * Math.PI * 2;
+                            const distance = Math.random() * 100 + 50;
+                            spark.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                            spark.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+
+                            spark.animate([
+                                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                                { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`, opacity: 0 }
+                            ], {
+                                duration: 1000,
+                                easing: 'ease-out'
+                            });
+
+                            setTimeout(() => spark.remove(), 1000);
+                        }
+                        setTimeout(() => firework.remove(), 1000);
+                    }, 750);
                 }, i * 300);
             }
         }
