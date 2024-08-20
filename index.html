@@ -263,7 +263,9 @@
         const fetchInterval = 60000; // 60 seconds
         let currentContent = '';
 
-        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://prognosticai-11cf2622005a.herokuapp.com';
+        const API_BASE = window.location.hostname === 'localhost' 
+  ? 'http://localhost:3000' 
+  : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
 function fetchAndDisplayText(retryCount = 0) {
     console.log(`Attempting to fetch text (retry count: ${retryCount})`);
