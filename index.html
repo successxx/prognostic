@@ -177,12 +177,15 @@
   fetchInProgress = true;
 
   fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
-    .then(response => response.json())
-    .then(data => {
-      if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
-        if (typedInstance) {
-          typedInstance.destroy();
-        }
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('typed-output').innerHTML = data.text;  // Directly render HTML
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+  });
+
         createFireworks();
         streak++;
         updateStreak();
