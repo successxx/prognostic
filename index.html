@@ -255,56 +255,58 @@
         const fetchInterval = 60000; // 60 seconds
         let currentContent = '';
 
-        function fetchAndDisplayText() {
-            const currentTime = Date.now();
-            if (fetchInProgress || (currentTime - lastFetchTime < fetchInterval)) return;
-            
-            fetchInProgress = true;
+        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
 
-            fetch('https://prognosticai-11cf2622005a.herokuapp.com/getText')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.text && data.text !== currentContent) {
-                        const typedOutput = document.getElementById('typed-output');
-                        typedOutput.innerHTML = ''; // Clear existing content
+function fetchAndDisplayText() {
+    const currentTime = Date.now();
+    if (fetchInProgress || (currentTime - lastFetchTime < fetchInterval)) return;
+    
+    fetchInProgress = true;
 
-                        if (typedInstance) {
-                            typedInstance.destroy();
-                        }
+    fetch(`${API_BASE}/getText`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.text && data.text !== currentContent) {
+                const typedOutput = document.getElementById('typed-output');
+                typedOutput.innerHTML = ''; // Clear existing content
 
-                        createFireworks();
-                        streak++;
-                        updateStreak();
+                if (typedInstance) {
+                    typedInstance.destroy();
+                }
 
-                        currentContent = data.text;
-                        const enhancedContent = enhanceContent(currentContent);
+                createFireworks();
+                streak++;
+                updateStreak();
 
-                        typedInstance = new Typed(typedOutput, {
-                            strings: [enhancedContent],
-                            typeSpeed: 30,
-                            showCursor: false,
-                            contentType: 'html',
-                            onComplete: function() {
-                                lastFetchTime = Date.now();
-                                animateProgressBar();
-                            }
-                        });
+                currentContent = data.text;
+                const enhancedContent = enhanceContent(currentContent);
 
-                        setTimeout(() => {
-                            document.getElementById('fireworks-container').innerHTML = '';
-                        }, 2000);
+                typedInstance = new Typed(typedOutput, {
+                    strings: [enhancedContent],
+                    typeSpeed: 30,
+                    showCursor: false,
+                    contentType: 'html',
+                    onComplete: function() {
+                        lastFetchTime = Date.now();
+                        animateProgressBar();
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    streak = 0;
-                    updateStreak();
-                })
-                .finally(() => {
-                    fetchInProgress = false;
                 });
-        }
+
+                setTimeout(() => {
+                    document.getElementById('fireworks-container').innerHTML = '';
+                }, 2000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+            streak = 0;
+            updateStreak();
+        })
+        .finally(() => {
+            fetchInProgress = false;
+        });
+}
 
         function enhanceContent(content) {
     content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
