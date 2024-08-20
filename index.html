@@ -163,7 +163,7 @@
     <div id="fireworks-container"></div>
 
     <script>
-       let typedInstance = null;
+  let typedInstance = null;
 let fetchInProgress = false;
 let streak = 0;
 
@@ -174,43 +174,28 @@ function fetchAndDisplayText() {
     fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
         .then(response => response.json())
         .then(data => {
-            if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+            if (data.text) {
+                const typedOutput = document.getElementById('typed-output');
+                typedOutput.innerHTML = ''; // Clear existing content
+
                 if (typedInstance) {
                     typedInstance.destroy();
                 }
+
                 createFireworks();
                 streak++;
                 updateStreak();
 
-                const typedOutput = document.getElementById('typed-output');
-                typedOutput.innerHTML = ''; // Clear existing content
-
-                // Create a temporary element to hold the HTML content
-                const tempElement = document.createElement('div');
-                tempElement.innerHTML = data.text;
-
-                // Function to type out the content
-                function typeContent(element, index = 0) {
-                    if (index < element.childNodes.length) {
-                        const node = element.childNodes[index];
-                        if (node.nodeType === Node.TEXT_NODE) {
-                            typedInstance = new Typed(typedOutput, {
-                                strings: [node.textContent],
-                                typeSpeed: 30,
-                                showCursor: false,
-                                onComplete: () => {
-                                    typeContent(element, index + 1);
-                                }
-                            });
-                        } else {
-                            typedOutput.appendChild(node.cloneNode(true));
-                            typeContent(element, index + 1);
-                        }
+                // Use Typed.js to create typing effect
+                typedInstance = new Typed(typedOutput, {
+                    strings: [data.text],
+                    typeSpeed: 30,
+                    showCursor: false,
+                    onComplete: function() {
+                        // After typing is complete, set the innerHTML to render HTML properly
+                        typedOutput.innerHTML = data.text;
                     }
-                }
-
-                // Start typing the content
-                typeContent(tempElement);
+                });
 
                 setTimeout(() => {
                     document.getElementById('fireworks-container').innerHTML = '';
