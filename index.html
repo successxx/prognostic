@@ -1,3 +1,6 @@
+Current dopamine animation front end code
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -310,14 +313,13 @@
     content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
     content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
     content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
-    
-    // Remove progress bar entirely as per your request
     content += `
-    <div style="text-align: center;">
-        <a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a>
-    </div>`;
-    
-    content += '</div>'; // Close the main result-content div properly
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>
+    `;
+    content += '</div>';
     return content;
 }
 
