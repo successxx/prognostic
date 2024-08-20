@@ -180,7 +180,7 @@
 
         .progress-bar-fill {
             height: 20px;
-            background-color: F0F4F8;
+            background-color: #4CAF50;
             width: 0;
             transition: width 1s ease-in-out;
         }
@@ -307,7 +307,7 @@
         }
 
         function enhanceContent(content) {
-    content = `<div id="typed-output" class="result-container"></div>` + content;
+    content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
     content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
     content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
     content += `
