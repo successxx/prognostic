@@ -241,6 +241,7 @@
 </head>
 <body>
     <div class="container">
+        <div id="loading" style="display: none;">Analyzing...</div>
         <div id="typed-output"></div>
         <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
         <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
@@ -257,15 +258,17 @@
 
         const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
 
-function fetchAndDisplayText() {
+function fetchAndDisplayText(retryCount = 0) {
     const currentTime = Date.now();
     if (fetchInProgress || (currentTime - lastFetchTime < fetchInterval)) return;
     
     fetchInProgress = true;
+    document.getElementById('loading').style.display = 'block';
 
     fetch(`${API_BASE}/getText`)
         .then(response => response.json())
         .then(data => {
+            document.getElementById('loading').style.display = 'none';
             if (data.text && data.text !== currentContent) {
                 const typedOutput = document.getElementById('typed-output');
                 typedOutput.innerHTML = ''; // Clear existing content
@@ -295,11 +298,19 @@ function fetchAndDisplayText() {
                 setTimeout(() => {
                     document.getElementById('fireworks-container').innerHTML = '';
                 }, 2000);
+            } else if (retryCount < 3) {
+                setTimeout(() => fetchAndDisplayText(retryCount + 1), 5000);
             }
         })
         .catch(error => {
+            document.getElementById('loading').style.display = 'none';
             console.error('Error:', error);
-            document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+            document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Retrying...';
+            if (retryCount < 3) {
+                setTimeout(() => fetchAndDisplayText(retryCount + 1), 5000);
+            } else {
+                document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again later.';
+            }
             streak = 0;
             updateStreak();
         })
@@ -334,7 +345,7 @@ function fetchAndDisplayText() {
     }
 }
 
-        fetchAndDisplayText();
+        fetchAndDisplayText(0);
 
         setInterval(() => {
             if (Date.now() - lastFetchTime >= fetchInterval) {
