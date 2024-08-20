@@ -273,6 +273,32 @@
             bottom: -40px;
         }
     }
+        .button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.demo-button {
+    display: inline-block;
+    white-space: nowrap;
+    background-color: #0142AC;
+    color: white;
+    font-size: 18px;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-align: center;
+    max-width: 300px;
+    animation: buttonAppear 0.5s ease-out, pulse 2s infinite;
+}
+
+.demo-button:hover {
+    background-color: #0056d6;
+}
 </style>
 </head>
 <body>
@@ -368,13 +394,35 @@ function fetchAndDisplayText() {
 
 function enhanceContent(content) {
     content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
+    
+    // Replace double line breaks with paragraph tags
     content = content.replace(/\n\n/g, '</p><p>');
+    
+    // Handle headers
     content = content.replace(/(Key Insight #\d+:.*?)\n/g, '</p><h2>$1</h2><p>');
-    content = content.replace(/(Imagine for a second.*?)\n/g, '</p><div class="highlight-box"><p>$1</p></div><p>');
     content = content.replace(/(Here's how.*?:)\n/g, '</p><h3>$1</h3><p>');
+    
+    // Handle highlight boxes
+    content = content.replace(/(Imagine for a second.*?)\n/g, '</p><div class="highlight-box"><p>$1</p></div><p>');
+    
+    // Handle unordered lists
+    content = content.replace(/\n- /g, '</p><ul><li>');
+    content = content.replace(/\n  - /g, '</li><li>');
+    content = content.replace(/(<li>.*?)\n/g, '$1</li></ul><p>');
+    
+    // Handle ordered lists
+    content = content.replace(/\n\d+\. /g, '</p><ol><li>');
+    content = content.replace(/(<li>.*?)\n/g, '$1</li></ol><p>');
+    
+    // Wrap content in paragraphs
     content = '<p>' + content + '</p>';
+    
+    // Remove empty paragraphs
     content = content.replace(/<p>\s*<\/p>/g, '');
-    content += `<a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a>`;
+    
+    // Add the demo button
+    content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
+    
     content += '</div>';
     return content;
 }
