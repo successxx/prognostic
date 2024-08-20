@@ -167,6 +167,12 @@
         let fetchInProgress = false;
         let streak = 0;
 
+        function decodeHTMLEntities(text) {
+            const textArea = document.createElement('textarea');
+            textArea.innerHTML = text;
+            return textArea.value;
+        }
+
         function fetchAndDisplayText() {
             if (fetchInProgress) return;
             fetchInProgress = true;
@@ -184,12 +190,12 @@
 
                         // Typed.js typing effect for raw text
                         typedInstance = new Typed('#typed-output', {
-                            strings: [data.text],
-                            typeSpeed: 30, // Adjust typing speed
+                            strings: [data.text],  // Raw text for typing effect
+                            typeSpeed: 30,         // Adjust typing speed as needed
                             showCursor: false,
                             onComplete: function() {
-                                // Replace typed text with proper HTML once typing finishes
-                                document.getElementById('typed-output').innerHTML = data.text;
+                                // Decode HTML entities and replace the content with actual HTML
+                                document.getElementById('typed-output').innerHTML = decodeHTMLEntities(data.text);
                             }
                         });
 
@@ -222,12 +228,12 @@
             const container = document.getElementById('fireworks-container');
             container.innerHTML = '';
             const colors = ['#FF00FF', '#A020F0', '#8A2BE2', '#9400D3', '#9370DB', '#7B68EE', '#6A5ACD', '#FFD700', '#FFA500', '#FF4500'];
-            
+
             const textBox = document.getElementById('typed-output');
             const rect = textBox.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            
+
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
                     createFirework(container, colors, centerX, centerY);
