@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -30,7 +31,7 @@
             margin: 0 auto;
         }
 
-        #output {
+        #typed-output {
             font-size: 24px;
             width: 100%;
             text-align: left;
@@ -46,13 +47,13 @@
             white-space: pre-wrap;
         }
 
-        #output h1, #output h2, #output h3 {
+        #typed-output h1, #typed-output h2, #typed-output h3 {
             font-weight: 700;
             margin-top: 15px;
             margin-bottom: 10px;
         }
 
-        #output strong {
+        #typed-output strong {
             font-weight: bold;
         }
 
@@ -91,16 +92,78 @@
             font-weight: 400;
             z-index: 10;
         }
+
+        #fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: shoot 1.5s ease-out forwards;
+        }
+
+        .spark {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: spark 1.2s ease-out forwards;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateY(50vh) scale(0); opacity: 0; }
+            50% { transform: translateY(-25vh) scale(1); opacity: 1; }
+            100% { transform: translateY(-50vh) scale(0.8); opacity: 0; }
+        }
+
+        @keyframes spark {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                max-width: none;
+            }
+            #typed-output {
+                font-size: 18px;
+                padding: 20px;
+                min-height: 100px;
+            }
+            .prognostic-button {
+                font-size: 10px;
+                bottom: -25px;
+            }
+            .streak-counter {
+                font-size: 16px;
+                padding: 10px 15px;
+                bottom: -50px;
+            }
+            .streak-counter.visible {
+                bottom: -40px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="output"></div>
+        <div id="typed-output"></div>
         <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
         <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
     </div>
+    <div id="fireworks-container"></div>
 
     <script>
+        let typedInstance = null;
         let fetchInProgress = false;
         let streak = 0;
 
@@ -111,15 +174,33 @@
             fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.text) {
-                        document.getElementById('output').innerHTML = data.text;
+                    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+                        if (typedInstance) {
+                            typedInstance.destroy();
+                        }
+                        createFireworks();
                         streak++;
                         updateStreak();
+
+                        // Typed.js typing effect for raw text
+                        typedInstance = new Typed('#typed-output', {
+                            strings: [data.text],  // Raw text for typing effect
+                            typeSpeed: 30,         // Adjust typing speed as needed
+                            showCursor: false,
+                            onStringTyped: function(index) {
+                                // After each string chunk, render it as HTML
+                                document.getElementById('typed-output').innerHTML = data.text;
+                            }
+                        });
+
+                        setTimeout(() => {
+                            document.getElementById('fireworks-container').innerHTML = '';
+                        }, 4000);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    document.getElementById('output').innerHTML = 'Error fetching AI response. Please try again.';
+                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
                     streak = 0;
                     updateStreak();
                 })
@@ -130,11 +211,50 @@
 
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
-            streakCounter.innerHTML = `Streak: ${streak} 🔥`;
+            streakCounter.innerHTML = Streak: ${streak} 🔥;
             streakCounter.classList.add('visible');
             setTimeout(() => {
                 streakCounter.classList.remove('visible');
             }, 1500);
+        }
+
+        function createFireworks() {
+            const container = document.getElementById('fireworks-container');
+            container.innerHTML = '';
+            const colors = ['#FF00FF', '#A020F0', '#8A2BE2', '#9400D3', '#9370DB', '#7B68EE', '#6A5ACD', '#FFD700', '#FFA500', '#FF4500'];
+
+            const textBox = document.getElementById('typed-output');
+            const rect = textBox.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createFirework(container, colors, centerX, centerY);
+                }, i * 100);
+            }
+        }
+
+        function createFirework(container, colors, x, y) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = ${x + (Math.random() - 0.5) * 300}px;
+            firework.style.top = ${y + (Math.random() - 0.5) * 200}px;
+            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            container.appendChild(firework);
+
+            for (let j = 0; j < 60; j++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.left = firework.style.left;
+                spark.style.top = firework.style.top;
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 100;
+                spark.style.setProperty('--tx', ${Math.cos(angle) * distance}px);
+                spark.style.setProperty('--ty', ${Math.sin(angle) * distance}px);
+                container.appendChild(spark);
+            }
         }
 
         fetchAndDisplayText();
