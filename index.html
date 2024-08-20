@@ -159,45 +159,43 @@
         let fetchInProgress = false;
         let streak = 0;
 
-        function fetchAndDisplayText() {
-            if (fetchInProgress) return;
-            fetchInProgress = true;
+      function fetchAndDisplayText() {
+  if (fetchInProgress) return;
+  fetchInProgress = true;
 
-            fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
-  .then(response => response.json())
-  .then(data => {
-    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
-      if (typedInstance) {
-        typedInstance.destroy();
-      }
-      createFireworks();
-      streak++;
-      updateStreak();
-
-      // Replace newline characters with <br> tags for HTML rendering
-      const formattedText = data.text.replace(/\n/g, '<br>');
-
-      typedInstance = new Typed('#typed-output', {
-        strings: [formattedText],
-        typeSpeed: 60,
-        showCursor: false
-      });
-
-                        setTimeout(() => {
-                            document.getElementById('fireworks-container').innerHTML = '';
-                        }, 4000);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    streak = 0;
-                    updateStreak();
-                })
-                .finally(() => {
-                    fetchInProgress = false;
-                });
+  fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
+    .then(response => response.json())
+    .then(data => {
+      if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+        if (typedInstance) {
+          typedInstance.destroy();
         }
+        createFireworks();
+        streak++;
+        updateStreak();
+
+        typedInstance = new Typed('#typed-output', {
+          strings: [data.text],
+          typeSpeed: 1,  // Increased typing speed (lower number = faster)
+          showCursor: false,
+          html: true  // Enable HTML parsing
+        });
+
+        setTimeout(() => {
+          document.getElementById('fireworks-container').innerHTML = '';
+        }, 4000);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+      streak = 0;
+      updateStreak();
+    })
+    .finally(() => {
+      fetchInProgress = false;
+    });
+}
 
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
