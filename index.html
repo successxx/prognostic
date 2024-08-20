@@ -19,52 +19,7 @@
         padding: 20px;
         box-sizing: border-box;
     }
-
-        .insight-section {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.insight-section h2 {
-    color: #0142AC;
-    border-bottom: 2px solid #0142AC;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.result-content {
-    background-color: white;
-    border-radius: 0 0 15px 15px;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
-
-#typed-output p, #typed-output ul, #typed-output ol {
-    text-align: left;
-    width: 100%;
-}
-
-#typed-output ul, #typed-output ol {
-    padding-left: 20px;
-}
-
-#typed-output h1, #typed-output h2, #typed-output h3 {
-    text-align: center;
-}
-
-.highlight-box {
-    background-color: #e9ecef;
-    border-left: 5px solid #0142AC;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 0 10px 10px 0;
-}
-        
+    
     .container {
     width: 100%;
     max-width: 800px;
@@ -367,23 +322,7 @@ function fetchAndDisplayText() {
     const typedOutput = document.getElementById('typed-output');
     
     typedOutput.style.opacity = '0';
-    typedInstance = new Typed(typedOutput, {
-    strings: [enhancedContent],
-    typeSpeed: 1,
-    showCursor: false,
-    contentType: 'html',
-    onStringTyped: function(arrayPos, self) {
-        // Force a reflow to ensure proper rendering
-        typedOutput.style.display = 'none';
-        typedOutput.offsetHeight; // Trigger a reflow
-        typedOutput.style.display = 'block';
-    },
-    onComplete: function() {
-        console.log("Typing complete");
-        showDemoButton();
-    }
-});
-    <styl
+    
     const loadingMessages = [
         "Psychoanalyzing your inner workings...",
         "Uncovering hidden patterns in your responses...",
@@ -454,38 +393,38 @@ function fetchAndDisplayText() {
 }
 
 function enhanceContent(content) {
-    let enhancedContent = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">`;
+    content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
     
-    // Split content into paragraphs
-    const paragraphs = content.split('\n\n');
+    // Replace double line breaks with paragraph tags
+    content = content.replace(/\n\n/g, '</p><p>');
     
-    paragraphs.forEach((paragraph, index) => {
-        if (paragraph.startsWith("Key Insight #")) {
-            enhancedContent += `<div class="insight-section"><h2>${paragraph}</h2>`;
-        } else if (paragraph.startsWith("Here's how")) {
-            enhancedContent += `<h3>${paragraph}</h3>`;
-        } else if (paragraph.startsWith("Imagine for a second")) {
-            enhancedContent += `<div class="highlight-box"><p>${paragraph}</p></div>`;
-        } else if (paragraph.trim().startsWith("-")) {
-            const listItems = paragraph.split('\n').map(item => `<li>${item.trim().substring(1).trim()}</li>`).join('');
-            enhancedContent += `<ul>${listItems}</ul>`;
-        } else if (paragraph.trim().match(/^\d+\./)) {
-            const listItems = paragraph.split('\n').map(item => `<li>${item.trim().substring(item.indexOf('.') + 1).trim()}</li>`).join('');
-            enhancedContent += `<ol>${listItems}</ol>`;
-        } else {
-            enhancedContent += `<p>${paragraph}</p>`;
-        }
-        
-        if (paragraph.startsWith("Key Insight #") && index < paragraphs.length - 1 && !paragraphs[index + 1].startsWith("Key Insight #")) {
-            enhancedContent += `</div>`;
-        }
-    });
+    // Handle headers
+    content = content.replace(/(Key Insight #\d+:.*?)\n/g, '</p><h2>$1</h2><p>');
+    content = content.replace(/(Here's how.*?:)\n/g, '</p><h3>$1</h3><p>');
+    
+    // Handle highlight boxes
+    content = content.replace(/(Imagine for a second.*?)\n/g, '</p><div class="highlight-box"><p>$1</p></div><p>');
+    
+    // Handle unordered lists
+    content = content.replace(/\n- /g, '</p><ul><li>');
+    content = content.replace(/\n  - /g, '</li><li>');
+    content = content.replace(/(<li>.*?)\n/g, '$1</li></ul><p>');
+    
+    // Handle ordered lists
+    content = content.replace(/\n\d+\. /g, '</p><ol><li>');
+    content = content.replace(/(<li>.*?)\n/g, '$1</li></ol><p>');
+    
+    // Wrap content in paragraphs
+    content = '<p>' + content + '</p>';
+    
+    // Remove empty paragraphs
+    content = content.replace(/<p>\s*<\/p>/g, '');
     
     // Add the demo button
-    enhancedContent += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
+    content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
     
-    enhancedContent += '</div>';
-    return enhancedContent;
+    content += '</div>';
+    return content;
 }
 
 function updateStreak() {
