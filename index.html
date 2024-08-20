@@ -352,6 +352,11 @@ function fetchAndDisplayText(retryCount = 0) {
             })
             .catch(error => {
                 console.error('Error:', error);
+                console.error('Error name:', error.name);
+                console.error('Error message:', error.message);
+                if (error instanceof TypeError) {
+                    console.error('This might be a CORS or network error');
+                }
                 if (retryCount < 3) {
                     console.log(`Retrying fetch (attempt ${retryCount + 1})`);
                     setTimeout(() => fetchAndDisplayText(retryCount + 1), 5000);
