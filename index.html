@@ -221,7 +221,7 @@
     background-color: #0142AC;
     color: white;
     font-size: 18px;
-    padding: 15px 30px;
+    padding: 30px 30px;
     border-radius: 8px;
     text-decoration: none;
     font-weight: 700;
@@ -336,7 +336,7 @@ function fetchAndDisplayText() {
     console.log(`Displaying loading message: ${randomMessage}`);
     typedOutput.innerHTML = randomMessage;
     
-    typedOutput.style.opacity = '1';
+    typedOutput.style.opacity = '0';
     
     console.log(`Fetching from ${API_BASE}/getText`);
     fetch(`${API_BASE}/getText?t=${Date.now()}`)
