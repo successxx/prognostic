@@ -136,20 +136,19 @@
         }
 
         .result-header {
-            background-color: #0142AC;
-            color: white;
-            padding: 20px;
-            border-radius: 15px 15px 0 0;
-            margin-bottom: 0;
-            text-align: center;
-        }
+    background-color: #0142AC;
+    color: white;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    margin-bottom: 0;
+    text-align: center;
+}
 
-        .result-content {
-            background-color: white;
-            border-radius: 0 0 15px 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
+.result-content {
+    background-color: white;
+    border-radius: 0 0 15px 15px;
+    padding: 25px;
+}
 
         .highlight-box {
             background-color: #F0F4F8;
@@ -173,7 +172,7 @@
 
         .progress-bar {
             width: 100%;
-            background-color: #e0e0e0;
+            background-color: #F0F4F8;
             border-radius: 10px;
             margin: 20px 0;
             overflow: hidden;
@@ -186,6 +185,32 @@
             transition: width 1s ease-in-out;
         }
 
+        .demo-button {
+    display: none;
+    background-color: #0142AC;
+    color: white;
+    font-size: 18px;
+    padding: 15px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(1, 66, 172, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(1, 66, 172, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(1, 66, 172, 0);
+    }
+}
+        
         @media (max-width: 600px) {
             .container {
                 width: 90%;
@@ -282,24 +307,30 @@
         }
 
         function enhanceContent(content) {
-            content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
-            content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
-            content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
-            content += `
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" id="progressBar"></div>
-                </div>
-            `;
-            content += '</div>';
-            return content;
-        }
+    content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
+    content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
+    content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
+    content += `
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>
+    `;
+    content += '</div>';
+    return content;
+}
 
         function animateProgressBar() {
-            const progressBar = document.getElementById('progressBar');
-            if (progressBar) {
-                progressBar.style.width = '100%';
-            }
-        }
+    const progressBar = document.getElementById('progressBar');
+    const demoButton = document.getElementById('demoButton');
+    if (progressBar) {
+        progressBar.style.width = '100%';
+        setTimeout(() => {
+            progressBar.style.display = 'none';
+            demoButton.style.display = 'inline-block';
+        }, 1000);
+    }
+}
 
         fetchAndDisplayText();
 
