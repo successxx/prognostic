@@ -154,6 +154,12 @@
     border-radius: 0 0 15px 15px;
     padding: 25px;
 }
+ 
+        .result-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
         .highlight-box {
             background-color: #F0F4F8;
@@ -215,7 +221,6 @@
         }
 
         .demo-button {
-    .demo-button {
     display: inline-block;
     width: auto;
     white-space: nowrap;
@@ -226,7 +231,7 @@
     border-radius: 8px;
     text-decoration: none;
     font-weight: 700;
-    margin: 20px auto 0;
+    margin: 20px auto;
     transition: all 0.3s ease;
     text-align: center;
     max-width: 300px;
@@ -237,16 +242,15 @@
     background-color: #0056d6;
 }
 
+@keyframes buttonAppear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(1, 66, 172, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(1, 66, 172, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(1, 66, 172, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(1, 66, 172, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(1, 66, 172, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(1, 66, 172, 0); }
 }
         
         @media (max-width: 600px) {
@@ -390,7 +394,42 @@ function updateStreak() {
 }
 
 function createFireworks() {
-    // ... (keep your existing createFireworks function here)
+    const container = document.getElementById('fireworks-container');
+    container.innerHTML = '';
+    const colors = ['#FF00FF', '#A020F0', '#8A2BE2', '#9400D3', '#9370DB', '#7B68EE', '#6A5ACD', '#FFD700', '#FFA500', '#FF4500'];
+
+    const textBox = document.getElementById('typed-output');
+    const rect = textBox.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+            createFirework(container, colors, centerX, centerY);
+        }, i * 50);
+    }
+}
+
+function createFirework(container, colors, x, y) {
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    firework.style.left = `${x + (Math.random() - 0.5) * 300}px`;
+    firework.style.top = `${y + (Math.random() - 0.5) * 200}px`;
+    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    container.appendChild(firework);
+
+    for (let j = 0; j < 30; j++) {
+        const spark = document.createElement('div');
+        spark.className = 'spark';
+        spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        spark.style.left = firework.style.left;
+        spark.style.top = firework.style.top;
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 50 + Math.random() * 100;
+        spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+        spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+        container.appendChild(spark);
+    }
 }
 
 function showDemoButton() {
