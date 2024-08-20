@@ -261,7 +261,7 @@
             
             fetchInProgress = true;
 
-            fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
+            fetch('https://prognosticai-11cf2622005a.herokuapp.com/getText')
                 .then(response => response.json())
                 .then(data => {
                     if (data.text && data.text !== currentContent) {
