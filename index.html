@@ -1,3 +1,6 @@
+Current dopamine animation front end code
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -170,41 +173,33 @@
             font-size: 20px;
         }
 
-       <div class="progress-bar">
-    <div class="progress-bar-fill" id="progressBar"></div>
-    <a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>
-</div>
-
         .progress-bar {
-    width: 100%;
-    background-color: #E0E0E0;
-    border-radius: 10px;
-    margin: 20px 0;
-    position: relative; /* Ensure everything stays inside */
-    display: flex; /* Use Flexbox to align content */
-    justify-content: center; /* Center the button horizontally */
-    align-items: center; /* Center the button vertically */
-    overflow: hidden;
-}
+            width: 100%;
+            background-color: #F0F4F8;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
 
-.progress-bar-fill {
-    height: 20px;
-    background-color: #F0F4F8;
-    width: 0;
-    transition: width 1s ease-in-out;
-    border-radius: 10px;
-}
+        .progress-bar-fill {
+            height: 20px;
+            background-color: #F0F4F8;
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
 
-.demo-button {
-    display: none; /* Hidden until progress is complete */
+        .demo-button {
+    display: none;
     background-color: #0142AC;
     color: white;
     font-size: 18px;
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 15px 30px;
+    border-radius: 30px;
     text-decoration: none;
     font-weight: 700;
     margin-top: 20px;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
@@ -318,13 +313,14 @@
     content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
     content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
     content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
+    
+    // Remove progress bar entirely as per your request
     content += `
-        <div class="progress-bar">
-            <div class="progress-bar-fill" id="progressBar"></div>
-        </div>
-        <a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>
-    `;
-    content += '</div>';
+    <div style="text-align: center;">
+        <a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a>
+    </div>`;
+    
+    content += '</div>'; // Close the main result-content div properly
     return content;
 }
 
@@ -347,39 +343,7 @@
                 fetchAndDisplayText();
             }
         }, 10000);
-
-        function animateProgressBar() {
-    const progressBar = document.getElementById('progressBar');
-    const demoButton = document.getElementById('demoButton');
-    if (progressBar) {
-        progressBar.style.width = '100%';
-        setTimeout(() => {
-            progressBar.style.display = 'none';
-            demoButton.style.display = 'inline-block';
-        }, 1000); // Adjust timing as needed
-    }
-}
-
-function observeProgressBar() {
-    const progressBar = document.querySelector('.progress-bar');
-
-    // Using IntersectionObserver to trigger the animation when the section becomes visible
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateProgressBar();
-                observer.unobserve(progressBar); // Stop observing once it's triggered
-            }
-        });
-    });
-
-    observer.observe(progressBar);
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    observeProgressBar();
-});
-
+        
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
             streakCounter.innerHTML = `Streak: ${streak} 🔥`;
