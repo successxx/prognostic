@@ -19,32 +19,6 @@
             padding: 20px;
             box-sizing: border-box;
         }
-
-        .progress-container {
-    margin: 30px 0;
-    text-align: center;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 10px;
-    background-color: #e9ecef;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    width: 0;
-    height: 100%;
-    background-color: #0142AC;
-    transition: width 1s ease-in-out;
-}
-
-.progress-text {
-    margin-top: 10px;
-    font-weight: bold;
-    color: #0142AC;
-}
         
         .container {
             display: flex;
@@ -190,18 +164,6 @@
         }
 
         .action-item {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-        }
-
-        .action-item:before {
-            content: '✅';
-            margin-right: 10px;
-            font-size: 20px;
-        }
-
-        .action-item {
     display: flex;
     align-items: flex-start;
     margin: 20px 0;
@@ -209,18 +171,6 @@
     background-color: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.action-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.action-number {
-    font-weight: bold;
-    margin-right: 10px;
-    color: #0142AC;
 }
 
 .action-item:before {
@@ -236,8 +186,6 @@
     padding: 20px;
     margin: 30px 0;
     border-radius: 0 15px 15px 0;
-    position: relative;
-    overflow: hidden;
 }
 
 .highlight-box:after {
@@ -335,12 +283,6 @@
     <div class="container">
     <div id="loading" style="display: none;">Analyzing...</div>
     <div id="typed-output"></div>
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
-        </div>
-        <p class="progress-text">0% Complete</p>
-    </div>
     <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
     <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
 </div>
@@ -402,17 +344,15 @@ function fetchAndDisplayText() {
                 const enhancedContent = enhanceContent(data.text);
                 console.log("Creating new Typed instance");
                 typedInstance = new Typed(typedOutput, {
-                    strings: [enhancedContent],
-                    typeSpeed: 5,
-                    showCursor: false,
-                    contentType: 'html',
-                    onComplete: function() {
-                        console.log("Typing complete");
-                        showDemoButton();
-                        addScrollAnimation();
-                        updateProgressBar();
-                    }
-                });
+    strings: [enhancedContent],
+    typeSpeed: 5,
+    showCursor: false,
+    contentType: 'html',
+    onComplete: function() {
+        console.log("Typing complete");
+        showDemoButton();
+    }
+});
                 typedOutput.style.opacity = '1';
             }, 300);
         } else {
@@ -474,6 +414,7 @@ function addScrollAnimation() {
         observer.observe(section);
     });
 }
+        
 
 function updateProgressBar() {
     const progressFill = document.querySelector('.progress-fill');
