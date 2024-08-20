@@ -5,8 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
     <style>
-        /* ... (keep all existing styles) ... */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F0F4F8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #typed-output {
+            font-size: 24px;
+            width: 100%;
+            text-align: left;
+            font-weight: 300;
+            min-height: 120px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            white-space: pre-wrap;
+        }
 
         #typed-output h1, #typed-output h2, #typed-output h3 {
             font-weight: 700;
@@ -18,20 +57,101 @@
             font-weight: bold;
         }
 
-        #typed-output em {
-            font-style: italic;
+        .streak-counter {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0142AC;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(1, 66, 172, 0.2);
+            opacity: 0;
+            transition: all 0.5s ease-in-out;
+            z-index: 2;
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        #typed-output ul, #typed-output ol {
-            margin-left: 20px;
-            margin-bottom: 10px;
+        .streak-counter.visible {
+            opacity: 1;
+            bottom: -50px;
         }
 
-        #typed-output li {
-            margin-bottom: 5px;
+        .prognostic-button {
+            position: absolute;
+            bottom: -30px;
+            right: 0;
+            background-color: #0142AC;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 400;
+            z-index: 10;
         }
 
-        /* ... (keep all other existing styles) ... */
+        #fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: shoot 1.5s ease-out forwards;
+        }
+
+        .spark {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: spark 1.2s ease-out forwards;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateY(50vh) scale(0); opacity: 0; }
+            50% { transform: translateY(-25vh) scale(1); opacity: 1; }
+            100% { transform: translateY(-50vh) scale(0.8); opacity: 0; }
+        }
+
+        @keyframes spark {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                max-width: none;
+            }
+            #typed-output {
+                font-size: 18px;
+                padding: 20px;
+                min-height: 100px;
+            }
+            .prognostic-button {
+                font-size: 10px;
+                bottom: -25px;
+            }
+            .streak-counter {
+                font-size: 16px;
+                padding: 10px 15px;
+                bottom: -50px;
+            }
+            .streak-counter.visible {
+                bottom: -40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -43,46 +163,70 @@
     <div id="fireworks-container"></div>
 
     <script>
-        let fetchInProgress = false;
-        let streak = 0;
+       let typedInstance = null;
+let fetchInProgress = false;
+let streak = 0;
 
-        function fetchAndDisplayText() {
-            if (fetchInProgress) return;
-            fetchInProgress = true;
+function fetchAndDisplayText() {
+    if (fetchInProgress) return;
+    fetchInProgress = true;
 
-            fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.text) {
-                        const typedOutput = document.getElementById('typed-output');
-                        if (typedOutput.innerHTML !== data.text) {
-                            createFireworks();
-                            streak++;
-                            updateStreak();
+    fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
+        .then(response => response.json())
+        .then(data => {
+            if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+                if (typedInstance) {
+                    typedInstance.destroy();
+                }
+                createFireworks();
+                streak++;
+                updateStreak();
 
-                            // Animate the text appearance
-                            typedOutput.style.opacity = '0';
-                            setTimeout(() => {
-                                typedOutput.innerHTML = data.text;
-                                typedOutput.style.opacity = '1';
-                            }, 300);
+                const typedOutput = document.getElementById('typed-output');
+                typedOutput.innerHTML = ''; // Clear existing content
 
-                            setTimeout(() => {
-                                document.getElementById('fireworks-container').innerHTML = '';
-                            }, 4000);
+                // Create a temporary element to hold the HTML content
+                const tempElement = document.createElement('div');
+                tempElement.innerHTML = data.text;
+
+                // Function to type out the content
+                function typeContent(element, index = 0) {
+                    if (index < element.childNodes.length) {
+                        const node = element.childNodes[index];
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            typedInstance = new Typed(typedOutput, {
+                                strings: [node.textContent],
+                                typeSpeed: 30,
+                                showCursor: false,
+                                onComplete: () => {
+                                    typeContent(element, index + 1);
+                                }
+                            });
+                        } else {
+                            typedOutput.appendChild(node.cloneNode(true));
+                            typeContent(element, index + 1);
                         }
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    streak = 0;
-                    updateStreak();
-                })
-                .finally(() => {
-                    fetchInProgress = false;
-                });
-        }
+                }
+
+                // Start typing the content
+                typeContent(tempElement);
+
+                setTimeout(() => {
+                    document.getElementById('fireworks-container').innerHTML = '';
+                }, 4000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+            streak = 0;
+            updateStreak();
+        })
+        .finally(() => {
+            fetchInProgress = false;
+        });
+}
 
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
@@ -94,7 +238,42 @@
         }
 
         function createFireworks() {
-            // ... (keep existing createFireworks function) ...
+            const container = document.getElementById('fireworks-container');
+            container.innerHTML = '';
+            const colors = ['#FF00FF', '#A020F0', '#8A2BE2', '#9400D3', '#9370DB', '#7B68EE', '#6A5ACD', '#FFD700', '#FFA500', '#FF4500'];
+
+            const textBox = document.getElementById('typed-output');
+            const rect = textBox.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createFirework(container, colors, centerX, centerY);
+                }, i * 100);
+            }
+        }
+
+        function createFirework(container, colors, x, y) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = `${x + (Math.random() - 0.5) * 300}px`;
+            firework.style.top = `${y + (Math.random() - 0.5) * 200}px`;
+            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            container.appendChild(firework);
+
+            for (let j = 0; j < 60; j++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.left = firework.style.left;
+                spark.style.top = firework.style.top;
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 100;
+                spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+                container.appendChild(spark);
+            }
         }
 
         fetchAndDisplayText();
