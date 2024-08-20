@@ -21,14 +21,12 @@
     }
     
     .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 1;
-        position: relative;
-        width: 100%;
-        max-width: 1000px;
-        margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
     }
 
     #typed-output {
@@ -254,10 +252,14 @@
             font-size: 18px;
             padding: 20px;
             min-height: 100px;
+            text-align: left;
         }
         #typed-output h1 { font-size: 28px; }
         #typed-output h2 { font-size: 24px; }
         #typed-output h3 { font-size: 22px; }
+        {
+    text-align: center;
+}
         .prognostic-button {
             font-size: 10px;
             bottom: -25px;
@@ -365,11 +367,14 @@ function fetchAndDisplayText() {
 }
 
 function enhanceContent(content) {
-    content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
-    content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item"><span class="action-number">$1</span></div>');
-    content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
-    
-    content += `<a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>`;
+    content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
+    content = content.replace(/\n\n/g, '</p><p>');
+    content = content.replace(/(Key Insight #\d+:.*?)\n/g, '</p><h2>$1</h2><p>');
+    content = content.replace(/(Imagine for a second.*?)\n/g, '</p><div class="highlight-box"><p>$1</p></div><p>');
+    content = content.replace(/(Here's how.*?:)\n/g, '</p><h3>$1</h3><p>');
+    content = '<p>' + content + '</p>';
+    content = content.replace(/<p>\s*<\/p>/g, '');
+    content += `<a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a>`;
     content += '</div>';
     return content;
 }
