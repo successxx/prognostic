@@ -167,12 +167,6 @@
         let fetchInProgress = false;
         let streak = 0;
 
-        function decodeHTMLEntities(text) {
-            const textArea = document.createElement('textarea');
-            textArea.innerHTML = text;
-            return textArea.value;
-        }
-
         function fetchAndDisplayText() {
             if (fetchInProgress) return;
             fetchInProgress = true;
@@ -193,9 +187,9 @@
                             strings: [data.text],  // Raw text for typing effect
                             typeSpeed: 30,         // Adjust typing speed as needed
                             showCursor: false,
-                            onComplete: function() {
-                                // Decode HTML entities and replace the content with actual HTML
-                                document.getElementById('typed-output').innerHTML = decodeHTMLEntities(data.text);
+                            onStringTyped: function(index) {
+                                // After each string chunk, render it as HTML
+                                document.getElementById('typed-output').innerHTML = data.text;
                             }
                         });
 
