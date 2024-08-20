@@ -170,20 +170,10 @@
             font-size: 20px;
         }
 
-        .progress-bar {
-            width: 100%;
-            background-color: #F0F4F8;
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 20px;
-            background-color: #F0F4F8;
-            width: 0;
-            transition: width 1s ease-in-out;
-        }
+       <div class="progress-bar">
+    <div class="progress-bar-fill" id="progressBar"></div>
+    <a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>
+</div>
 
         .demo-button {
     display: none;
@@ -191,7 +181,7 @@
     color: white;
     font-size: 18px;
     padding: 15px 30px;
-    border-radius: 30px;
+    border-radius: 10px; /* Less rounded */
     text-decoration: none;
     font-weight: 700;
     margin-top: 20px;
@@ -339,7 +329,39 @@
                 fetchAndDisplayText();
             }
         }, 10000);
-        
+
+        function animateProgressBar() {
+    const progressBar = document.getElementById('progressBar');
+    const demoButton = document.getElementById('demoButton');
+    if (progressBar) {
+        progressBar.style.width = '100%';
+        setTimeout(() => {
+            progressBar.style.display = 'none';
+            demoButton.style.display = 'inline-block';
+        }, 1000); // Adjust timing as needed
+    }
+}
+
+function observeProgressBar() {
+    const progressBar = document.querySelector('.progress-bar');
+
+    // Using IntersectionObserver to trigger the animation when the section becomes visible
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateProgressBar();
+                observer.unobserve(progressBar); // Stop observing once it's triggered
+            }
+        });
+    });
+
+    observer.observe(progressBar);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    observeProgressBar();
+});
+
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
             streakCounter.innerHTML = `Streak: ${streak} 🔥`;
