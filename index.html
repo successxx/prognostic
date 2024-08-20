@@ -255,294 +255,19 @@
     </div>
     <div id="fireworks-container"></div>
 
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrognosticAI Enabled</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #F0F4F8;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 1;
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        #typed-output {
-            font-size: 24px;
-            width: 100%;
-            text-align: left;
-            font-weight: 300;
-            min-height: 120px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-            white-space: pre-wrap;
-            line-height: 1.6;
-        }
-
-        #typed-output h1, #typed-output h2, #typed-output h3 {
-            font-weight: 700;
-            margin-top: 15px;
-            margin-bottom: 10px;
-        }
-
-        #typed-output h1 { font-size: 36px; }
-        #typed-output h2 { font-size: 30px; }
-        #typed-output h3 { font-size: 26px; }
-
-        #typed-output strong {
-            font-weight: bold;
-        }
-
-        .streak-counter {
-            font-size: 20px;
-            font-weight: 600;
-            color: #0142AC;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 12px 20px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(1, 66, 172, 0.2);
-            opacity: 0;
-            transition: all 0.5s ease-in-out;
-            z-index: 2;
-            position: absolute;
-            bottom: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .streak-counter.visible {
-            opacity: 1;
-            bottom: -50px;
-        }
-
-        .prognostic-button {
-            position: absolute;
-            bottom: -30px;
-            right: 0;
-            background-color: #0142AC;
-            color: white;
-            font-size: 12px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 400;
-            z-index: 10;
-        }
-
-        #fireworks-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        .firework {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            animation: shoot 1s ease-out forwards;
-        }
-
-        .spark {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            animation: spark 0.8s ease-out forwards;
-        }
-
-        @keyframes shoot {
-            0% { transform: translateY(50vh) scale(0); opacity: 0; }
-            50% { transform: translateY(-25vh) scale(1); opacity: 1; }
-            100% { transform: translateY(-50vh) scale(0.8); opacity: 0; }
-        }
-
-        @keyframes spark {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-        }
-
-        .result-header {
-    background-color: #0142AC;
-    color: white;
-    padding: 20px;
-    border-radius: 15px 15px 0 0;
-    margin-bottom: 0;
-    text-align: center;
-}
-
-.result-content {
-    background-color: white;
-    border-radius: 0 0 15px 15px;
-    padding: 25px;
-}
-
-        .highlight-box {
-            background-color: #F0F4F8;
-            border-left: 5px solid #0142AC;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 0 15px 15px 0;
-        }
-
-        .action-item {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-        }
-
-        .action-item:before {
-            content: '✅';
-            margin-right: 10px;
-            font-size: 20px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            background-color: #F0F4F8;
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 20px;
-            background-color: #F0F4F8;
-            width: 0;
-            transition: width 1s ease-in-out;
-        }
-
-        .demo-button {
-    display: none;
-    background-color: #0142AC;
-    color: white;
-    font-size: 18px;
-    padding: 15px 30px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 700;
-    margin: 20px auto 0;
-    transition: all 0.3s ease;
-    text-align: center;
-    max-width: 300px;
-}
-
-.demo-button:hover {
-    background-color: #0056d6;
-}
-
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(1, 66, 172, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(1, 66, 172, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(1, 66, 172, 0);
-    }
-}
-        
-        @media (max-width: 600px) {
-            .container {
-                width: 90%;
-                max-width: none;
-            }
-            #typed-output {
-                font-size: 18px;
-                padding: 20px;
-                min-height: 100px;
-            }
-            #typed-output {
-    transition: opacity 0.3s ease-in-out;
-            #typed-output h1 { font-size: 28px; }
-            #typed-output h2 { font-size: 24px; }
-            #typed-output h3 { font-size: 22px; }
-            .prognostic-button {
-                font-size: 10px;
-                bottom: -25px;
-            }
-            .streak-counter {
-                font-size: 16px;
-                padding: 10px 15px;
-                bottom: -50px;
-            }
-            .streak-counter.visible {
-                bottom: -40px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div id="loading" style="display: none;">Analyzing...</div>
-        <div id="typed-output"></div>
-        <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
-        <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
-    </div>
-    <div id="fireworks-container"></div>
-
     <script>
-        let typedInstance = null;
-        let fetchInProgress = false;
-        let streak = 0;
-        let lastFetchTime = 0;
-        const fetchInterval = 60000; // 60 seconds
-        let currentContent = '';
+    let typedInstance = null;
+    let streak = 0;
+    const API_BASE = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000' 
+        : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
-        const API_BASE = window.location.hostname === 'localhost' 
-  ? 'http://localhost:3000' 
-  : 'https://prognosticai-11cf2622005a.herokuapp.com';
-
-function fetchAndDisplayText(retryCount = 0) {
-    console.log(`Attempting to fetch text (retry count: ${retryCount})`);
-    const currentTime = Date.now();
-    if (fetchInProgress) {
-        console.log('Fetch already in progress, skipping');
-        return;
-    }
-    if (currentTime - lastFetchTime < fetchInterval) {
-        console.log('Not enough time has passed since last fetch, skipping');
-        return;
-    }
-    
-    fetchInProgress = true;
-    const typedOutput = document.getElementById('typed-output');
-    
-    console.log('Fading out typed output');
-    typedOutput.style.opacity = '0';
-    
-    setTimeout(() => {
+    function fetchAndDisplayText() {
+        console.log('Fetching and displaying text');
+        const typedOutput = document.getElementById('typed-output');
+        
+        typedOutput.style.opacity = '0';
+        
         const loadingMessages = [
             "Psychoanalyzing your inner workings...",
             "Uncovering hidden patterns in your responses...",
@@ -555,124 +280,85 @@ function fetchAndDisplayText(retryCount = 0) {
         console.log(`Displaying loading message: ${randomMessage}`);
         typedOutput.innerHTML = randomMessage;
         
-        console.log('Fading in typed output');
         typedOutput.style.opacity = '1';
         
         console.log(`Fetching from ${API_BASE}/getText`);
         fetch(`${API_BASE}/getText?t=${Date.now()}`)
         .then(response => {
-                console.log(`Received response with status: ${response.status}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("Received data:", data);
-                if (data.text && data.text !== currentContent) {
-                    console.log("New content received, updating display");
-                    typedOutput.style.opacity = '0';
-                    setTimeout(() => {
-                        typedOutput.innerHTML = '';
-                        if (typedInstance) {
-                            console.log("Destroying previous Typed instance");
-                            typedInstance.destroy();
-                        }
-                        console.log("Creating fireworks");
-                        createFireworks();
-                        streak++;
-                        console.log(`Updating streak to ${streak}`);
-                        updateStreak();
-                        currentContent = data.text;
-                        console.log("Enhancing content");
-                        const enhancedContent = enhanceContent(currentContent);
-                        console.log("Creating new Typed instance");
-                        typedInstance = new Typed(typedOutput, {
-                            strings: [enhancedContent],
-                            typeSpeed: 5,
-                            showCursor: false,
-                            contentType: 'html',
-                            onComplete: function() {
-                                console.log("Typing complete");
-                                lastFetchTime = Date.now();
-                                showDemoButton();
-                            }
-                        });
-                        typedOutput.style.opacity = '1';
-                    }, 300);
-                } else if (retryCount < 3) {
-                    console.log("No new content, retrying...");
-                    setTimeout(() => fetchAndDisplayText(retryCount + 1), 5000);
-                } else {
-                    console.log("No new content after retries");
-                    typedOutput.innerHTML = 'No new content available. Please try again later.';
-                    typedOutput.style.opacity = '1';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                console.error('Error name:', error.name);
-                console.error('Error message:', error.message);
-                if (error instanceof TypeError) {
-                    console.error('This might be a CORS or network error');
-                }
-                if (retryCount < 3) {
-                    console.log(`Retrying fetch (attempt ${retryCount + 1})`);
-                    setTimeout(() => fetchAndDisplayText(retryCount + 1), 5000);
-                    typedOutput.innerHTML = `Error fetching AI response. Retrying... (Attempt ${retryCount + 1}/3)`;
-                } else {
-                    console.log("Max retries reached, displaying error message");
-                    typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
-                }
-                typedOutput.style.opacity = '1';
-                streak = 0;
-                updateStreak();
-            })
-            .finally(() => {
-                console.log("Fetch process complete");
-                fetchInProgress = false;
-            });
-    }, 300);
-}
-
-        function enhanceContent(content) {
-    content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
-    content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
-    content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
-    
-    content += `<a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>`;
-    content += '</div>';
-    return content;
-}
-
-        function animateProgressBar() {
-    const progressBar = document.getElementById('progressBar');
-    const demoButton = document.getElementById('demoButton');
-    if (progressBar) {
-        progressBar.style.width = '100%';
-        setTimeout(() => {
-            progressBar.style.display = 'none';
+            console.log(`Received response with status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Received data:", data);
+            if (data.text) {
+                console.log("New content received, updating display");
+                typedOutput.style.opacity = '0';
+                setTimeout(() => {
+                    typedOutput.innerHTML = '';
+                    if (typedInstance) {
+                        console.log("Destroying previous Typed instance");
+                        typedInstance.destroy();
+                    }
+                    console.log("Creating fireworks");
+                    createFireworks();
+                    streak++;
+                    console.log(`Updating streak to ${streak}`);
+                    updateStreak();
+                    console.log("Enhancing content");
+                    const enhancedContent = enhanceContent(data.text);
+                    console.log("Creating new Typed instance");
+                    typedInstance = new Typed(typedOutput, {
+                        strings: [enhancedContent],
+                        typeSpeed: 5,
+                        showCursor: false,
+                        contentType: 'html',
+                        onComplete: function() {
+                            console.log("Typing complete");
+                           function showDemoButton() {
+        const demoButton = document.getElementById('demoButton');
+        if (demoButton) {
             demoButton.style.display = 'inline-block';
-        }, 1000);
-    }
-}
-
-        fetchAndDisplayText(0);
-
-        setInterval(() => {
-    if (Date.now() - lastFetchTime >= fetchInterval) {
-        fetchAndDisplayText(0);
-    }
-}, 10000);
-        
-        function updateStreak() {
-            const streakCounter = document.getElementById('streak-counter');
-            streakCounter.innerHTML = `Streak: ${streak} 🔥`;
-            streakCounter.classList.add('visible');
-            setTimeout(() => {
-                streakCounter.classList.remove('visible');
-            }, 1500);
         }
+                        }
+                    });
+                    typedOutput.style.opacity = '1';
+                }, 300);
+            } else {
+                console.log("No content received");
+                typedOutput.innerHTML = 'No content available. Please try again later.';
+                typedOutput.style.opacity = '1';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
+            typedOutput.style.opacity = '1';
+            streak = 0;
+            updateStreak();
+        });
+    }
+
+    function enhanceContent(content) {
+        content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
+        content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
+        content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
+        
+        content += `<a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>`;
+        content += '</div>';
+        return content;
+    }
+
+    function updateStreak() {
+        const streakCounter = document.getElementById('streak-counter');
+        streakCounter.innerHTML = `Streak: ${streak} 🔥`;
+        streakCounter.classList.add('visible');
+        setTimeout(() => {
+            streakCounter.classList.remove('visible');
+        }, 1500);
+    }
 
         function createFireworks() {
             const container = document.getElementById('fireworks-container');
