@@ -166,15 +166,19 @@
 let typedInstance = null;
 let fetchInProgress = false;
 let streak = 0;
+let lastFetchTime = 0;
+const fetchInterval = 60000; // 60 seconds
 
 function fetchAndDisplayText() {
-    if (fetchInProgress) return;
+    const currentTime = Date.now();
+    if (fetchInProgress || (currentTime - lastFetchTime < fetchInterval)) return;
+    
     fetchInProgress = true;
 
     fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
         .then(response => response.json())
         .then(data => {
-            if (data.text) {
+            if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
                 const typedOutput = document.getElementById('typed-output');
                 typedOutput.innerHTML = ''; // Clear existing content
 
@@ -191,12 +195,17 @@ function fetchAndDisplayText() {
                     strings: [data.text],
                     typeSpeed: 30,
                     showCursor: false,
-                    contentType: 'html'
+                    contentType: 'html',
+                    onComplete: function() {
+                        lastFetchTime = Date.now();
+                    }
                 });
 
                 setTimeout(() => {
                     document.getElementById('fireworks-container').innerHTML = '';
                 }, 4000);
+            } else {
+                lastFetchTime = currentTime;
             }
         })
         .catch(error => {
@@ -209,6 +218,16 @@ function fetchAndDisplayText() {
             fetchInProgress = false;
         });
 }
+
+// Initial fetch
+fetchAndDisplayText();
+
+// Check for new content every 10 seconds, but only fetch if the interval has passed
+setInterval(() => {
+    if (Date.now() - lastFetchTime >= fetchInterval) {
+        fetchAndDisplayText();
+    }
+}, 10000);
         
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
