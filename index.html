@@ -32,35 +32,56 @@
         }
 
         #typed-output {
-            font-size: 24px;
-            width: 100%;
-            text-align: left;
-            font-weight: 300;
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-        }
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    #typed-output h1, #typed-output h2, #typed-output h3 {
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+    #typed-output h1 { font-size: 28px; }
+    #typed-output h2 { font-size: 24px; }
+    #typed-output h3 { font-size: 20px; }
+</style>
 
-        #typed-output {
-  white-space: pre-wrap;
-}
+<script>
+    let typedInstance = null;
+    let fetchInProgress = false;
+    let streak = 0;
 
-#typed-output h1, #typed-output h2, #typed-output h3 {
-  margin-top: 10px;
-  margin-bottom: 5px;
-}
+    function fetchAndDisplayText() {
+        if (fetchInProgress) return;
+        fetchInProgress = true;
 
-#typed-output h1 { font-size: 28px; }
-#typed-output h2 { font-size: 24px; }
-#typed-output h3 { font-size: 20px; }
+        fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
+            .then(response => response.json())
+            .then(data => {
+                if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+                    if (typedInstance) {
+                        typedInstance.destroy();
+                    }
+                    createFireworks();
+                    streak++;
+                    updateStreak();
+
+                    document.getElementById('typed-output').innerHTML = data.text;
+
+                    setTimeout(() => {
+                        document.getElementById('fireworks-container').innerHTML = '';
+                    }, 4000);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
+                streak = 0;
+                updateStreak();
+            })
+            .finally(() => {
+                fetchInProgress = false;
+            });
+    }
         
         .streak-counter {
             font-size: 20px;
