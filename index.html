@@ -256,19 +256,23 @@
         const fetchInterval = 60000; // 60 seconds
         let currentContent = '';
 
-        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
 function fetchAndDisplayText(retryCount = 0) {
     const currentTime = Date.now();
     if (fetchInProgress || (currentTime - lastFetchTime < fetchInterval)) return;
     
     fetchInProgress = true;
-    document.getElementById('loading').style.display = 'block';
+    document.getElementById('typed-output').innerHTML = 'Fetching AI response...';
 
     fetch(`${API_BASE}/getText`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            document.getElementById('loading').style.display = 'none';
             if (data.text && data.text !== currentContent) {
                 const typedOutput = document.getElementById('typed-output');
                 typedOutput.innerHTML = ''; // Clear existing content
@@ -300,14 +304,15 @@ function fetchAndDisplayText(retryCount = 0) {
                 }, 2000);
             } else if (retryCount < 3) {
                 setTimeout(() => fetchAndDisplayText(retryCount + 1), 5000);
+            } else {
+                document.getElementById('typed-output').innerHTML = 'No new content available. Please try again later.';
             }
         })
         .catch(error => {
-            document.getElementById('loading').style.display = 'none';
             console.error('Error:', error);
-            document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Retrying...';
             if (retryCount < 3) {
                 setTimeout(() => fetchAndDisplayText(retryCount + 1), 5000);
+                document.getElementById('typed-output').innerHTML = `Error fetching AI response. Retrying... (Attempt ${retryCount + 1}/3)`;
             } else {
                 document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again later.';
             }
@@ -348,10 +353,10 @@ function fetchAndDisplayText(retryCount = 0) {
         fetchAndDisplayText(0);
 
         setInterval(() => {
-            if (Date.now() - lastFetchTime >= fetchInterval) {
-                fetchAndDisplayText();
-            }
-        }, 10000);
+    if (Date.now() - lastFetchTime >= fetchInterval) {
+        fetchAndDisplayText(0);
+    }
+}, 10000);
         
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
