@@ -277,22 +277,28 @@ function fetchAndDisplayText(retryCount = 0) {
     
     setTimeout(() => {
         const loadingMessages = [
-    "Psychoanalyzing your inner workings...",
-    "Uncovering hidden patterns in your responses...",
-    "Identifying archetypal anomalies...",
-    "Delving into the deep dark depths of your hidden psyche...",
-    "Forging a window into your mind and future..."
-    "Mapping your synaptic space... illustrating your mind's landscape... Found: the tall grass, the low plains, the mountainous ridges... thickets among the forests, rivers beneath the bridges..."
-];
-const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+            "Psychoanalyzing your inner workings...",
+            "Uncovering hidden patterns in your responses...",
+            "Identifying archetypal anomalies...",
+            "Delving into the deep dark depths of your hidden psyche...",
+            "Forging a window into your mind and future...",
+            "Mapping your synaptic space... illustrating your mind's landscape... Found: the tall grass, the low plains, the mountainous ridges... thickets among the forests, rivers beneath the bridges..."
+        ];
+        const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
         typedOutput.innerHTML = randomMessage;
         
         // Fade in
         typedOutput.style.opacity = '1';
         
-        fetch(`${API_BASE}/getText`)
-            .then(response => response.json())
+        fetch(`${API_BASE}/getText?t=${Date.now()}`) // Add cache-busting parameter
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log("Received data:", data); // Debug log
                 if (data.text && data.text !== currentContent) {
                     typedOutput.style.opacity = '0';
                     setTimeout(() => {
@@ -318,8 +324,10 @@ const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages
                         typedOutput.style.opacity = '1';
                     }, 300);
                 } else if (retryCount < 3) {
+                    console.log("No new content, retrying..."); // Debug log
                     setTimeout(() => fetchAndDisplayText(retryCount + 1), 5000);
                 } else {
+                    console.log("No new content after retries"); // Debug log
                     typedOutput.innerHTML = 'No new content available. Please try again later.';
                     typedOutput.style.opacity = '1';
                 }
