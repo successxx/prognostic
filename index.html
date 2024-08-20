@@ -189,10 +189,10 @@
           
 typedInstance = new Typed('#typed-output', {
   strings: [data.text],
-  typeSpeed: 1,  // Adjust as needed
+  typeSpeed: 1,
   showCursor: false,
   onComplete: function() {
-    // Set the innerHTML instead of plain text to parse HTML
+    // This ensures the text is parsed and displayed as HTML
     document.getElementById('typed-output').innerHTML = data.text;
   }
 });
