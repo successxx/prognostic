@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -44,7 +43,6 @@
             margin-bottom: 15px;
             transition: all 0.3s ease;
             box-sizing: border-box;
-            white-space: pre-wrap;
         }
 
         #typed-output h1, #typed-output h2, #typed-output h3 {
@@ -163,9 +161,9 @@
     <div id="fireworks-container"></div>
 
     <script>
-        let typedInstance = null;
-        let fetchInProgress = false;
         let streak = 0;
+        let fetchInProgress = false;
+        let typingSpeed = 25; // Speed of typing
 
         function fetchAndDisplayText() {
             if (fetchInProgress) return;
@@ -174,39 +172,44 @@
             fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
-                        if (typedInstance) {
-                            typedInstance.destroy();
-                        }
-                        createFireworks();
-                        streak++;
-                        updateStreak();
-
-                        // Typed.js typing effect for raw text
-                        typedInstance = new Typed('#typed-output', {
-                            strings: [data.text],  // Raw text for typing effect
-                            typeSpeed: 30,         // Adjust typing speed as needed
-                            showCursor: false,
-                            onStringTyped: function(index) {
-                                // After each string chunk, render it as HTML
-                                document.getElementById('typed-output').innerHTML = data.text;
-                            }
-                        });
-
-                        setTimeout(() => {
-                            document.getElementById('fireworks-container').innerHTML = '';
-                        }, 4000);
-                    }
+                    const htmlContent = data.text;
+                    typeHTML(htmlContent);
+                    streak++;
+                    updateStreak();
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('typed-output').innerHTML = 'Error fetching AI response. Please try again.';
-                    streak = 0;
-                    updateStreak();
                 })
                 .finally(() => {
                     fetchInProgress = false;
                 });
+        }
+
+        // Custom typing effect that handles HTML content
+        function typeHTML(htmlContent) {
+            const container = document.getElementById('typed-output');
+            container.innerHTML = ''; // Clear previous content
+
+            let currentIndex = 0;
+            let isTag = false;
+
+            function typeNextChar() {
+                if (currentIndex < htmlContent.length) {
+                    const currentChar = htmlContent[currentIndex++];
+                    
+                    // Detect opening and closing tags to handle HTML correctly
+                    if (currentChar === '<') isTag = true;
+                    if (currentChar === '>') isTag = false;
+
+                    container.innerHTML += currentChar;
+
+                    // Recursively call to continue typing
+                    setTimeout(typeNextChar, isTag ? 0 : typingSpeed); // No delay for HTML tags
+                }
+            }
+
+            typeNextChar(); // Start typing
         }
 
         function updateStreak() {
@@ -218,47 +221,8 @@
             }, 1500);
         }
 
-        function createFireworks() {
-            const container = document.getElementById('fireworks-container');
-            container.innerHTML = '';
-            const colors = ['#FF00FF', '#A020F0', '#8A2BE2', '#9400D3', '#9370DB', '#7B68EE', '#6A5ACD', '#FFD700', '#FFA500', '#FF4500'];
-
-            const textBox = document.getElementById('typed-output');
-            const rect = textBox.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    createFirework(container, colors, centerX, centerY);
-                }, i * 100);
-            }
-        }
-
-        function createFirework(container, colors, x, y) {
-            const firework = document.createElement('div');
-            firework.className = 'firework';
-            firework.style.left = `${x + (Math.random() - 0.5) * 300}px`;
-            firework.style.top = `${y + (Math.random() - 0.5) * 200}px`;
-            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            container.appendChild(firework);
-
-            for (let j = 0; j < 60; j++) {
-                const spark = document.createElement('div');
-                spark.className = 'spark';
-                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                spark.style.left = firework.style.left;
-                spark.style.top = firework.style.top;
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 50 + Math.random() * 100;
-                spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
-                spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-                container.appendChild(spark);
-            }
-        }
-
         fetchAndDisplayText();
-        setInterval(fetchAndDisplayText, 10000);
+        setInterval(fetchAndDisplayText, 10000);  // Fetch new text every 10 seconds
     </script>
 </body>
 </html>
