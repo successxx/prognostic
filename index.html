@@ -186,14 +186,16 @@
         createFireworks();
         streak++;
         updateStreak();
-
-        typedInstance = new Typed('#typed-output', {
-          strings: [data.text],
-          typeSpeed: 1,  // Increased typing speed (lower number = faster)
-          showCursor: false,
-          html: true  // Enable HTML parsing
-        });
-
+          
+typedInstance = new Typed('#typed-output', {
+  strings: [data.text],
+  typeSpeed: 10,
+  showCursor: false,
+  onComplete: function() {
+    document.getElementById('typed-output').innerHTML = data.text;
+  }
+});
+          
         setTimeout(() => {
           document.getElementById('fireworks-container').innerHTML = '';
         }, 4000);
