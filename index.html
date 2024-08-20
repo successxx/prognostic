@@ -163,7 +163,7 @@
     <div id="fireworks-container"></div>
 
     <script>
-  let typedInstance = null;
+ let typedInstance = null;
 let fetchInProgress = false;
 let streak = 0;
 
@@ -191,8 +191,9 @@ function fetchAndDisplayText() {
                     strings: [data.text],
                     typeSpeed: 30,
                     showCursor: false,
+                    contentType: 'html',
                     onComplete: function() {
-                        // After typing is complete, set the innerHTML to render HTML properly
+                        // Ensure any remaining HTML is rendered properly
                         typedOutput.innerHTML = data.text;
                     }
                 });
@@ -212,7 +213,7 @@ function fetchAndDisplayText() {
             fetchInProgress = false;
         });
 }
-
+        
         function updateStreak() {
             const streakCounter = document.getElementById('streak-counter');
             streakCounter.innerHTML = `Streak: ${streak} 🔥`;
