@@ -105,7 +105,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1000; /* Ensure fireworks are on top */
+            z-index: 1000;
         }
 
         .firework {
@@ -113,7 +113,7 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            animation: shoot 1.5s ease-out forwards;
+            animation: shoot 1s ease-out forwards;
         }
 
         .spark {
@@ -121,7 +121,7 @@
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            animation: spark 1.2s ease-out forwards;
+            animation: spark 0.8s ease-out forwards;
         }
 
         @keyframes shoot {
@@ -135,7 +135,6 @@
             100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
         }
 
-        /* New styles for enhanced design */
         .result-header {
             background-color: #0142AC;
             color: white;
@@ -229,6 +228,7 @@
         let streak = 0;
         let lastFetchTime = 0;
         const fetchInterval = 60000; // 60 seconds
+        let currentContent = '';
 
         function fetchAndDisplayText() {
             const currentTime = Date.now();
@@ -239,7 +239,7 @@
             fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+                    if (data.text && data.text !== currentContent) {
                         const typedOutput = document.getElementById('typed-output');
                         typedOutput.innerHTML = ''; // Clear existing content
 
@@ -251,13 +251,12 @@
                         streak++;
                         updateStreak();
 
-                        // Enhance the content with new design elements
-                        const enhancedContent = enhanceContent(data.text);
+                        currentContent = data.text;
+                        const enhancedContent = enhanceContent(currentContent);
 
-                        // Use Typed.js to create typing effect
                         typedInstance = new Typed(typedOutput, {
                             strings: [enhancedContent],
-                            typeSpeed: 15,
+                            typeSpeed: 30,
                             showCursor: false,
                             contentType: 'html',
                             onComplete: function() {
@@ -268,9 +267,7 @@
 
                         setTimeout(() => {
                             document.getElementById('fireworks-container').innerHTML = '';
-                        }, 4000);
-                    } else {
-                        lastFetchTime = currentTime;
+                        }, 2000);
                     }
                 })
                 .catch(error => {
@@ -285,24 +282,15 @@
         }
 
         function enhanceContent(content) {
-            // Add result header
             content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
-
-            // Wrap action items
             content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
-
-            // Add highlight boxes
             content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
-
-            // Add progress bar
             content += `
                 <div class="progress-bar">
                     <div class="progress-bar-fill" id="progressBar"></div>
                 </div>
             `;
-
-            content += '</div>'; // Close result-content div
-
+            content += '</div>';
             return content;
         }
 
@@ -313,10 +301,8 @@
             }
         }
 
-        // Initial fetch
         fetchAndDisplayText();
 
-        // Check for new content every 10 seconds, but only fetch if the interval has passed
         setInterval(() => {
             if (Date.now() - lastFetchTime >= fetchInterval) {
                 fetchAndDisplayText();
@@ -342,10 +328,10 @@
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
                     createFirework(container, colors, centerX, centerY);
-                }, i * 100);
+                }, i * 50);
             }
         }
 
@@ -357,7 +343,7 @@
             firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             container.appendChild(firework);
 
-            for (let j = 0; j < 60; j++) {
+            for (let j = 0; j < 30; j++) {
                 const spark = document.createElement('div');
                 spark.className = 'spark';
                 spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
