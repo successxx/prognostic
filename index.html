@@ -175,18 +175,37 @@
     <a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton" style="display: none;">Book Your Free Demo Now!</a>
 </div>
 
-        .demo-button {
+        .progress-bar {
+    width: 100%;
+    background-color: #E0E0E0;
+    border-radius: 10px;
+    margin: 20px 0;
+    position: relative; /* Add this */
+    overflow: hidden; /* Prevent button from appearing outside the progress bar */
+}
+
+.progress-bar-fill {
+    height: 20px;
+    background-color: #0142AC;
+    width: 0;
+    transition: width 1s ease-in-out;
+    border-radius: 10px;
+}
+
+.demo-button {
+    position: absolute; /* Ensures button stays within the progress bar */
+    right: 10px; /* Adjust as needed */
+    top: 50%; /* Vertically center it */
+    transform: translateY(-50%); /* Adjust for centering */
     display: none;
     background-color: #0142AC;
     color: white;
     font-size: 18px;
-    padding: 15px 30px;
-    border-radius: 10px; /* Less rounded */
+    padding: 10px 20px;
+    border-radius: 10px;
     text-decoration: none;
     font-weight: 700;
-    margin-top: 20px;
     transition: all 0.3s ease;
-    animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
