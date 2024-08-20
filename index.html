@@ -27,7 +27,7 @@
             z-index: 1;
             position: relative;
             width: 100%;
-            max-width: 1000px; /* Increased from 800px */
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -45,7 +45,7 @@
             transition: all 0.3s ease;
             box-sizing: border-box;
             white-space: pre-wrap;
-            line-height: 1.6; /* Increased line spacing */
+            line-height: 1.6;
         }
 
         #typed-output h1, #typed-output h2, #typed-output h3 {
@@ -54,9 +54,9 @@
             margin-bottom: 10px;
         }
 
-        #typed-output h1 { font-size: 36px; } /* Increased header size */
-        #typed-output h2 { font-size: 30px; } /* Increased header size */
-        #typed-output h3 { font-size: 26px; } /* Increased header size */
+        #typed-output h1 { font-size: 36px; }
+        #typed-output h2 { font-size: 30px; }
+        #typed-output h3 { font-size: 26px; }
 
         #typed-output strong {
             font-weight: bold;
@@ -134,6 +134,58 @@
             100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
         }
 
+        /* New styles for enhanced design */
+        .result-header {
+            background-color: #0142AC;
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        .result-content {
+            background-color: white;
+            border-radius: 0 0 15px 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight-box {
+            background-color: #F0F4F8;
+            border-left: 5px solid #0142AC;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 15px 15px 0;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .action-item:before {
+            content: '✅';
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 20px;
+            background-color: #4CAF50;
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+
         @media (max-width: 600px) {
             .container {
                 width: 90%;
@@ -198,14 +250,18 @@
                         streak++;
                         updateStreak();
 
+                        // Enhance the content with new design elements
+                        const enhancedContent = enhanceContent(data.text);
+
                         // Use Typed.js to create typing effect
                         typedInstance = new Typed(typedOutput, {
-                            strings: [data.text],
-                            typeSpeed: 15, // Increased typing speed (reduced from 30)
+                            strings: [enhancedContent],
+                            typeSpeed: 15,
                             showCursor: false,
                             contentType: 'html',
                             onComplete: function() {
                                 lastFetchTime = Date.now();
+                                animateProgressBar();
                             }
                         });
 
@@ -225,6 +281,35 @@
                 .finally(() => {
                     fetchInProgress = false;
                 });
+        }
+
+        function enhanceContent(content) {
+            // Add result header
+            content = `<div class="result-header"><h1>Your Quiz Results</h1></div><div class="result-content">` + content;
+
+            // Wrap action items
+            content = content.replace(/(\d+\.\s.*?)(?=\d+\.|$)/gs, '<div class="action-item">$1</div>');
+
+            // Add highlight boxes
+            content = content.replace(/(Benefits:.*?(?=\n\n|$))/gs, '<div class="highlight-box">$1</div>');
+
+            // Add progress bar
+            content += `
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="progressBar"></div>
+                </div>
+            `;
+
+            content += '</div>'; // Close result-content div
+
+            return content;
+        }
+
+        function animateProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.style.width = '100%';
+            }
         }
 
         // Initial fetch
