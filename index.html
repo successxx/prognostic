@@ -164,21 +164,24 @@
             fetchInProgress = true;
 
             fetch('https://prognostic-backend-44804a264069.herokuapp.com/getText')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
-                        if (typedInstance) {
-                            typedInstance.destroy();
-                        }
-                        createFireworks();
-                        streak++;
-                        updateStreak();
+  .then(response => response.json())
+  .then(data => {
+    if (data.text && (!typedInstance || typedInstance.strings[0] !== data.text)) {
+      if (typedInstance) {
+        typedInstance.destroy();
+      }
+      createFireworks();
+      streak++;
+      updateStreak();
 
-                        typedInstance = new Typed('#typed-output', {
-                            strings: [data.text],
-                            typeSpeed: 30,
-                            showCursor: false
-                        });
+      // Replace newline characters with <br> tags for HTML rendering
+      const formattedText = data.text.replace(/\n/g, '<br>');
+
+      typedInstance = new Typed('#typed-output', {
+        strings: [formattedText],
+        typeSpeed: 60,
+        showCursor: false
+      });
 
                         setTimeout(() => {
                             document.getElementById('fireworks-container').innerHTML = '';
