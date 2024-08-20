@@ -163,7 +163,7 @@
     <div id="fireworks-container"></div>
 
     <script>
- let typedInstance = null;
+let typedInstance = null;
 let fetchInProgress = false;
 let streak = 0;
 
@@ -191,11 +191,7 @@ function fetchAndDisplayText() {
                     strings: [data.text],
                     typeSpeed: 30,
                     showCursor: false,
-                    contentType: 'html',
-                    onComplete: function() {
-                        // Ensure any remaining HTML is rendered properly
-                        typedOutput.innerHTML = data.text;
-                    }
+                    contentType: 'html'
                 });
 
                 setTimeout(() => {
