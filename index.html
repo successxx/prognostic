@@ -28,31 +28,6 @@
     box-sizing: border-box;
     position: relative;
 }
-
-@media (max-width: 768px) {
-    .container {
-        padding: 0 10px;
-    }
-    #typed-output {
-        font-size: 18px;
-        padding: 15px;
-    }
-    .new-demo-button {
-        font-size: 16px;
-        padding: 12px 24px;
-    }
-}
-
-@media (max-width: 480px) {
-    #typed-output {
-        font-size: 16px;
-        padding: 10px;
-    }
-    .new-demo-button {
-        font-size: 14px;
-        padding: 10px 20px;
-    }
-}
     }
 
     #typed-output {
@@ -164,6 +139,55 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+        @media (max-width: 600px) {
+    @media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    #typed-output {
+        font-size: 16px;
+        padding: 15px;
+        min-height: auto;
+    }
+
+    #typed-output h1 { font-size: 24px; }
+    #typed-output h2 { font-size: 20px; }
+    #typed-output h3 { font-size: 18px; }
+
+    .result-header h1 { font-size: 22px; }
+
+    .result-content {
+        padding: 15px;
+    }
+
+    .prognostic-button {
+        bottom: -25px;
+        right: 10px;
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .streak-counter {
+        font-size: 14px;
+        padding: 6px 10px;
+        bottom: -40px;
+    }
+
+    .new-demo-button {
+        font-size: 16px;
+        padding: 12px 20px;
+        white-space: normal;
+    }
+}
+}
+        
     .result-header {
         background-color: #0142AC;
         color: white;
@@ -283,88 +307,6 @@
         0% { box-shadow: 0 0 0 0 rgba(1, 66, 172, 0.7); }
         70% { box-shadow: 0 0 0 10px rgba(1, 66, 172, 0); }
         100% { box-shadow: 0 0 0 0 rgba(1, 66, 172, 0); }
-    }
-    
-    @media (max-width: 600px) {
-    .container {
-        width: 100%;
-        padding: 0 10px;
-        box-sizing: border-box;
-    }
-        @media (max-width: 600px) {
-    #typed-output {
-        min-width: 100%;
-    }
-}
-    #typed-output {
-        width: 100%;
-        box-sizing: border-box;
-    }
-}
-    @media (max-width: 600px) {
-    #typed-output h1 { font-size: 24px; }
-    #typed-output h2 { font-size: 20px; }
-    #typed-output h3 { font-size: 18px; }
-    .result-header h1 { font-size: 22px; }
-    .result-content {
-        padding: 15px;
-    }
-}
-    }
-        @media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-    #typed-output {
-        font-size: 16px;
-        padding: 15px;
-    }
-    .prognostic-button {
-        bottom: -25px;
-        right: 10px;
-        font-size: 10px;
-        padding: 3px 6px;
-    }
-    .streak-counter {
-        font-size: 14px;
-        padding: 6px 10px;
-        bottom: -40px;
-    }
-}
-    .streak-counter {
-        font-size: 14px;
-        padding: 8px 12px;
-        bottom: -40px;
-    }
-}
-    }
-        .button-container {
-    text-align: center;
-    width: 100%;
-}
-
-.demo-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    background-color: #0142AC;
-    color: white;
-    font-size: 18px;
-    padding: 15px 30px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    text-align: center;
-    max-width: 300px;
-    animation: buttonAppear 0.5s ease-out, pulse 2s infinite;
-}
-        @media (max-width: 600px) {
-    .new-demo-button {
-        font-size: 16px;
-        padding: 12px 20px;
-        white-space: normal;
     }
 }
 
