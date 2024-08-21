@@ -57,31 +57,11 @@
 .result-content {
     background-color: white;
     border-radius: 0 0 15px 15px;
-    padding: 25px;
+    padding: 30px; /* Increased from 25px */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
-}
-
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-
-    .container {
-        padding: 0;
-    }
-
-    #typed-output {
-        font-size: 16px;
-        padding: 15px;
-        min-height: auto;
-    }
-
-    .result-header, .result-content {
-        border-radius: 0;
-    }
 }
 
 #typed-output h1, #typed-output h2, #typed-output h3 {
@@ -337,14 +317,52 @@
     }
 
     .container {
-        padding: 0 10px;
-    }
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+}
 
     #typed-output {
         font-size: 16px;
         padding: 15px;
         min-height: auto;
     }
+
+    .result-header {
+        padding: 15px;
+    }
+
+    .result-header h1 {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .result-content {
+        padding: 15px;
+    }
+
+    .streak-counter {
+        font-size: 14px;
+        padding: 6px 10px;
+        bottom: -30px;
+    }
+
+    .prognostic-button {
+        bottom: -20px;
+        right: 10px;
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .new-demo-button {
+        font-size: 16px;
+        padding: 12px 20px;
+        white-space: normal;
+    }
+}
 
     #typed-output h1 { font-size: 24px; }
     #typed-output h2 { font-size: 20px; }
