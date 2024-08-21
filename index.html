@@ -386,37 +386,6 @@ white-space: normal;
 .demo-button:hover {
 background-color: #0056d6;
 }
-
-  .share-buttons {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        .share-button {
-            margin: 0 10px;
-            font-size: 24px;
-            color: #0142AC;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .share-button:hover {
-            color: #0056d6;
-        }
-
-        @media (max-width: 600px) {
-            .share-buttons {
-                flex-wrap: wrap;
-            }
-
-            .share-button {
-                margin: 5px;
-            }
-        }
-
 </style>
 </head>
 <body>
@@ -427,14 +396,8 @@ background-color: #0056d6;
 <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
 </div>
 <div id="fireworks-container"></div>
-<div class="share-buttons" id="shareButtons">
-        <i class="share-button fas fa-sms" onclick="share('sms')"></i>
-        <i class="share-button fab fa-facebook" onclick="share('facebook')"></i>
-        <i class="share-button fab fa-linkedin" onclick="share('linkedin')"></i>
-        <i class="share-button fab fa-twitter" onclick="share('twitter')"></i>
-    </div>
 
-    <script>
+<script>
 let typedInstance = null;
 let streak = 0;
 const API_BASE = window.location.hostname === 'localhost'
@@ -602,28 +565,11 @@ container.appendChild(spark);
 }
 
 function showDemoButton() {
-            const demoButton = document.getElementById('demoButton');
-            if (demoButton) {
-                demoButton.style.display = 'inline-block';
-            }
-            // Show share buttons after demo button appears
-            setTimeout(() => {
-                const shareButtons = document.getElementById('shareButtons');
-                shareButtons.style.opacity = '1';
-            }, 500);
-        }
-
-        function share(platform) {
-            const shareUrls = {
-                sms: "sms:?&body=Hey,%20check%20out%20this%20new%20marketing%20software.%20it%20recreates%20new%20marketing%20for%20each%20lead%20in%20real%20time,%20and%20I%20thought%20of%20you!%20I%20just%20took%20their%20quiz%20and%20got%20mind-blowing%20personal%20insights.%20Try%20it%20out%20and%20see%20if%20their%20AI%20can%20make%20you%20some%20money!%20https%3A%2F%2FPrognostic.ai",
-                facebook: "https://www.facebook.com/sharer.php?u=https%3A%2F%2Fprognostic.ai&quote=Hey,%20check%20out%20this%20new%20marketing%20software.%20it%20recreates%20new%20marketing%20for%20each%20lead%20in%20real%20time,%20and%20I%20thought%20of%20you!%20I%20just%20took%20their%20quiz%20and%20got%20mind-blowing%20personal%20insights.%20Try%20it%20out%20and%20see%20if%20their%20AI%20can%20make%20you%20some%20money!",
-                linkedin: "https://www.linkedin.com/shareArticle?url=https%3A%2F%2Fprognostic.ai&title=PrognosticAI%20-%20Personalized%20Marketing%20Strategy&summary=Hey,%20check%20out%20this%20new%20marketing%20software.%20it%20recreates%20new%20marketing%20for%20each%20lead%20in%20real%20time,%20and%20I%20thought%20of%20you!%20I%20just%20took%20their%20quiz%20and%20got%20mind-blowing%20personal%20insights.%20Try%20it%20out%20and%20see%20if%20their%20AI%20can%20make%20you%20some%20money!",
-                twitter: "https://twitter.com/intent/tweet?url=https%3A%2F%2Fprognostic.ai&text=Hey,%20check%20out%20this%20new%20marketing%20software.%20it%20recreates%20new%20marketing%20for%20each%20lead%20in%20real%20time,%20and%20I%20thought%20of%20you!%20I%20just%20took%20their%20quiz%20and%20got%20mind-blowing%20personal%20insights.%20Try%20it%20out%20and%20see%20if%20their%20AI%20can%20make%20you%20some%20money!"
-            };
-
-            window.open(shareUrls[platform], '_blank');
-        }
-
+const demoButton = document.getElementById('demoButton');
+if (demoButton) {
+demoButton.style.display = 'inline-block';
+}
+}
 
 function addScrollAnimation() {
 const sections = document.querySelectorAll('.action-item, .highlight-box');
