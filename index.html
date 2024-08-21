@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
@@ -59,6 +60,60 @@
     #typed-output strong {
         font-weight: bold;
     }
+
+        .feature-box {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 48px;
+  color: #0142AC;
+  margin-bottom: 15px;
+}
+
+.comparison-box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.comparison-column {
+  width: 48%;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.comparison-column h3 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.comparison-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.comparison-list li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.comparison-list li::before {
+  content: '✓';
+  color: green;
+  margin-right: 10px;
+}
+
+.comparison-list.negative li::before {
+  content: '✗';
+  color: red;
+}
 
     .streak-counter {
         font-size: 20px;
@@ -394,38 +449,60 @@ function fetchAndDisplayText() {
 }
 
 function enhanceContent(content) {
-    content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
-    
-    // Replace double line breaks with paragraph tags
-    content = content.replace(/\n\n/g, '</p><p>');
-    
-    // Handle headers
-    content = content.replace(/(Key Insight #\d+:.*?)\n/g, '</p><h2>$1</h2><p>');
-    content = content.replace(/(Here's how.*?:)\n/g, '</p><h3>$1</h3><p>');
-    
-    // Handle highlight boxes
-    content = content.replace(/(Imagine for a second.*?)\n/g, '</p><div class="highlight-box"><p>$1</p></div><p>');
-    
-    // Handle unordered lists
-    content = content.replace(/\n- /g, '</p><ul><li>');
-    content = content.replace(/\n  - /g, '</li><li>');
-    content = content.replace(/(<li>.*?)\n/g, '$1</li></ul><p>');
-    
-    // Handle ordered lists
-    content = content.replace(/\n\d+\. /g, '</p><ol><li>');
-    content = content.replace(/(<li>.*?)\n/g, '$1</li></ol><p>');
-    
-    // Wrap content in paragraphs
-    content = '<p>' + content + '</p>';
-    
-    // Remove empty paragraphs
-    content = content.replace(/<p>\s*<\/p>/g, '');
-    
-    // Add the demo button
-    content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
-    
-    content += '</div>';
-    return content;
+  content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
+  
+  // Replace double line breaks with div tags
+  content = content.replace(/\n\n/g, '</div><div>');
+  
+  // Handle headers
+  content = content.replace(/(Key Insight #\d+:.*?)\n/g, '</div><h2>$1</h2><div>');
+  content = content.replace(/(Here's how.*?:)\n/g, '</div><h3>$1</h3><div>');
+  
+  // Handle highlight boxes
+  content = content.replace(/(Imagine for a second.*?)\n/g, '</div><div class="highlight-box"><div>$1</div></div><div>');
+  
+  // Handle unordered lists
+  content = content.replace(/\n- /g, '</div><ul><li>');
+  content = content.replace(/\n  - /g, '</li><li>');
+  content = content.replace(/(<li>.*?)\n/g, '$1</li></ul><div>');
+  
+  // Handle ordered lists
+  content = content.replace(/\n\d+\. /g, '</div><ol><li>');
+  content = content.replace(/(<li>.*?)\n/g, '$1</li></ol><div>');
+  
+  // Create feature boxes
+  content = content.replace(/\[(.*?)\]\((.*?)\)/g, '<div class="feature-box"><div class="feature-icon">$2</div><h3>$1</h3></div>');
+  
+  // Create comparison box
+  const comparisonRegex = /Compare:\s*\n((?:- .*\n)+)VS\s*\n((?:- .*\n)+)/g;
+  content = content.replace(comparisonRegex, (match, left, right) => {
+    const leftItems = left.split('\n').filter(item => item.trim() !== '').map(item => item.replace('- ', '')).join('</li><li>');
+    const rightItems = right.split('\n').filter(item => item.trim() !== '').map(item => item.replace('- ', '')).join('</li><li>');
+    return `
+      <div class="comparison-box">
+        <div class="comparison-column">
+          <h3>Without</h3>
+          <ul class="comparison-list negative"><li>${leftItems}</li></ul>
+        </div>
+        <div class="comparison-column">
+          <h3>With</h3>
+          <ul class="comparison-list"><li>${rightItems}</li></ul>
+        </div>
+      </div>
+    `;
+  });
+  
+  // Wrap content in divs
+  content = '<div>' + content + '</div>';
+  
+  // Remove empty divs
+  content = content.replace(/<div>\s*<\/div>/g, '');
+  
+  // Add the demo button
+  content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
+  
+  content += '</div>';
+  return content;
 }
 
 function updateStreak() {
