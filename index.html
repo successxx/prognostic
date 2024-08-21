@@ -217,21 +217,25 @@
 
     .demo-button {
     display: inline-block;
-    white-space: nowrap;
     background-color: #0142AC;
     color: white;
     font-size: 18px;
-    padding: 30px 30px;
+    padding: 15px 30px;
     border-radius: 8px;
     text-decoration: none;
     font-weight: 700;
     transition: all 0.3s ease;
     text-align: center;
-    margin: 40px auto 20px;
     width: 100%;
-    max-width: 300px; /* Ensures the button doesn't stretch too much */
-    box-sizing: border-box; /* Includes padding in width calculations */
+    max-width: 300px;
+    margin: 40px auto 20px;
+    box-sizing: border-box;
     animation: buttonAppear 0.5s ease-out, pulse 2s infinite;
+}
+
+.demo-button span {
+    display: block;
+    text-align: center !important;
 }
 
     .demo-button:hover {
@@ -275,10 +279,8 @@
         }
     }
         .button-container {
-    display: flex;
-    justify-content: center;
+    text-align: center;
     width: 100%;
-    margin-top: 40px;
 }
 
 .demo-button {
@@ -422,7 +424,7 @@ function enhanceContent(content) {
     content = content.replace(/<p>\s*<\/p>/g, '');
     
     // Add the demo button
-    content += `<a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a>`;
+    content += `<a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton"><span>Book Your Free Demo Now!</span></a>`;
     
     content += '</div>';
     return content;
