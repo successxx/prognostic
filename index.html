@@ -22,32 +22,29 @@
         box-sizing: border-box;
     }
 
-    #typed-output {
-        font-size: 18px;
-        background-color: #FFFFFF;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        margin-bottom: 15px;
-        transition: all 0.3s ease;
-        box-sizing: border-box;
-        line-height: 1.6;
-    }
+   body {
+  background-color: #F0F4F8;
+}
 
-    .result-header {
-        background-color: #0142AC;
-        color: white;
-        padding: 20px;
-        border-radius: 15px 15px 0 0;
-        margin-bottom: 0;
-        text-align: center;
-    }
+#typed-output {
+  background-color: transparent;
+  box-shadow: none;
+}
 
-    .result-content {
-        background-color: white;
-        border-radius: 0 0 15px 15px;
-        padding: 25px;
-    }
+.result-header {
+  background-color: #0142AC;
+  color: white;
+  padding: 30px;
+  border-radius: 15px 15px 0 0;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.result-content {
+  background-color: transparent;
+  border-radius: 0 0 15px 15px;
+  padding: 0;
+}
 
     .section {
         background-color: #f8f9fa;
@@ -57,6 +54,45 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
+        .insight-section {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.insight-header {
+  background-color: #0142AC;
+  color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.insight-number {
+  font-size: 36px;
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.insight-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.insight-content {
+  padding: 25px;
+}
+
+.highlight-box {
+  background-color: #F0F4F8;
+  border-left: 5px solid #0142AC;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 0 15px 15px 0;
+}
+        
     .highlight-box {
         background-color: #e9ecef;
         border-left: 5px solid #0142AC;
@@ -120,23 +156,26 @@
         ? 'http://localhost:3000' 
         : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
+        function createFireworks() {
+  const container = document.getElementById('fireworks-container');
+  container.innerHTML = '';
+  const colors = ['#FFD700', '#FFA500', '#FF4500', '#FF00FF', '#A020F0'];
+
+  const textBox = document.getElementById('typed-output');
+  const rect = textBox.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      createFirework(container, colors, centerX, centerY);
+    }, i * 200);
+  }
+}
+        
     function fetchAndDisplayText() {
         console.log('Fetching and displaying text');
         const typedOutput = document.getElementById('typed-output');
-        
-        typedOutput.style.opacity = '0';
-        
-        const loadingMessages = [
-            "Psychoanalyzing your inner workings...",
-            "Uncovering hidden patterns in your responses...",
-            "Identifying archetypal anomalies...",
-            "Delving into the deep dark depths of your hidden psyche...",
-            "Forging a window into your mind and future...",
-            "Mapping your synaptic space... illustrating your mind's landscape..."
-        ];
-        const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-        console.log(`Displaying loading message: ${randomMessage}`);
-        typedOutput.innerHTML = randomMessage;
         
         typedOutput.style.opacity = '0';
         
@@ -191,6 +230,19 @@
         let enhancedContent = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">`;
         
         // Split content into sections
+content = content.replace(/Key Insight #(\d+):(.*?)(?=Key Insight #|$)/gs, (match, number, text) => {
+  return `
+    <section class="insight-section">
+      <div class="insight-header">
+        <span class="insight-number">${number}</span>
+        <h2>Key Insight #${number}</h2>
+      </div>
+      <div class="insight-content">
+        ${text.trim()}
+      </div>
+    </section>
+  `;
+});
         const sections = content.split(/Key Insight #\d+:/);
         sections.shift(); // Remove the empty first element
 
