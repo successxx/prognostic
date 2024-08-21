@@ -3,30 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
-    <style>
-        
-        typedInstance = new Typed(typedOutput, {
-    strings: [enhancedContent],
-    typeSpeed: 5,
-    showCursor: false,
-    contentType: 'html',
-    onComplete: function() {
-        console.log("Typing complete");
-        showDemoButton();
-    },
-    onStringTyped: function(arrayPos, self) {
-        console.log("Typed string:", self.strings[arrayPos]);
-    },
-    preStringTyped: function(arrayPos, self) {
-        console.log("About to type:", self.strings[arrayPos]);
-    }
-});
-        
-    </script>
     <style>
     body {
         font-family: 'Montserrat', sans-serif;
@@ -40,99 +19,7 @@
         padding: 20px;
         box-sizing: border-box;
     }
-
-       .section-container {
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.section-icon {
-  flex: 0 0 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.section-icon i {
-  font-size: 100px;
-  color: #0142AC;
-}
-
-.section-content {
-  flex: 1;
-  min-width: 300px;
-}
-
-.feature-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.feature-item {
-  background-color: #e9ecef;
-  border-radius: 20px;
-  padding: 8px 15px;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-}
-
-.feature-item i {
-  margin-right: 8px;
-  color: #0142AC;
-}
-
-.bullet-list {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.bullet-list li {
-  position: relative;
-  padding-left: 25px;
-  margin-bottom: 10px;
-}
-
-.bullet-list li::before {
-  content: '›';
-  position: absolute;
-  left: 0;
-  color: #0142AC;
-  font-weight: bold;
-}
-
-.cta-button {
-  display: inline-block;
-  background-color: #0142AC;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.replacements {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.replacement-logo {
-  background-color: #e9ecef;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: bold;
-}
-        
+    
     .container {
     width: 100%;
     max-width: 800px;
@@ -157,15 +44,6 @@
         box-sizing: border-box;
         white-space: pre-wrap;
         line-height: 1.6;
-        display: block !important; /* Force display */
-        min-height: 200px; /* Ensure there's always some visible area */
-    }
-
-    .error-message {
-        color: red;
-        font-weight: bold;
-        text-align: center;
-        padding: 20px;
     }
 
     #typed-output h1, #typed-output h2, #typed-output h3 {
@@ -181,64 +59,6 @@
     #typed-output strong {
         font-weight: bold;
     }
-        
-display: block !important; /* Force display */
-    min-height: 200px; /* Ensure there's always some visible area */
-}
-        
-        .feature-box {
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.feature-icon {
-  font-size: 48px;
-  color: #0142AC;
-  margin-bottom: 15px;
-}
-
-.comparison-box {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
-}
-
-.comparison-column {
-  width: 48%;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
-}
-
-.comparison-column h3 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.comparison-list {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.comparison-list li {
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.comparison-list li::before {
-  content: '✓';
-  color: green;
-  margin-right: 10px;
-}
-
-.comparison-list.negative li::before {
-  content: '✗';
-  color: red;
-}
 
     .streak-counter {
         font-size: 20px;
@@ -492,158 +312,120 @@ display: block !important; /* Force display */
     <div id="fireworks-container"></div>
         
     <script>
-    let typedInstance = null;
-    let streak = 0;
-    const API_BASE = window.location.hostname === 'localhost' 
-        ? 'http://localhost:3000' 
-        : 'https://prognosticai-11cf2622005a.herokuapp.com';
+let typedInstance = null;
+let streak = 0;
+const API_BASE = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' 
+    : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
-    function fetchAndDisplayText() {
-        console.log('Fetching and displaying text');
-        const typedOutput = document.getElementById('typed-output');
-        
-        typedOutput.style.opacity = '0';
-        
-        const loadingMessages = [
-            "Psychoanalyzing your inner workings...",
-            "Uncovering hidden patterns in your responses...",
-            "Identifying archetypal anomalies...",
-            "Delving into the deep dark depths of your hidden psyche...",
-            "Forging a window into your mind and future...",
-            "Mapping your synaptic space... illustrating your mind's landscape..."
-        ];
-        const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-        console.log(`Displaying loading message: ${randomMessage}`);
-        typedOutput.innerHTML = randomMessage;
-        
-        typedOutput.style.opacity = '0';
-        
-        console.log(`Fetching from ${API_BASE}/getText`);
-        fetch(`${API_BASE}/getText?t=${Date.now()}`)
-        .then(response => {
-            console.log(`Received response with status: ${response.status}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Received data:", data);
-            if (data.text) {
-                console.log("Content received, updating display");
-                typedOutput.style.opacity = '0';
-                setTimeout(() => {
-                    typedOutput.innerHTML = '';
-                    if (typedInstance) {
-                        console.log("Destroying previous Typed instance");
-                        typedInstance.destroy();
-                    }
-                    console.log("Creating fireworks");
-                    createFireworks();
-                    streak++;
-                    console.log(`Updating streak to ${streak}`);
-                    updateStreak();
-                    console.log("Enhancing content");
-                    const enhancedContent = enhanceContent(data.text);
-                    console.log("Creating new Typed instance");
-                    typedInstance = new Typed(typedOutput, {
-                        strings: [enhancedContent],
-                        typeSpeed: 5,
-                        showCursor: false,
-                        contentType: 'html',
-                        onComplete: function() {
-                            console.log("Typing complete");
-                            showDemoButton();
-                        },
-                        onStringTyped: function(arrayPos, self) {
-                            console.log("Typed string:", self.strings[arrayPos]);
-                        },
-                        preStringTyped: function(arrayPos, self) {
-                            console.log("About to type:", self.strings[arrayPos]);
-                        }
-                    });
-                    typedOutput.style.opacity = '1';
-                }, 300);
-            } else {
-                console.log("No content received");
-                typedOutput.innerHTML = 'No content available. Please try again later.';
+function fetchAndDisplayText() {
+    console.log('Fetching and displaying text');
+    const typedOutput = document.getElementById('typed-output');
+    
+    typedOutput.style.opacity = '0';
+    
+    const loadingMessages = [
+        "Psychoanalyzing your inner workings...",
+        "Uncovering hidden patterns in your responses...",
+        "Identifying archetypal anomalies...",
+        "Delving into the deep dark depths of your hidden psyche...",
+        "Forging a window into your mind and future...",
+        "Mapping your synaptic space... illustrating your mind's landscape..."
+    ];
+    const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+    console.log(`Displaying loading message: ${randomMessage}`);
+    typedOutput.innerHTML = randomMessage;
+    
+    typedOutput.style.opacity = '0';
+    
+    console.log(`Fetching from ${API_BASE}/getText`);
+    fetch(`${API_BASE}/getText?t=${Date.now()}`)
+    .then(response => {
+        console.log(`Received response with status: ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Received data:", data);
+        if (data.text) {
+            console.log("Content received, updating display");
+            typedOutput.style.opacity = '0';
+            setTimeout(() => {
+                typedOutput.innerHTML = '';
+                if (typedInstance) {
+                    console.log("Destroying previous Typed instance");
+                    typedInstance.destroy();
+                }
+                console.log("Creating fireworks");
+                createFireworks();
+                streak++;
+                console.log(`Updating streak to ${streak}`);
+                updateStreak();
+                console.log("Enhancing content");
+                const enhancedContent = enhanceContent(data.text);
+                console.log("Creating new Typed instance");
+                typedInstance = new Typed(typedOutput, {
+    strings: [enhancedContent],
+    typeSpeed: 5,
+    showCursor: false,
+    contentType: 'html',
+    onComplete: function() {
+        console.log("Typing complete");
+        showDemoButton();
+    }
+});
                 typedOutput.style.opacity = '1';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
+            }, 300);
+        } else {
+            console.log("No content received");
+            typedOutput.innerHTML = 'No content available. Please try again later.';
             typedOutput.style.opacity = '1';
-            streak = 0;
-            updateStreak();
-        });
-    }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
+        typedOutput.style.opacity = '1';
+        streak = 0;
+        updateStreak();
+    });
+}
 
-    function enhanceContent(content) {
-        if (!content) {
-            console.error('No content to enhance');
-            return '<div class="error-message">No content available</div>';
-        }
-        
-        try {
-            content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
-  
-  try {
+function enhanceContent(content) {
     content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
-  
-  // Handle highlight boxes
-  content = content.replace(/(Imagine for a second.*?)\n/g, '</div><div class="highlight-box"><div>$1</div></div><div>');
-  
-  // Handle unordered lists
-  content = content.replace(/\n- /g, '</div><ul><li>');
-  content = content.replace(/\n  - /g, '</li><li>');
-  content = content.replace(/(<li>.*?)\n/g, '$1</li></ul><div>');
-  
-  // Handle ordered lists
-  content = content.replace(/\n\d+\. /g, '</div><ol><li>');
-  content = content.replace(/(<li>.*?)\n/g, '$1</li></ol><div>');
-  
-  // Create feature boxes
-  content = content.replace(/\[(.*?)\]\((.*?)\)/g, '<div class="feature-box"><div class="feature-icon">$2</div><h3>$1</h3></div>');
-  
-  // Create comparison box
-  const comparisonRegex = /Compare:\s*\n((?:- .*\n)+)VS\s*\n((?:- .*\n)+)/g;
-  content = content.replace(comparisonRegex, (match, left, right) => {
-    const leftItems = left.split('\n').filter(item => item.trim() !== '').map(item => item.replace('- ', '')).join('</li><li>');
-    const rightItems = right.split('\n').filter(item => item.trim() !== '').map(item => item.replace('- ', '')).join('</li><li>');
-    return `
-      <div class="comparison-box">
-        <div class="comparison-column">
-          <h3>Without</h3>
-          <ul class="comparison-list negative"><li>${leftItems}</li></ul>
-        </div>
-        <div class="comparison-column">
-          <h3>With</h3>
-          <ul class="comparison-list"><li>${rightItems}</li></ul>
-        </div>
-      </div>
-    `;
-  });
-  
-  // Wrap content in divs
-  content = '<div>' + content + '</div>';
-  
-  // Remove empty divs
-  content = content.replace(/<div>\s*<\/div>/g, '');
-  
-  // Add the demo button
- content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
-            
-            content += '</div>';
-            return content;
-        } catch (error) {
-            console.error('Error enhancing content:', error);
-            return '<div class="error-message">Error processing content</div>';
-        }
-    }
-  
-  content += '</div>';
-  return content;
+    
+    // Replace double line breaks with paragraph tags
+    content = content.replace(/\n\n/g, '</p><p>');
+    
+    // Handle headers
+    content = content.replace(/(Key Insight #\d+:.*?)\n/g, '</p><h2>$1</h2><p>');
+    content = content.replace(/(Here's how.*?:)\n/g, '</p><h3>$1</h3><p>');
+    
+    // Handle highlight boxes
+    content = content.replace(/(Imagine for a second.*?)\n/g, '</p><div class="highlight-box"><p>$1</p></div><p>');
+    
+    // Handle unordered lists
+    content = content.replace(/\n- /g, '</p><ul><li>');
+    content = content.replace(/\n  - /g, '</li><li>');
+    content = content.replace(/(<li>.*?)\n/g, '$1</li></ul><p>');
+    
+    // Handle ordered lists
+    content = content.replace(/\n\d+\. /g, '</p><ol><li>');
+    content = content.replace(/(<li>.*?)\n/g, '$1</li></ol><p>');
+    
+    // Wrap content in paragraphs
+    content = '<p>' + content + '</p>';
+    
+    // Remove empty paragraphs
+    content = content.replace(/<p>\s*<\/p>/g, '');
+    
+    // Add the demo button
+    content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
+    
+    content += '</div>';
+    return content;
 }
 
 function updateStreak() {
@@ -732,7 +514,7 @@ function updateProgressBar() {
 }
 
 // Fetch and display text once when the page loads
-    fetchAndDisplayText();
-    </script>
+fetchAndDisplayText();
+</script>
 </body>
 </html>
