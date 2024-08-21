@@ -215,11 +215,15 @@
         width: 0;
         transition: width 1s ease-in-out;
     }
-
-    .demo-button {
-    display: inline-flex;
+        .button-container {
+    width: 100%;
+    display: flex;
     justify-content: center;
-    align-items: center;
+    margin-top: 40px;
+}
+
+.new-demo-button {
+    display: inline-block;
     background-color: #0142AC;
     color: white;
     font-size: 18px;
@@ -228,11 +232,15 @@
     text-decoration: none;
     font-weight: 700;
     transition: all 0.3s ease;
+    text-align: center;
     width: 100%;
     max-width: 300px;
-    margin: 40px auto 20px;
     box-sizing: border-box;
     animation: buttonAppear 0.5s ease-out, pulse 2s infinite;
+}
+
+.new-demo-button:hover {
+    background-color: #0056d6;
 }
 
 .demo-button span {
@@ -426,7 +434,7 @@ function enhanceContent(content) {
     content = content.replace(/<p>\s*<\/p>/g, '');
     
     // Add the demo button
-    content += `<a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a>`;
+    content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="new-demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
     
     content += '</div>';
     return content;
