@@ -8,29 +8,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
     <style>
     body {
-        font-family: 'Montserrat', sans-serif;
-        background-color: #F0F4F8;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-    
-    .container {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F0F4F8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
     width: 100%;
-    max-width: 1200px; /* Increased from 800px */
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
     box-sizing: border-box;
     position: relative;
 }
-    }
 
-    #typed-output {
+#typed-output {
     font-size: 24px;
     width: 100%;
     text-align: left;
@@ -47,43 +46,43 @@
     line-height: 1.6;
 }
 
-    #typed-output h1, #typed-output h2, #typed-output h3 {
-        font-weight: 700;
-        margin-top: 15px;
-        margin-bottom: 10px;
-    }
+#typed-output h1, #typed-output h2, #typed-output h3 {
+    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
 
-    #typed-output h1 { font-size: 36px; }
-    #typed-output h2 { font-size: 30px; }
-    #typed-output h3 { font-size: 26px; }
+#typed-output h1 { font-size: 36px; }
+#typed-output h2 { font-size: 30px; }
+#typed-output h3 { font-size: 26px; }
 
-    #typed-output strong {
-        font-weight: bold;
-    }
+#typed-output strong {
+    font-weight: bold;
+}
 
-    .streak-counter {
-        font-size: 20px;
-        font-weight: 600;
-        color: #0142AC;
-        background-color: rgba(255, 255, 255, 0.95);
-        padding: 12px 20px;
-        border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(1, 66, 172, 0.2);
-        opacity: 0;
-        transition: all 0.5s ease-in-out;
-        z-index: 2;
-        position: absolute;
-        bottom: -60px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+.streak-counter {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0142AC;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(1, 66, 172, 0.2);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    z-index: 2;
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
-    .streak-counter.visible {
-        opacity: 1;
-        bottom: -50px;
-    }
+.streak-counter.visible {
+    opacity: 1;
+    bottom: -50px;
+}
 
-    .prognostic-button {
+.prognostic-button {
     position: absolute;
     bottom: -30px;
     right: 20px;
@@ -294,14 +293,50 @@
     background-color: #0056d6;
 }
 
-.demo-button span {
-    display: block;
-    text-align: center !important;
-}
-
-    .demo-button:hover {
-        background-color: #0056d6;
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
     }
+
+    .container {
+        padding: 0 10px;
+    }
+
+    #typed-output {
+        font-size: 16px;
+        padding: 15px;
+        min-height: auto;
+    }
+
+    #typed-output h1 { font-size: 24px; }
+    #typed-output h2 { font-size: 20px; }
+    #typed-output h3 { font-size: 18px; }
+
+    .result-header h1 { font-size: 22px; }
+
+    .result-content {
+        padding: 15px;
+    }
+
+    .prognostic-button {
+        bottom: -25px;
+        right: 10px;
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .streak-counter {
+        font-size: 14px;
+        padding: 6px 10px;
+        bottom: -40px;
+    }
+
+    .new-demo-button {
+        font-size: 16px;
+        padding: 12px 20px;
+        white-space: normal;
+    }
+}
 
     @keyframes pulse {
         0% { box-shadow: 0 0 0 0 rgba(1, 66, 172, 0.7); }
@@ -332,8 +367,13 @@ const API_BASE = window.location.hostname === 'localhost'
     : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
 function fetchAndDisplayText() {
+    function fetchAndDisplayText() {
     console.log('Fetching and displaying text');
     const typedOutput = document.getElementById('typed-output');
+    
+    // Set a fixed width before initializing Typed.js
+    typedOutput.style.width = '100%';
+    typedOutput.style.minWidth = '100%';
     
     typedOutput.style.opacity = '0';
     
@@ -405,7 +445,7 @@ typedOutput.style.opacity = '1';
 }
 
 function enhanceContent(content) {
-    content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
+    content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content" style="width:100%;">` + content;
     
     // Replace double line breaks with paragraph tags
     content = content.replace(/\n\n/g, '</p><p>');
