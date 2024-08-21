@@ -352,21 +352,20 @@ function fetchAndDisplayText() {
         if (data.text) {
             console.log("Content received, updating display");
             typedOutput.style.opacity = '0';
-            setTimeout(() => {
-                typedOutput.innerHTML = '';
-                if (typedInstance) {
-                    console.log("Destroying previous Typed instance");
-                    typedInstance.destroy();
-                }
-                console.log("Creating fireworks");
-                createFireworks();
-                streak++;
-                console.log(`Updating streak to ${streak}`);
-                updateStreak();
-                console.log("Enhancing content");
-                const enhancedContent = enhanceContent(data.text);
-                console.log("Creating new Typed instance");
-                typedInstance = new Typed(typedOutput, {
+            typedOutput.innerHTML = '';
+if (typedInstance) {
+    console.log("Destroying previous Typed instance");
+    typedInstance.destroy();
+}
+console.log("Creating fireworks");
+createFireworks();
+streak++;
+console.log(`Updating streak to ${streak}`);
+updateStreak();
+console.log("Enhancing content");
+const enhancedContent = enhanceContent(data.text);
+console.log("Creating new Typed instance");
+typedInstance = new Typed(typedOutput, {
     strings: [enhancedContent],
     typeSpeed: 5,
     showCursor: false,
@@ -376,8 +375,6 @@ function fetchAndDisplayText() {
         showDemoButton();
     }
 });
-                typedOutput.style.opacity = '1';
-            }, 300);
         } else {
             console.log("No content received");
             typedOutput.innerHTML = 'No content available. Please try again later.';
