@@ -312,44 +312,6 @@
     <div id="fireworks-container"></div>
         
     <script>
-        let isUserInteracting = false;  // To check if user is interacting
-let lastScrollTop = 0;          // To monitor scroll direction
-
-// Function to scroll smoothly to the bottom of the page
-function autoScroll() {
-    if (!isUserInteracting) {
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: 'smooth'
-        });
-    }
-}
-
-// Triggered after each new text string is typed
-function onTextGenerated() {
-    autoScroll();
-}
-
-// Track if the user is manually scrolling
-window.addEventListener('scroll', () => {
-    let currentScrollTop = window.scrollY;
-    
-    if (currentScrollTop < lastScrollTop) {
-        // User scrolled up
-        isUserInteracting = true;
-    } else if ((window.innerHeight + currentScrollTop) >= document.body.offsetHeight) {
-        // User has scrolled back to the bottom, so re-enable auto-scrolling
-        isUserInteracting = false;
-    }
-    
-    lastScrollTop = currentScrollTop;
-});
-
-// Track if the user is selecting/highlighting text
-document.addEventListener('selectionchange', () => {
-    isUserInteracting = true;
-});
-
 let typedInstance = null;
 let streak = 0;
 const API_BASE = window.location.hostname === 'localhost' 
@@ -382,55 +344,54 @@ function fetchAndDisplayText() {
         console.log(`Received response with status: ${response.status}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-     return response.json();
-})
-.then(data => {
-    console.log("Received data:", data);
-    if (data.text) {
-        console.log("Content received, updating display");
-        typedOutput.style.opacity = '0';
-        setTimeout(() => {
-            typedOutput.innerHTML = '';
-            if (typedInstance) {
-                console.log("Destroying previous Typed instance");
-                typedInstance.destroy();
-            }
-            console.log("Creating fireworks");
-            createFireworks();
-            streak++;
-            console.log(`Updating streak to ${streak}`);
-            updateStreak();
-            console.log("Enhancing content");
-            const enhancedContent = enhanceContent(data.text);
-            console.log("Creating new Typed instance");
-            
-            typedInstance = new Typed(typedOutput, {
-                strings: [enhancedContent],
-                typeSpeed: 5,
-                showCursor: false,
-                contentType: 'html',
-                onComplete: function() {
-                    showDemoButton();  // This function will show your demo button
-                },
-                onStringTyped: function() {
-                    onTextGenerated();  // Auto-scroll after each string is typed
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Received data:", data);
+        if (data.text) {
+            console.log("Content received, updating display");
+            typedOutput.style.opacity = '0';
+            setTimeout(() => {
+                typedOutput.innerHTML = '';
+                if (typedInstance) {
+                    console.log("Destroying previous Typed instance");
+                    typedInstance.destroy();
                 }
-            });
-            typedOutput.style.opacity = '1';
-        }, 300);
-    } else {
-        console.log("No content received");
-        typedOutput.innerHTML = 'No content available. Please try again later.';
-        typedOutput.style.opacity = '1';
+                console.log("Creating fireworks");
+                createFireworks();
+                streak++;
+                console.log(`Updating streak to ${streak}`);
+                updateStreak();
+                console.log("Enhancing content");
+                const enhancedContent = enhanceContent(data.text);
+                console.log("Creating new Typed instance");
+                typedInstance = new Typed(typedOutput, {
+    strings: [enhancedContent],
+    typeSpeed: 5,
+    showCursor: false,
+    contentType: 'html',
+    onComplete: function() {
+        console.log("Typing complete");
+        showDemoButton();
     }
-})
-.catch(error => {
-    console.error('Error:', error);
-    typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
-    typedOutput.style.opacity = '1';
-    streak = 0;
-    updateStreak();
 });
+                typedOutput.style.opacity = '1';
+            }, 300);
+        } else {
+            console.log("No content received");
+            typedOutput.innerHTML = 'No content available. Please try again later.';
+            typedOutput.style.opacity = '1';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
+        typedOutput.style.opacity = '1';
+        streak = 0;
+        updateStreak();
+    });
+}
 
 function enhanceContent(content) {
     content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
