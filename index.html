@@ -331,49 +331,101 @@
     background-color: #0056d6;
 }
 
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
 
-    .container {
-        padding: 0 10px;
-    }
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+  }
 
-    #typed-output {
-        font-size: 16px;
-        padding: 15px;
-        min-height: auto;
-    }
+  #typed-output {
+    font-size: 16px;
+    padding: 15px;
+    min-height: auto;
+  }
 
-    #typed-output h1 { font-size: 24px; }
-    #typed-output h2 { font-size: 20px; }
-    #typed-output h3 { font-size: 18px; }
+  #typed-output h1 { font-size: 24px; }
+  #typed-output h2 { font-size: 20px; }
+  #typed-output h3 { font-size: 18px; }
 
-    .result-header h1 { font-size: 22px; }
+  .result-header {
+    border-radius: 10px 10px 0 0;
+    padding: 15px;
+  }
 
-    .result-content {
-        padding: 15px;
-    }
+  .result-header h1 { 
+    font-size: 22px; 
+    margin: 0;
+  }
 
-    .prognostic-button {
-        bottom: -25px;
-        right: 10px;
-        font-size: 10px;
-        padding: 3px 6px;
-    }
+  .result-content {
+    border-radius: 0 0 10px 10px;
+    padding: 20px 15px;
+  }
 
-    .streak-counter {
-        font-size: 14px;
-        padding: 6px 10px;
-        bottom: -40px;
-    }
+  .highlight-box {
+    margin: 15px 0;
+    padding: 15px;
+  }
 
-    .new-demo-button {
-        font-size: 16px;
-        padding: 12px 20px;
-        white-space: normal;
-    }
+  .action-item {
+    margin: 15px 0;
+    padding: 10px;
+  }
+
+  .streak-counter {
+    font-size: 14px;
+    padding: 6px 10px;
+    bottom: -40px;
+  }
+
+  .prognostic-button {
+    bottom: -25px;
+    right: 10px;
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .new-demo-button {
+    font-size: 16px;
+    padding: 12px 20px;
+    white-space: normal;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .button-container {
+    margin-top: 30px;
+  }
+}
+
+/* Additional global styles to ensure proper scaling */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+#typed-output {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.result-content {
+  width: 100%;
+  box-sizing: border-box;
 }
 
     @keyframes pulse {
