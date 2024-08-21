@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
@@ -70,7 +70,9 @@
     }
 
     .container {
-        padding: 0;
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
 
     #typed-output {
@@ -79,40 +81,37 @@
         min-height: auto;
     }
 
-    .result-header, .result-content {
-        border-radius: 0;
+    #typed-output h1 { font-size: 24px; }
+    #typed-output h2 { font-size: 20px; }
+    #typed-output h3 { font-size: 18px; }
+
+    .result-header h1 { font-size: 22px; }
+
+    .result-content {
+        padding: 15px;
     }
-}
 
-#typed-output h1, #typed-output h2, #typed-output h3 {
-    font-weight: 700;
-    margin-top: 15px;
-    margin-bottom: 10px;
-}
+    .prognostic-button {
+        bottom: -25px;
+        right: 10px;
+        font-size: 10px;
+        padding: 3px 6px;
+    }
 
-#typed-output h1 { font-size: 36px; }
-#typed-output h2 { font-size: 30px; }
-#typed-output h3 { font-size: 26px; }
+    .streak-counter {
+        font-size: 14px;
+        padding: 6px 10px;
+        bottom: -40px;
+    }
 
-#typed-output strong {
-    font-weight: bold;
-}
-
-.streak-counter {
-    font-size: 20px;
-    font-weight: 600;
-    color: #0142AC;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 12px 20px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(1, 66, 172, 0.2);
-    opacity: 0;
-    transition: all 0.5s ease-in-out;
-    z-index: 2;
-    position: absolute;
-    bottom: -60px;
-    left: 50%;
-    transform: translateX(-50%);
+    .new-demo-button {
+        font-size: 16px;
+        padding: 12px 20px;
+        white-space: normal;
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+    }
 }
 
 .streak-counter.visible {
@@ -331,101 +330,49 @@
     background-color: #0056d6;
 }
 
-@media (max-width: 768px) {
-  body {
-    padding: 10px;
-  }
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
 
-  .container {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 15px;
-    box-sizing: border-box;
-  }
+    .container {
+        padding: 0 10px;
+    }
 
-  #typed-output {
-    font-size: 16px;
-    padding: 15px;
-    min-height: auto;
-  }
+    #typed-output {
+        font-size: 16px;
+        padding: 15px;
+        min-height: auto;
+    }
 
-  #typed-output h1 { font-size: 24px; }
-  #typed-output h2 { font-size: 20px; }
-  #typed-output h3 { font-size: 18px; }
+    #typed-output h1 { font-size: 24px; }
+    #typed-output h2 { font-size: 20px; }
+    #typed-output h3 { font-size: 18px; }
 
-  .result-header {
-    border-radius: 10px 10px 0 0;
-    padding: 15px;
-  }
+    .result-header h1 { font-size: 22px; }
 
-  .result-header h1 { 
-    font-size: 22px; 
-    margin: 0;
-  }
+    .result-content {
+        padding: 15px;
+    }
 
-  .result-content {
-    border-radius: 0 0 10px 10px;
-    padding: 20px 15px;
-  }
+    .prognostic-button {
+        bottom: -25px;
+        right: 10px;
+        font-size: 10px;
+        padding: 3px 6px;
+    }
 
-  .highlight-box {
-    margin: 15px 0;
-    padding: 15px;
-  }
+    .streak-counter {
+        font-size: 14px;
+        padding: 6px 10px;
+        bottom: -40px;
+    }
 
-  .action-item {
-    margin: 15px 0;
-    padding: 10px;
-  }
-
-  .streak-counter {
-    font-size: 14px;
-    padding: 6px 10px;
-    bottom: -40px;
-  }
-
-  .prognostic-button {
-    bottom: -25px;
-    right: 10px;
-    font-size: 10px;
-    padding: 3px 6px;
-  }
-
-  .new-demo-button {
-    font-size: 16px;
-    padding: 12px 20px;
-    white-space: normal;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .button-container {
-    margin-top: 30px;
-  }
-}
-
-/* Additional global styles to ensure proper scaling */
-html, body {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-  box-sizing: border-box;
-}
-
-#typed-output {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.result-content {
-  width: 100%;
-  box-sizing: border-box;
+    .new-demo-button {
+        font-size: 16px;
+        padding: 12px 20px;
+        white-space: normal;
+    }
 }
 
     @keyframes pulse {
