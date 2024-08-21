@@ -46,6 +46,43 @@
   padding: 0;
 }
 
+        #fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.firework {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: shoot 1s ease-out forwards;
+}
+
+.spark {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    animation: spark 0.8s ease-out forwards;
+}
+
+@keyframes shoot {
+    0% { transform: translateY(50vh) scale(0); opacity: 0; }
+    50% { transform: translateY(-25vh) scale(1); opacity: 1; }
+    100% { transform: translateY(-50vh) scale(0.8); opacity: 0; }
+}
+
+@keyframes spark {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+        
     .section {
         background-color: #f8f9fa;
         border-radius: 10px;
@@ -156,22 +193,7 @@
         ? 'http://localhost:3000' 
         : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
-        function createFireworks() {
-  const container = document.getElementById('fireworks-container');
-  container.innerHTML = '';
-  const colors = ['#FFD700', '#FFA500', '#FF4500', '#FF00FF', '#A020F0'];
-
-  const textBox = document.getElementById('typed-output');
-  const rect = textBox.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-
-  for (let i = 0; i < 5; i++) {
-    setTimeout(() => {
-      createFirework(container, colors, centerX, centerY);
-    }, i * 200);
-  }
-}
+        <div id="fireworks-container"></div>
         
     function fetchAndDisplayText() {
         console.log('Fetching and displaying text');
@@ -200,6 +222,7 @@
                         typedInstance.destroy();
                     }
                     console.log("Enhancing content");
+                    createFireworks();
                     const enhancedContent = enhanceContent(data.text);
                     console.log("Creating new Typed instance");
                     typedInstance = new Typed(typedOutput, {
@@ -227,40 +250,30 @@
     }
 
     function enhanceContent(content) {
-        let enhancedContent = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">`;
-        
-        // Split content into sections
-content = content.replace(/Key Insight #(\d+):(.*?)(?=Key Insight #|$)/gs, (match, number, text) => {
-  return `
-    <section class="insight-section">
-      <div class="insight-header">
-        <span class="insight-number">${number}</span>
-        <h2>Key Insight #${number}</h2>
-      </div>
-      <div class="insight-content">
-        ${text.trim()}
-      </div>
-    </section>
-  `;
-});
-        const sections = content.split(/Key Insight #\d+:/);
-        sections.shift(); // Remove the empty first element
-
-        sections.forEach((section, index) => {
-            enhancedContent += `
-                <div class="section">
-                    <h2>Key Insight #${index + 1}:</h2>
-                    ${processSection(section)}
+    let enhancedContent = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">`;
+    
+    content = content.replace(/Key Insight #(\d+):(.*?)(?=Key Insight #|$)/gs, (match, number, text) => {
+        return `
+            <section class="insight-section">
+                <div class="insight-header">
+                    <span class="insight-number">${number}</span>
+                    <h2>Key Insight #${number}</h2>
                 </div>
-            `;
-        });
-
-        // Add the demo button
-        enhancedContent += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
-        
-        enhancedContent += '</div>';
-        return enhancedContent;
-    }
+                <div class="insight-content">
+                    ${processSection(text.trim())}
+                </div>
+            </section>
+        `;
+    });
+    
+    enhancedContent += content;
+    
+    // Add the demo button
+    enhancedContent += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
+    
+    enhancedContent += '</div>';
+    return enhancedContent;
+}
 
     function processSection(sectionContent) {
         // Handle highlight boxes
@@ -280,6 +293,7 @@ content = content.replace(/Key Insight #(\d+):(.*?)(?=Key Insight #|$)/gs, (matc
 
     // Fetch and display text once when the page loads
     fetchAndDisplayText();
+        <div id="fireworks-container"></div>
     </script>
 </body>
 </html>
