@@ -6,7 +6,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js">
+
+        typedInstance = new Typed(typedOutput, {
+    strings: [enhancedContent],
+    typeSpeed: 5,
+    showCursor: false,
+    contentType: 'html',
+    onComplete: function() {
+        console.log("Typing complete");
+        showDemoButton();
+    },
+    onStringTyped: function(arrayPos, self) {
+        console.log("Typed string:", self.strings[arrayPos]);
+    },
+    preStringTyped: function(arrayPos, self) {
+        console.log("About to type:", self.strings[arrayPos]);
+    }
+});
+        
+    </script>
     <style>
     body {
         font-family: 'Montserrat', sans-serif;
@@ -152,7 +171,11 @@
     #typed-output strong {
         font-weight: bold;
     }
-
+        
+display: block !important; /* Force display */
+    min-height: 200px; /* Ensure there's always some visible area */
+}
+        
         .feature-box {
   background-color: #f8f9fa;
   border-radius: 10px;
@@ -471,21 +494,8 @@ function fetchAndDisplayText() {
     
     typedOutput.style.opacity = '0';
     
-    const loadingMessages = [
-        "Psychoanalyzing your inner workings...",
-        "Uncovering hidden patterns in your responses...",
-        "Identifying archetypal anomalies...",
-        "Delving into the deep dark depths of your hidden psyche...",
-        "Forging a window into your mind and future...",
-        "Mapping your synaptic space... illustrating your mind's landscape..."
-    ];
-    const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-    console.log(`Displaying loading message: ${randomMessage}`);
-    typedOutput.innerHTML = randomMessage;
+    // ... (keep existing code)
     
-    typedOutput.style.opacity = '0';
-    
-    console.log(`Fetching from ${API_BASE}/getText`);
     fetch(`${API_BASE}/getText?t=${Date.now()}`)
     .then(response => {
         console.log(`Received response with status: ${response.status}`);
@@ -498,33 +508,7 @@ function fetchAndDisplayText() {
         console.log("Received data:", data);
         if (data.text) {
             console.log("Content received, updating display");
-            typedOutput.style.opacity = '0';
-            setTimeout(() => {
-                typedOutput.innerHTML = '';
-                if (typedInstance) {
-                    console.log("Destroying previous Typed instance");
-                    typedInstance.destroy();
-                }
-                console.log("Creating fireworks");
-                createFireworks();
-                streak++;
-                console.log(`Updating streak to ${streak}`);
-                updateStreak();
-                console.log("Enhancing content");
-                const enhancedContent = enhanceContent(data.text);
-                console.log("Creating new Typed instance");
-                typedInstance = new Typed(typedOutput, {
-    strings: [enhancedContent],
-    typeSpeed: 5,
-    showCursor: false,
-    contentType: 'html',
-    onComplete: function() {
-        console.log("Typing complete");
-        showDemoButton();
-    }
-});
-                typedOutput.style.opacity = '1';
-            }, 300);
+            // ... (keep existing code)
         } else {
             console.log("No content received");
             typedOutput.innerHTML = 'No content available. Please try again later.';
@@ -539,16 +523,14 @@ function fetchAndDisplayText() {
         updateStreak();
     });
 }
-
 function enhanceContent(content) {
-  content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
+  if (!content) {
+    console.error('No content to enhance');
+    return '<div class="error-message">No content available</div>';
+  }
   
-  // Replace double line breaks with div tags
-  content = content.replace(/\n\n/g, '</div><div>');
-  
-  // Handle headers
-  content = content.replace(/(Key Insight #\d+:.*?)\n/g, '</div><h2>$1</h2><div>');
-  content = content.replace(/(Here's how.*?:)\n/g, '</div><h3>$1</h3><div>');
+  try {
+    content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
   
   // Handle highlight boxes
   content = content.replace(/(Imagine for a second.*?)\n/g, '</div><div class="highlight-box"><div>$1</div></div><div>');
@@ -592,6 +574,14 @@ function enhanceContent(content) {
   
   // Add the demo button
   content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
+    
+    content += '</div>';
+    return content;
+  } catch (error) {
+    console.error('Error enhancing content:', error);
+    return '<div class="error-message">Error processing content</div>';
+  }
+}
   
   content += '</div>';
   return content;
