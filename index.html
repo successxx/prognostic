@@ -386,8 +386,7 @@ white-space: normal;
 .demo-button:hover {
 background-color: #0056d6;
 }
-
-  .share-buttons {
+.share-buttons {
     display: flex;
     justify-content: center;
     gap: 1rem;
@@ -443,7 +442,24 @@ background-color: #0056d6;
 <div id="typed-output"></div>
 <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
 <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
-<div class="share-buttons" id="shareButtons">
+</div>
+<div id="fireworks-container"></div>
+
+<script>
+let typedInstance = null;
+let streak = 0;
+const API_BASE = window.location.hostname === 'localhost'
+? 'http://localhost:3000'
+: 'https://prognosticai-11cf2622005a.herokuapp.com';
+
+  function addShareButtons() {
+    const container = document.querySelector('.container');
+    const shareButtonsDiv = document.createElement('div');
+    shareButtonsDiv.className = 'share-buttons';
+    shareButtonsDiv.id = 'shareButtons';
+    shareButtonsDiv.style.opacity = '0';
+    
+    const buttonsHTML = `
         <a href="sms:?&body=Hey,%20check%20out%20this%20new%20marketing%20software.%20it%20recreates%20new%20marketing%20for%20each%20lead%20in%20real%20time,%20and%20I%20thought%20of%20you!%20I%20just%20took%20their%20quiz%20and%20got%20mind-blowing%20personal%20insights.%20Try%20it%20out%20and%20see%20if%20their%20AI%20can%20make%20you%20some%20money!%20https%3A%2F%2FPrognostic.ai" target="_blank" rel="noopener noreferrer" class="share-button" style="background-color: #25D366;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
         </a>
@@ -456,21 +472,12 @@ background-color: #0056d6;
         <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fprognostic.ai&text=Hey,%20check%20out%20this%20new%20marketing%20software.%20it%20recreates%20new%20marketing%20for%20each%20lead%20in%20real%20time,%20and%20I%20thought%20of%20you!%20I%20just%20took%20their%20quiz%20and%20got%20mind-blowing%20personal%20insights.%20Try%20it%20out%20and%20see%20if%20their%20AI%20can%20make%20you%20some%20money!" target="_blank" rel="noopener noreferrer" class="share-button" style="background-color: #000000;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
         </a>
-    </div>
-</div>
-<div id="fireworks-container"></div>
-
-<script>
-</div>
-<div id="fireworks-container"></div>
-
-<script>
-let typedInstance = null;
-let streak = 0;
-const API_BASE = window.location.hostname === 'localhost'
-? 'http://localhost:3000'
-: 'https://prognosticai-11cf2622005a.herokuapp.com';
-
+    `;
+    
+    shareButtonsDiv.innerHTML = buttonsHTML;
+    container.appendChild(shareButtonsDiv);
+}
+  
 function fetchAndDisplayText() {
 console.log('Fetching and displaying text');
 const typedOutput = document.getElementById('typed-output');
@@ -632,10 +639,21 @@ container.appendChild(spark);
 }
 
 function showDemoButton() {
-const demoButton = document.getElementById('demoButton');
-if (demoButton) {
-demoButton.style.display = 'inline-block';
-}
+    const demoButton = document.getElementById('demoButton');
+    if (demoButton) {
+        demoButton.style.display = 'inline-block';
+    }
+    
+    // Add share buttons
+    addShareButtons();
+    
+    // Show the share buttons after the demo button appears
+    setTimeout(() => {
+        const shareButtons = document.getElementById('shareButtons');
+        if (shareButtons) {
+            shareButtons.style.opacity = '1';
+        }
+    }, 500); // Delay of 500ms for a smooth transition
 }
 
 function addScrollAnimation() {
@@ -667,18 +685,6 @@ clearInterval(interval);
 }, 50);
 }
 
-  function showDemoButton() {
-    const demoButton = document.getElementById('demoButton');
-    if (demoButton) {
-        demoButton.style.display = 'inline-block';
-    }
-    setTimeout(() => {
-        const shareButtons = document.getElementById('shareButtons');
-        if (shareButtons) {
-            shareButtons.style.opacity = '1';
-        }
-    }, 500); // Delay of 500ms for a smooth transition
-}
 // Fetch and display text once when the page loads
 fetchAndDisplayText();
 </script>
