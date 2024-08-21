@@ -465,83 +465,81 @@ const API_BASE = window.location.hostname === 'localhost'
 : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
 function fetchAndDisplayText() {
-console.log('Fetching and displaying text');
-const typedOutput = document.getElementById('typed-output');
+    console.log('Fetching and displaying text');
+    const typedOutput = document.getElementById('typed-output');
 
-// Set a fixed width before initializing Typed.js
-typedOutput.style.width = '100%';
-typedOutput.style.minWidth = '100%';
+    // Set a fixed width before initializing Typed.js
+    typedOutput.style.width = '100%';
+    typedOutput.style.minWidth = '100%';
 
-typedOutput.style.opacity = '0';
+    typedOutput.style.opacity = '0';
 
-const loadingMessages = [
-"Psychoanalyzing your inner workings...",
-"Uncovering hidden patterns in your responses...",
-"Identifying archetypal anomalies...",
-"Delving into the deep dark depths of your hidden psyche...",
-"Forging a window into your mind and future...",
-"Mapping your synaptic space... illustrating your mind's landscape..."
-];
-const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
-console.log(`Displaying loading message: ${randomMessage}`);
-typedOutput.innerHTML = randomMessage;
+    const loadingMessages = [
+        "Psychoanalyzing your inner workings...",
+        "Uncovering hidden patterns in your responses...",
+        "Identifying archetypal anomalies...",
+        "Delving into the deep dark depths of your hidden psyche...",
+        "Forging a window into your mind and future...",
+        "Mapping your synaptic space... illustrating your mind's landscape..."
+    ];
+    const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+    console.log(`Displaying loading message: ${randomMessage}`);
+    typedOutput.innerHTML = randomMessage;
 
-typedOutput.style.opacity = '0';
+    typedOutput.style.opacity = '0';
 
-console.log(`Fetching from ${API_BASE}/getText`);
-fetch(`${API_BASE}/getText?t=${Date.now()}`)
-.then(response => {
-console.log(`Received response with status: ${response.status}`);
-if (!response.ok) {
-throw new Error(`HTTP error! status: ${response.status}`);
-}
-return response.json();
-})
-.then(data => {
-console.log("Received data:", data);
-if (data.text) {
-console.log("Content received, updating display");
-typedOutput.style.opacity = '0';
-typedOutput.innerHTML = '';
-if (typedInstance) {
-console.log("Destroying previous Typed instance");
-typedInstance.destroy();
-}
-console.log("Creating fireworks");
-createFireworks();
-streak++;
-console.log(`Updating streak to ${streak}`);
-updateStreak();
-console.log("Enhancing content");
-const enhancedContent = enhanceContent(data.text);
-console.log("Creating new Typed instance");
-typedInstance = new Typed(typedOutput, {
-    strings: [enhancedContent],
-    typeSpeed: 5,
-    showCursor: false,
-    contentType: 'html',
-    onComplete: function() {
-        console.log("Typing complete");
-        showDemoButton();
-        addShareButtons();
-    }
-});
-}
-});
-typedOutput.style.opacity = '1';
-} else {
-console.log("No content received");
-typedOutput.innerHTML = 'No content available. Please try again later.';
-typedOutput.style.opacity = '1';
-}
-})
-.catch(error => {
-console.error('Error:', error);
-typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
-typedOutput.style.opacity = '1';
-streak = 0;
-updateStreak();
-});
+    console.log(`Fetching from ${API_BASE}/getText`);
+    fetch(`${API_BASE}/getText?t=${Date.now()}`)
+        .then(response => {
+            console.log(`Received response with status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Received data:", data);
+            if (data.text) {
+                console.log("Content received, updating display");
+                typedOutput.style.opacity = '0';
+                typedOutput.innerHTML = '';
+                if (typedInstance) {
+                    console.log("Destroying previous Typed instance");
+                    typedInstance.destroy();
+                }
+                console.log("Creating fireworks");
+                createFireworks();
+                streak++;
+                console.log(`Updating streak to ${streak}`);
+                updateStreak();
+                console.log("Enhancing content");
+                const enhancedContent = enhanceContent(data.text);
+                console.log("Creating new Typed instance");
+                typedInstance = new Typed(typedOutput, {
+                    strings: [enhancedContent],
+                    typeSpeed: 5,
+                    showCursor: false,
+                    contentType: 'html',
+                    onComplete: function() {
+                        console.log("Typing complete");
+                        showDemoButton();
+                        addShareButtons();
+                    }
+                });
+                typedOutput.style.opacity = '1';
+            } else {
+                console.log("No content received");
+                typedOutput.innerHTML = 'No content available. Please try again later.';
+                typedOutput.style.opacity = '1';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
+            typedOutput.style.opacity = '1';
+            streak = 0;
+            updateStreak();
+        });
 }
 
 function enhanceContent(content) {
