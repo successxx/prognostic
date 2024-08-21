@@ -19,12 +19,19 @@
     padding: 20px;
     box-sizing: border-box;
 }
-
+        
+        body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+        
 .container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0;
     box-sizing: border-box;
     position: relative;
 }
@@ -36,7 +43,7 @@
     font-weight: 300;
     min-height: 120px;
     background-color: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
+    border-radius: 0;
     padding: 25px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 15px;
@@ -44,6 +51,23 @@
     box-sizing: border-box;
     white-space: pre-wrap;
     line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 0;
+    }
+
+    .container {
+        padding: 0;
+    }
+
+    #typed-output {
+        font-size: 16px;
+        padding: 15px;
+        min-height: auto;
+        border-radius: 0;
+    }
 }
 
 #typed-output h1, #typed-output h2, #typed-output h3 {
@@ -367,7 +391,6 @@ const API_BASE = window.location.hostname === 'localhost'
     : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
 function fetchAndDisplayText() {
-    function fetchAndDisplayText() {
     console.log('Fetching and displaying text');
     const typedOutput = document.getElementById('typed-output');
     
