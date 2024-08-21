@@ -10,132 +10,158 @@
     body {
         font-family: 'Montserrat', sans-serif;
         background-color: #F0F4F8;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
         margin: 0;
         padding: 20px;
         box-sizing: border-box;
     }
     
     .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        box-sizing: border-box;
-    }
-
-   body {
-  background-color: #F0F4F8;
-}
-
-#typed-output {
-  background-color: transparent;
-  box-shadow: none;
-}
-
-.result-header {
-  background-color: #0142AC;
-  color: white;
-  padding: 30px;
-  border-radius: 15px 15px 0 0;
-  margin-bottom: 0;
-  text-align: center;
-}
-
-.result-content {
-  background-color: transparent;
-  border-radius: 0 0 15px 15px;
-  padding: 0;
-}
-
-        #fireworks-container {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1000;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
-
-.firework {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    animation: shoot 1s ease-out forwards;
-}
-
-.spark {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    animation: spark 0.8s ease-out forwards;
-}
-
-@keyframes shoot {
-    0% { transform: translateY(50vh) scale(0); opacity: 0; }
-    50% { transform: translateY(-25vh) scale(1); opacity: 1; }
-    100% { transform: translateY(-50vh) scale(0.8); opacity: 0; }
-}
-
-@keyframes spark {
-    0% { transform: translate(0, 0) scale(1); opacity: 1; }
-    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-}
-        
-    .section {
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-        .insight-section {
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-  overflow: hidden;
+    #typed-output {
+        font-size: 24px;
+        width: 100%;
+        text-align: left;
+        font-weight: 300;
+        min-height: 120px;
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        white-space: pre-wrap;
+        line-height: 1.6;
+    }
+
+    #typed-output h1, #typed-output h2, #typed-output h3 {
+        font-weight: 700;
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+
+    #typed-output h1 { font-size: 36px; }
+    #typed-output h2 { font-size: 30px; }
+    #typed-output h3 { font-size: 26px; }
+
+    #typed-output strong {
+        font-weight: bold;
+    }
+
+    .streak-counter {
+        font-size: 20px;
+        font-weight: 600;
+        color: #0142AC;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 12px 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(1, 66, 172, 0.2);
+        opacity: 0;
+        transition: all 0.5s ease-in-out;
+        z-index: 2;
+        position: absolute;
+        bottom: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .streak-counter.visible {
+        opacity: 1;
+        bottom: -50px;
+    }
+
+    .prognostic-button {
+    position: absolute;
+    bottom: -30px;
+    right: 0;
+    background-color: #0142AC;
+    color: white;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 400;
+    z-index: 10;
 }
 
-.insight-header {
-  background-color: #0142AC;
-  color: white;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-}
+    #fireworks-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+    }
 
-.insight-number {
-  font-size: 36px;
-  font-weight: bold;
-  margin-right: 15px;
-}
+    .firework {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        animation: shoot 1s ease-out forwards;
+    }
 
-.insight-header h2 {
-  margin: 0;
-  font-size: 24px;
-}
+    .spark {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        animation: spark 0.8s ease-out forwards;
+    }
 
-.insight-content {
-  padding: 25px;
-}
+    @keyframes shoot {
+        0% { transform: translateY(50vh) scale(0); opacity: 0; }
+        50% { transform: translateY(-25vh) scale(1); opacity: 1; }
+        100% { transform: translateY(-50vh) scale(0.8); opacity: 0; }
+    }
 
-.highlight-box {
-  background-color: #F0F4F8;
-  border-left: 5px solid #0142AC;
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: 0 15px 15px 0;
-}
-        
-    .highlight-box {
-        background-color: #e9ecef;
-        border-left: 5px solid #0142AC;
+    @keyframes spark {
+        0% { transform: translate(0, 0) scale(1); opacity: 1; }
+        100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+    }
+
+    @keyframes buttonAppear {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+        background-color: #0142AC;
+        color: white;
         padding: 20px;
+        border-radius: 15px 15px 0 0;
+        margin-bottom: 0;
+        text-align: center;
+    }
+
+    .result-content {
+        background-color: white;
+        border-radius: 0 0 15px 15px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .highlight-box {
+        background-color: #F0F4F8;
+        border-left: 5px solid #0142AC;
+        padding: 15px;
         margin: 20px 0;
-        border-radius: 0 10px 10px 0;
+        border-radius: 0 15px 15px 0;
     }
 
     .action-item {
@@ -143,7 +169,7 @@
         align-items: flex-start;
         margin: 20px 0;
         padding: 15px;
-        background-color: #f0f4f8;
+        background-color: #f8f9fa;
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
@@ -155,20 +181,58 @@
         flex-shrink: 0;
     }
 
-    .demo-button {
-        display: inline-block;
-        background-color: #0142AC;
-        color: white;
-        font-size: 18px;
-        padding: 15px 30px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 700;
-        transition: all 0.3s ease;
-        text-align: center;
-        margin: 40px auto 20px;
-        animation: buttonAppear 0.5s ease-out, pulse 2s infinite;
+    .highlight-box {
+        background-color: #e9ecef;
+        border-left: 5px solid #0142AC;
+        padding: 20px;
+        margin: 30px 0;
+        border-radius: 0 15px 15px 0;
     }
+
+    .highlight-box:after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 40px;
+        height: 40px;
+        background-color: #0142AC;
+        transform: rotate(45deg);
+    }
+
+    .progress-bar {
+        width: 100%;
+        background-color: #F0F4F8;
+        border-radius: 10px;
+        margin: 20px 0;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 20px;
+        background-color: #0142AC;
+        width: 0;
+        transition: width 1s ease-in-out;
+    }
+
+    .demo-button {
+    display: inline-block;
+    white-space: nowrap;
+    background-color: #0142AC;
+    color: white;
+    font-size: 18px;
+    padding: 30px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin: 40px auto 20px;
+    width: 100%;
+    max-width: 300px; /* Ensures the button doesn't stretch too much */
+    box-sizing: border-box; /* Includes padding in width calculations */
+    animation: buttonAppear 0.5s ease-out, pulse 2s infinite;
+}
 
     .demo-button:hover {
         background-color: #0056d6;
@@ -179,121 +243,278 @@
         70% { box-shadow: 0 0 0 10px rgba(1, 66, 172, 0); }
         100% { box-shadow: 0 0 0 0 rgba(1, 66, 172, 0); }
     }
-    </style>
+    
+    @media (max-width: 600px) {
+        .container {
+            width: 90%;
+            max-width: none;
+        }
+        #typed-output {
+            font-size: 18px;
+            padding: 20px;
+            min-height: 100px;
+            text-align: left;
+        }
+        #typed-output h1 { font-size: 28px; }
+        #typed-output h2 { font-size: 24px; }
+        #typed-output h3 { font-size: 22px; }
+        {
+    text-align: center;
+}
+        .prognostic-button {
+            font-size: 10px;
+            bottom: -25px;
+        }
+        .streak-counter {
+            font-size: 16px;
+            padding: 10px 15px;
+            bottom: -50px;
+        }
+        .streak-counter.visible {
+            bottom: -40px;
+        }
+    }
+        .button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.demo-button {
+    display: inline-block;
+    white-space: nowrap;
+    background-color: #0142AC;
+    color: white;
+    font-size: 18px;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-align: center;
+    max-width: 300px;
+    animation: buttonAppear 0.5s ease-out, pulse 2s infinite;
+}
+
+.demo-button:hover {
+    background-color: #0056d6;
+}
+</style>
 </head>
 <body>
     <div class="container">
         <div id="loading" style="display: none;">Analyzing...</div>
         <div id="typed-output"></div>
+        <div class="streak-counter" id="streak-counter">Streak: 1 🔥</div>
+        <a href="https://prognostic.ai" class="prognostic-button" target="_blank">PrognosticAI Enabled</a>
     </div>
-    
+    <div id="fireworks-container"></div>
+        
     <script>
-    let typedInstance = null;
-    const API_BASE = window.location.hostname === 'localhost' 
-        ? 'http://localhost:3000' 
-        : 'https://prognosticai-11cf2622005a.herokuapp.com';
+let typedInstance = null;
+let streak = 0;
+const API_BASE = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' 
+    : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
-        <div id="fireworks-container"></div>
-        
-    function fetchAndDisplayText() {
-        console.log('Fetching and displaying text');
-        const typedOutput = document.getElementById('typed-output');
-        
-        typedOutput.style.opacity = '0';
-        
-        console.log(`Fetching from ${API_BASE}/getText`);
-        fetch(`${API_BASE}/getText?t=${Date.now()}`)
-        .then(response => {
-            console.log(`Received response with status: ${response.status}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Received data:", data);
-            if (data.text) {
-                console.log("Content received, updating display");
-                typedOutput.style.opacity = '0';
-                setTimeout(() => {
-                    typedOutput.innerHTML = '';
-                    if (typedInstance) {
-                        console.log("Destroying previous Typed instance");
-                        typedInstance.destroy();
-                    }
-                    console.log("Enhancing content");
-                    createFireworks();
-                    const enhancedContent = enhanceContent(data.text);
-                    console.log("Creating new Typed instance");
-                    typedInstance = new Typed(typedOutput, {
-                        strings: [enhancedContent],
-                        typeSpeed: 5,
-                        showCursor: false,
-                        contentType: 'html',
-                        onComplete: function() {
-                            console.log("Typing complete");
-                        }
-                    });
-                    typedOutput.style.opacity = '1';
-                }, 300);
-            } else {
-                console.log("No content received");
-                typedOutput.innerHTML = 'No content available. Please try again later.';
-                typedOutput.style.opacity = '1';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
-            typedOutput.style.opacity = '1';
-        });
+function fetchAndDisplayText() {
+    console.log('Fetching and displaying text');
+    const typedOutput = document.getElementById('typed-output');
+    
+    typedOutput.style.opacity = '0';
+    
+    const loadingMessages = [
+        "Psychoanalyzing your inner workings...",
+        "Uncovering hidden patterns in your responses...",
+        "Identifying archetypal anomalies...",
+        "Delving into the deep dark depths of your hidden psyche...",
+        "Forging a window into your mind and future...",
+        "Mapping your synaptic space... illustrating your mind's landscape..."
+    ];
+    const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+    console.log(`Displaying loading message: ${randomMessage}`);
+    typedOutput.innerHTML = randomMessage;
+    
+    typedOutput.style.opacity = '0';
+    
+    console.log(`Fetching from ${API_BASE}/getText`);
+    fetch(`${API_BASE}/getText?t=${Date.now()}`)
+    .then(response => {
+        console.log(`Received response with status: ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Received data:", data);
+        if (data.text) {
+            console.log("Content received, updating display");
+            typedOutput.style.opacity = '0';
+            setTimeout(() => {
+                typedOutput.innerHTML = '';
+                if (typedInstance) {
+                    console.log("Destroying previous Typed instance");
+                    typedInstance.destroy();
+                }
+                console.log("Creating fireworks");
+                createFireworks();
+                streak++;
+                console.log(`Updating streak to ${streak}`);
+                updateStreak();
+                console.log("Enhancing content");
+                const enhancedContent = enhanceContent(data.text);
+                console.log("Creating new Typed instance");
+                typedInstance = new Typed(typedOutput, {
+    strings: [enhancedContent],
+    typeSpeed: 5,
+    showCursor: false,
+    contentType: 'html',
+    onComplete: function() {
+        console.log("Typing complete");
+        showDemoButton();
     }
-
-    function enhanceContent(content) {
-    let enhancedContent = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">`;
-    
-    content = content.replace(/Key Insight #(\d+):(.*?)(?=Key Insight #|$)/gs, (match, number, text) => {
-        return `
-            <section class="insight-section">
-                <div class="insight-header">
-                    <span class="insight-number">${number}</span>
-                    <h2>Key Insight #${number}</h2>
-                </div>
-                <div class="insight-content">
-                    ${processSection(text.trim())}
-                </div>
-            </section>
-        `;
+});
+                typedOutput.style.opacity = '1';
+            }, 300);
+        } else {
+            console.log("No content received");
+            typedOutput.innerHTML = 'No content available. Please try again later.';
+            typedOutput.style.opacity = '1';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
+        typedOutput.style.opacity = '1';
+        streak = 0;
+        updateStreak();
     });
-    
-    enhancedContent += content;
-    
-    // Add the demo button
-    enhancedContent += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
-    
-    enhancedContent += '</div>';
-    return enhancedContent;
 }
 
-    function processSection(sectionContent) {
-        // Handle highlight boxes
-        sectionContent = sectionContent.replace(/(Imagine for a second.*?)\n/g, '<div class="highlight-box">$1</div>');
-        
-        // Handle action items
-        sectionContent = sectionContent.replace(/Here's how.*?:/g, '<div class="action-item">$&</div>');
-        
-        // Handle unordered lists
-        sectionContent = sectionContent.replace(/\n- (.*?)(?=\n|$)/g, '<ul><li>$1</li></ul>');
-        
-        // Handle ordered lists
-        sectionContent = sectionContent.replace(/\n\d+\. (.*?)(?=\n|$)/g, '<ol><li>$1</li></ol>');
-        
-        return sectionContent;
-    }
+function enhanceContent(content) {
+    content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
+    
+    // Replace double line breaks with paragraph tags
+    content = content.replace(/\n\n/g, '</p><p>');
+    
+    // Handle headers
+    content = content.replace(/(Key Insight #\d+:.*?)\n/g, '</p><h2>$1</h2><p>');
+    content = content.replace(/(Here's how.*?:)\n/g, '</p><h3>$1</h3><p>');
+    
+    // Handle highlight boxes
+    content = content.replace(/(Imagine for a second.*?)\n/g, '</p><div class="highlight-box"><p>$1</p></div><p>');
+    
+    // Handle unordered lists
+    content = content.replace(/\n- /g, '</p><ul><li>');
+    content = content.replace(/\n  - /g, '</li><li>');
+    content = content.replace(/(<li>.*?)\n/g, '$1</li></ul><p>');
+    
+    // Handle ordered lists
+    content = content.replace(/\n\d+\. /g, '</p><ol><li>');
+    content = content.replace(/(<li>.*?)\n/g, '$1</li></ol><p>');
+    
+    // Wrap content in paragraphs
+    content = '<p>' + content + '</p>';
+    
+    // Remove empty paragraphs
+    content = content.replace(/<p>\s*<\/p>/g, '');
+    
+    // Add the demo button
+    content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
+    
+    content += '</div>';
+    return content;
+}
 
-    // Fetch and display text once when the page loads
-    fetchAndDisplayText();
-        <div id="fireworks-container"></div>
-    </script>
+function updateStreak() {
+    const streakCounter = document.getElementById('streak-counter');
+    streakCounter.innerHTML = `Streak: ${streak} 🔥`;
+    streakCounter.classList.add('visible');
+    setTimeout(() => {
+        streakCounter.classList.remove('visible');
+    }, 1500);
+}
+
+function createFireworks() {
+    const container = document.getElementById('fireworks-container');
+    container.innerHTML = '';
+    const colors = ['#FF00FF', '#A020F0', '#8A2BE2', '#9400D3', '#9370DB', '#7B68EE', '#6A5ACD', '#FFD700', '#FFA500', '#FF4500'];
+
+    const textBox = document.getElementById('typed-output');
+    const rect = textBox.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+            createFirework(container, colors, centerX, centerY);
+        }, i * 50);
+    }
+}
+
+function createFirework(container, colors, x, y) {
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    firework.style.left = `${x + (Math.random() - 0.5) * 300}px`;
+    firework.style.top = `${y + (Math.random() - 0.5) * 200}px`;
+    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    container.appendChild(firework);
+
+    for (let j = 0; j < 30; j++) {
+        const spark = document.createElement('div');
+        spark.className = 'spark';
+        spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        spark.style.left = firework.style.left;
+        spark.style.top = firework.style.top;
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 50 + Math.random() * 100;
+        spark.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+        spark.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+        container.appendChild(spark);
+    }
+}
+
+function showDemoButton() {
+    const demoButton = document.getElementById('demoButton');
+    if (demoButton) {
+        demoButton.style.display = 'inline-block';
+    }
+}
+
+function addScrollAnimation() {
+    const sections = document.querySelectorAll('.action-item, .highlight-box');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+}
+        
+
+function updateProgressBar() {
+    const progressFill = document.querySelector('.progress-fill');
+    const progressText = document.querySelector('.progress-text');
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 1;
+        progressFill.style.width = `${progress}%`;
+        progressText.textContent = `${progress}% Complete`;
+        if (progress >= 100) {
+            clearInterval(interval);
+        }
+    }, 50);
+}
+
+// Fetch and display text once when the page loads
+fetchAndDisplayText();
+</script>
 </body>
 </html>
