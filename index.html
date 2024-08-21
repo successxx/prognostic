@@ -20,7 +20,99 @@
         padding: 20px;
         box-sizing: border-box;
     }
-    
+
+       .section-container {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.section-icon {
+  flex: 0 0 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section-icon i {
+  font-size: 100px;
+  color: #0142AC;
+}
+
+.section-content {
+  flex: 1;
+  min-width: 300px;
+}
+
+.feature-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.feature-item {
+  background-color: #e9ecef;
+  border-radius: 20px;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.feature-item i {
+  margin-right: 8px;
+  color: #0142AC;
+}
+
+.bullet-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.bullet-list li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 10px;
+}
+
+.bullet-list li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: #0142AC;
+  font-weight: bold;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: #0142AC;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.replacements {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.replacement-logo {
+  background-color: #e9ecef;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+        
     .container {
     width: 100%;
     max-width: 800px;
