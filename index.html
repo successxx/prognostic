@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>PrognosticAI Enabled</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <style>
+        
         typedInstance = new Typed(typedOutput, {
     strings: [enhancedContent],
     typeSpeed: 5,
@@ -156,6 +157,15 @@
         box-sizing: border-box;
         white-space: pre-wrap;
         line-height: 1.6;
+        display: block !important; /* Force display */
+        min-height: 200px; /* Ensure there's always some visible area */
+    }
+
+    .error-message {
+        color: red;
+        font-weight: bold;
+        text-align: center;
+        padding: 20px;
     }
 
     #typed-output h1, #typed-output h2, #typed-output h3 {
@@ -482,52 +492,101 @@ display: block !important; /* Force display */
     <div id="fireworks-container"></div>
         
     <script>
-let typedInstance = null;
-let streak = 0;
-const API_BASE = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000' 
-    : 'https://prognosticai-11cf2622005a.herokuapp.com';
+    let typedInstance = null;
+    let streak = 0;
+    const API_BASE = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000' 
+        : 'https://prognosticai-11cf2622005a.herokuapp.com';
 
-function fetchAndDisplayText() {
-    console.log('Fetching and displaying text');
-    const typedOutput = document.getElementById('typed-output');
-    
-    typedOutput.style.opacity = '0';
-    
-    // ... (keep existing code)
-    
-    fetch(`${API_BASE}/getText?t=${Date.now()}`)
-    .then(response => {
-        console.log(`Received response with status: ${response.status}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Received data:", data);
-        if (data.text) {
-            console.log("Content received, updating display");
-            // ... (keep existing code)
-        } else {
-            console.log("No content received");
-            typedOutput.innerHTML = 'No content available. Please try again later.';
+    function fetchAndDisplayText() {
+        console.log('Fetching and displaying text');
+        const typedOutput = document.getElementById('typed-output');
+        
+        typedOutput.style.opacity = '0';
+        
+        const loadingMessages = [
+            "Psychoanalyzing your inner workings...",
+            "Uncovering hidden patterns in your responses...",
+            "Identifying archetypal anomalies...",
+            "Delving into the deep dark depths of your hidden psyche...",
+            "Forging a window into your mind and future...",
+            "Mapping your synaptic space... illustrating your mind's landscape..."
+        ];
+        const randomMessage = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+        console.log(`Displaying loading message: ${randomMessage}`);
+        typedOutput.innerHTML = randomMessage;
+        
+        typedOutput.style.opacity = '0';
+        
+        console.log(`Fetching from ${API_BASE}/getText`);
+        fetch(`${API_BASE}/getText?t=${Date.now()}`)
+        .then(response => {
+            console.log(`Received response with status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Received data:", data);
+            if (data.text) {
+                console.log("Content received, updating display");
+                typedOutput.style.opacity = '0';
+                setTimeout(() => {
+                    typedOutput.innerHTML = '';
+                    if (typedInstance) {
+                        console.log("Destroying previous Typed instance");
+                        typedInstance.destroy();
+                    }
+                    console.log("Creating fireworks");
+                    createFireworks();
+                    streak++;
+                    console.log(`Updating streak to ${streak}`);
+                    updateStreak();
+                    console.log("Enhancing content");
+                    const enhancedContent = enhanceContent(data.text);
+                    console.log("Creating new Typed instance");
+                    typedInstance = new Typed(typedOutput, {
+                        strings: [enhancedContent],
+                        typeSpeed: 5,
+                        showCursor: false,
+                        contentType: 'html',
+                        onComplete: function() {
+                            console.log("Typing complete");
+                            showDemoButton();
+                        },
+                        onStringTyped: function(arrayPos, self) {
+                            console.log("Typed string:", self.strings[arrayPos]);
+                        },
+                        preStringTyped: function(arrayPos, self) {
+                            console.log("About to type:", self.strings[arrayPos]);
+                        }
+                    });
+                    typedOutput.style.opacity = '1';
+                }, 300);
+            } else {
+                console.log("No content received");
+                typedOutput.innerHTML = 'No content available. Please try again later.';
+                typedOutput.style.opacity = '1';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
             typedOutput.style.opacity = '1';
+            streak = 0;
+            updateStreak();
+        });
+    }
+
+    function enhanceContent(content) {
+        if (!content) {
+            console.error('No content to enhance');
+            return '<div class="error-message">No content available</div>';
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        typedOutput.innerHTML = 'Error fetching AI response. Please try again later.';
-        typedOutput.style.opacity = '1';
-        streak = 0;
-        updateStreak();
-    });
-}
-function enhanceContent(content) {
-  if (!content) {
-    console.error('No content to enhance');
-    return '<div class="error-message">No content available</div>';
-  }
+        
+        try {
+            content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
   
   try {
     content = `<div class="result-header"><h1>Your Marketing Strategy Insights</h1></div><div class="result-content">` + content;
@@ -573,15 +632,15 @@ function enhanceContent(content) {
   content = content.replace(/<div>\s*<\/div>/g, '');
   
   // Add the demo button
-  content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
-    
-    content += '</div>';
-    return content;
-  } catch (error) {
-    console.error('Error enhancing content:', error);
-    return '<div class="error-message">Error processing content</div>';
-  }
-}
+ content += `<div class="button-container"><a href="https://prognostic.ai/#demo" class="demo-button" id="demoButton">Book Your Free Demo Now!</a></div>`;
+            
+            content += '</div>';
+            return content;
+        } catch (error) {
+            console.error('Error enhancing content:', error);
+            return '<div class="error-message">Error processing content</div>';
+        }
+    }
   
   content += '</div>';
   return content;
@@ -673,7 +732,7 @@ function updateProgressBar() {
 }
 
 // Fetch and display text once when the page loads
-fetchAndDisplayText();
-</script>
+    fetchAndDisplayText();
+    </script>
 </body>
 </html>
