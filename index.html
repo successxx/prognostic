@@ -287,22 +287,50 @@
     
     @media (max-width: 600px) {
     .container {
-        width: 95%;
-        max-width: none;
+        width: 100%;
         padding: 0 10px;
+        box-sizing: border-box;
+    }
+        @media (max-width: 600px) {
+    #typed-output {
+        min-width: 100%;
+    }
+}
+    #typed-output {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+    @media (max-width: 600px) {
+    #typed-output h1 { font-size: 24px; }
+    #typed-output h2 { font-size: 20px; }
+    #typed-output h3 { font-size: 18px; }
+    .result-header h1 { font-size: 22px; }
+    .result-content {
+        padding: 15px;
+    }
+}
+    }
+        @media (max-width: 600px) {
+    body {
+        padding: 10px;
     }
     #typed-output {
         font-size: 16px;
         padding: 15px;
-        min-height: 100px;
     }
-    #typed-output h1 { font-size: 24px; }
-    #typed-output h2 { font-size: 20px; }
-    #typed-output h3 { font-size: 18px; }
     .prognostic-button {
-        font-size: 10px;
         bottom: -25px;
+        right: 10px;
+        font-size: 10px;
+        padding: 3px 6px;
     }
+    .streak-counter {
+        font-size: 14px;
+        padding: 6px 10px;
+        bottom: -40px;
+    }
+}
     .streak-counter {
         font-size: 14px;
         padding: 8px 12px;
@@ -335,7 +363,8 @@
         @media (max-width: 600px) {
     .new-demo-button {
         font-size: 16px;
-        padding: 12px 24px;
+        padding: 12px 20px;
+        white-space: normal;
     }
 }
 
